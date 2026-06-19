@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Mission Anchor — Two layouts × Topics × Confidence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#3092fa; --primary-700:#1976d2; --secondary:#9c27b0; --success:#43a047; --warning:#f57c00;
+  --bg:#f6f7fb; --surface:#fff; --s2:#f6f7fb; --s3:#eef1f6;
+  --title:#0a0a0a; --text:#384149; --soft:#6b7681; --faint:#9aa4ad;
+  --border:#e6eaef; --border2:#d3d9e0;
+  --info-c:#e8f1fd; --info-fg:#1168c3;
+  --success-c:#e8f5e9; --success-fg:#2e7d32;
+  --warning-c:#fff3e0; --warning-fg:#e65100;
+  --purple-c:#f3e5f5; --purple-fg:#7b1fa2; --danger-fg:#d32f2f;
+  --grad:linear-gradient(90deg,#f064fc,#3092fa);
+  --r-md:12px; --r-lg:20px; --pill:9999px;
+  --sh:0 0 8px 0 rgba(0,0,0,.10);
+  --font:"DM Sans",-apple-system,sans-serif;
+  --m-un:#9aa4ad; --m-nf:#f57c00; --m-bu:#3092fa; --m-st:#43a047;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;line-height:1.45}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px;border-radius:6px}
+.wrap{max-width:880px;margin:0 auto;padding:24px 20px 72px}
+
+.toolbar{position:sticky;top:0;z-index:50;background:rgba(246,247,251,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);margin:0 -20px;padding:16px 20px;display:flex;flex-wrap:wrap;gap:14px 22px;align-items:flex-start}
+.brandmark{display:flex;align-items:center;gap:12px}
+.brandmark .dot{width:26px;height:26px;border-radius:8px;background:var(--grad);flex:none}
+.brandmark b{font-size:14px;letter-spacing:-.01em}
+.brandmark span{display:block;font-size:11px;color:var(--faint);font-weight:500}
+.controls{margin-left:auto;display:flex;gap:18px;flex-wrap:wrap}
+.ctrl{display:flex;flex-direction:column;gap:6px}
+.ctrl>label{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+.seg{display:inline-flex;background:var(--s3);border-radius:var(--pill);padding:3px;gap:2px}
+.seg button{border:0;background:transparent;color:var(--text);font-size:13px;font-weight:600;padding:8px 13px;border-radius:var(--pill);transition:background .15s,color .15s;white-space:nowrap}
+.seg.var button[aria-pressed="true"]{background:var(--secondary);color:#fff}
+.seg button[aria-pressed="true"]{background:var(--primary);color:#fff}
+#vcaption{font-size:11.5px;color:var(--soft);max-width:300px;margin-top:2px;line-height:1.4}
+
+.explain{display:flex;gap:14px;align-items:flex-start;background:#1c2430;color:#dbe4ee;border-radius:var(--r-md);padding:14px 18px;margin-top:18px;font-size:13px;line-height:1.55}
+.explain .etag{flex:none;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#8fb6ff;border:1px solid #34507e;border-radius:var(--pill);padding:4px 9px;margin-top:1px}
+.explain b{color:#fff}
+.explain .meta2{display:block;margin-top:7px;font-size:11px;color:#9fb0c4}
+.explain .unlock{color:#7fd6a3}
+
+.page{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);margin-top:18px;overflow:hidden;box-shadow:var(--sh)}
+.ph{display:flex;gap:14px;align-items:center;padding:18px 22px 12px}
+.courseIcon{width:46px;height:46px;border-radius:13px;background:#e3f2fd;display:flex;align-items:center;justify-content:center;font-size:22px;flex:none}
+.courseTitle{font-size:22px;font-weight:700;letter-spacing:-.02em;color:var(--title);margin:0}
+.subRow{font-size:13px;color:var(--faint);margin-top:3px}
+.exam{display:flex;gap:12px;padding:0 22px 14px}
+.examItem{flex:1;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 14px;border-radius:var(--r-md);background:var(--s2)}
+.examL{display:flex;align-items:center;gap:9px;min-width:0}
+.examDot{width:8px;height:8px;border-radius:50%;background:var(--warning);flex:none}
+.examDot.far{background:var(--faint)}
+.examName{font-weight:700;font-size:14px;color:var(--title)}
+.examName .est{font-size:10px;font-weight:600;color:var(--faint);background:var(--s3);padding:2px 6px;border-radius:6px;margin-left:6px}
+.examName .ok{font-size:10px;font-weight:600;color:var(--success-fg);background:var(--success-c);padding:2px 7px;border-radius:var(--pill);margin-left:6px}
+.examMeta{font-size:12px;color:var(--faint);margin-top:2px}
+.cd{text-align:right;flex:none}
+.cd .num{font-size:22px;font-weight:700;letter-spacing:-.02em;line-height:1}
+.cd .num.urgent{color:var(--warning)} .cd .num.far{color:var(--faint)}
+.cd .lbl{font-size:11px;color:var(--faint)}
+.setDate{border:1px dashed var(--border2);background:var(--surface);color:var(--primary-700);font-weight:600;font-size:12.5px;padding:7px 12px;border-radius:var(--pill)}
+.tabs{display:flex;gap:2px;padding:0 22px;border-bottom:1px solid var(--border)}
+.tab{border:0;background:transparent;font-size:14px;font-weight:600;color:var(--faint);padding:11px 13px;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab.active{color:var(--primary);border-bottom-color:var(--primary)}
+.content{padding:22px;background:var(--s2)}
+
+/* sections (variant A) */
+.sec{margin-bottom:22px}
+.sechead{display:flex;align-items:baseline;gap:9px;margin-bottom:12px}
+.sechead .st{font-size:18px;font-weight:700;color:var(--title);letter-spacing:-.01em}
+.sechead .sd{font-size:12.5px;color:var(--faint)}
+
+/* hero (variant A) */
+.herorow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px}
+.hero{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:18px;display:flex;flex-direction:column;gap:8px;overflow:hidden}
+.hero::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px}
+.hero.read::before{background:var(--success)} .hero.practice::before{background:var(--primary)}
+.hero .hlabel{font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--faint)}
+.hero .htitle{font-size:18px;font-weight:700;color:var(--title);line-height:1.25}
+.hero .hmeta{font-size:13px;color:var(--faint)}
+.hero .hcta{margin-top:8px;align-self:flex-start;border-radius:var(--pill);font-weight:600;font-size:14px;padding:10px 20px}
+.hero.read .hcta{background:var(--surface);border:1px solid var(--border2);color:var(--text)}
+.hero.practice .hcta{background:var(--primary);border:1px solid var(--primary);color:#fff}
+
+/* feed cards (variant A) */
+.feedgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.fcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s}
+.fcard:hover{transform:translateY(-2px);box-shadow:var(--sh)}
+.fcard .thumb{height:78px;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:26px;border-bottom:1px solid var(--border);position:relative}
+.fcard .acc{position:absolute;left:0;top:0;bottom:0;width:4px}
+.fcard .fmeta{padding:12px 13px 14px}
+.fcard .ftype{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+.fcard .fname{font-size:14px;font-weight:600;color:var(--title);margin-top:4px;line-height:1.3}
+.fcard .fdesc{font-size:12px;color:var(--faint);margin-top:5px}
+
+/* reason chips */
+.rchip{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:4px 9px;border-radius:var(--pill);margin-top:9px}
+.rchip-exam{background:var(--warning-c);color:var(--warning)}
+.rchip-popular{background:var(--info-c);color:var(--info-fg)}
+.rchip-fav{background:#fff6da;color:#b8860b}
+.rchip-shared{background:var(--s3);color:var(--soft)}
+.rchip-trending{background:var(--purple-c);color:var(--purple-fg)}
+.rchip-continue{background:var(--success-c);color:var(--success-fg)}
+.rchip-nf{background:var(--warning-c);color:var(--m-nf)}
+
+/* live-data (Tier 1) input rows — student-added: dates + materials */
+.srow{display:flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:14px 18px;margin-bottom:14px}
+.srow.setup{background:#eafaf1;border-color:#bfe8d0}
+.srow .sl{flex:1;min-width:0}
+.srow .slab{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);display:flex;align-items:center;gap:8px}
+.srow.setup .slab{color:var(--success-fg)}
+.srow .sdots{display:inline-flex;gap:4px}
+.srow .sdots i{width:6px;height:6px;border-radius:50%;background:#bfe8d0}
+.srow .sdots i.on{background:var(--success)}
+.srow .stitle{font-size:16px;font-weight:700;color:var(--title);margin-top:4px}
+.srow.setup .stitle{color:#16591f}
+.srow .ssub{font-size:13px;color:var(--faint);margin-top:2px}
+.srow.setup .ssub{color:#2f7d4f}
+.srow .scta{flex:none;border:1px solid var(--border2);background:var(--surface);color:var(--text);font-weight:600;font-size:13px;padding:9px 16px;border-radius:var(--pill)}
+.srow .scta.add{color:var(--primary-700)}
+.srow.setup .scta{border-color:#9cd6b3;color:#16591f}
+
+/* spine (variant B) */
+.spine{position:relative;margin-left:7px;padding-left:28px}
+.spine::before{content:"";position:absolute;left:6px;top:8px;bottom:18px;width:2px;background:linear-gradient(180deg,var(--warning) 0%,var(--primary) 45%,var(--border2) 100%)}
+.bucket{position:relative;margin-bottom:24px}
+.bucket::before{content:"";position:absolute;left:-28px;top:3px;width:13px;height:13px;border-radius:50%;background:var(--surface);border:2px solid var(--primary);box-shadow:0 0 0 4px var(--s2)}
+.bucket.now::before{background:var(--warning);border-color:var(--warning);width:15px;height:15px;left:-29px}
+.bucket.est::before{border-style:dashed}
+.bucket.soft::before{border-color:var(--border2)}
+.bucket.locked::before{border-color:var(--border2);background:var(--s3)}
+.bhead{display:flex;align-items:baseline;gap:9px;margin-bottom:11px}
+.bhead .bt{font-size:15px;font-weight:700;color:var(--title)}
+.bhead .bd{font-size:12.5px;color:var(--faint)}
+.bhead .esttag{font-size:10px;font-weight:600;color:var(--faint);background:var(--s3);padding:2px 7px;border-radius:6px}
+.lockico{margin-right:6px;opacity:.6}
+.rows{display:flex;flex-direction:column;gap:8px}
+.row{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:11px 14px;transition:box-shadow .2s,transform .2s}
+.row:hover{box-shadow:var(--sh);transform:translateY(-1px)}
+.row .ricn{width:34px;height:34px;border-radius:9px;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:16px;flex:none;position:relative}
+.row .racc{position:absolute;left:0;top:6px;bottom:6px;width:3px;border-radius:3px}
+.row .rtxt{flex:1;min-width:0}
+.row .rname{font-size:14px;font-weight:600;color:var(--title)}
+.row .rmeta{font-size:12px;color:var(--faint);margin-top:1px}
+.tchip{font-size:11px;font-weight:600;color:var(--soft);background:var(--s3);border-radius:var(--pill);padding:4px 9px;flex:none;white-space:nowrap}
+.tchip.nf{color:var(--m-nf);background:var(--warning-c)}
+.tchip.peer{color:var(--info-fg);background:var(--info-c)}
+.row .rchev{flex:none;color:var(--faint);font-size:16px}
+.locked-box{border:1px dashed var(--border2);border-radius:var(--r-md);background:var(--surface);padding:15px 16px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.locked-box .lt{font-size:13px;color:var(--text);max-width:54ch}
+.locked-box .lt b{color:var(--title)}
+.locked-box .lcta{flex:none;background:var(--primary);color:#fff;border:0;font-weight:600;font-size:13px;padding:9px 16px;border-radius:var(--pill)}
+
+/* daily card (shared) */
+.daily{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;box-shadow:var(--sh)}
+.daily .dtop{display:flex;align-items:flex-start;gap:12px}
+.daily .demoji{font-size:22px}
+.daily .dtitle{font-size:17px;font-weight:700;color:var(--title);flex:1}
+.daily .dsub{font-size:13px;color:var(--faint);margin-top:3px}
+.dfront{display:flex;gap:20px;align-items:center;margin-top:14px}
+.radar{flex:none}
+.dready{flex:1;min-width:0}
+.mbar{display:flex;height:9px;border-radius:var(--pill);overflow:hidden;background:var(--s3);margin-top:2px}
+.mbar i{display:block;height:100%}
+.mbar i.st{background:var(--m-st)} .mbar i.bu{background:var(--m-bu)} .mbar i.nf{background:var(--m-nf)} .mbar i.un{background:var(--m-un)}
+.mcount{font-size:12px;color:var(--soft);margin-top:8px;display:flex;gap:12px;flex-wrap:wrap}
+.mcount b{color:var(--title)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:1px}
+.dot.st{background:var(--m-st)} .dot.bu{background:var(--m-bu)} .dot.nf{background:var(--m-nf)} .dot.un{background:var(--m-un)}
+.focusline{font-size:13.5px;color:var(--text);margin-top:12px;display:flex;align-items:center;gap:7px}
+.focusline b{color:var(--m-nf)}
+.notmeasured{font-size:13px;color:var(--faint);font-style:italic}
+.toplist{display:flex;flex-direction:column;gap:7px;margin-top:4px}
+.toprow{display:flex;align-items:center;justify-content:space-between;background:var(--s2);border-radius:9px;padding:8px 12px}
+.toprow .tn{font-size:13px;font-weight:600;color:var(--title)}
+.mst{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:var(--pill)}
+.mst.un{background:var(--s3);color:var(--soft)} .mst.nf{background:var(--warning-c);color:var(--m-nf)}
+.mst.bu{background:var(--info-c);color:var(--info-fg)} .mst.st{background:var(--success-c);color:var(--success-fg)}
+.dstart{margin-top:16px;width:100%;background:var(--primary);color:#fff;border:0;font-weight:700;font-size:15px;padding:13px;border-radius:var(--pill);transition:background .2s}
+.dstart:hover{background:var(--primary-700)}
+.iplabel{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--purple-fg);background:var(--purple-c);padding:4px 10px;border-radius:var(--pill)}
+.qtags{display:flex;gap:8px;margin-top:14px;align-items:center;flex-wrap:wrap}
+.qtag{font-size:12px;font-weight:600;color:var(--text);background:#eef1f6;border-radius:var(--pill);padding:4px 11px}
+.qdots{margin-left:auto;display:flex;gap:5px;align-items:center}
+.qdots i{width:7px;height:7px;border-radius:50%;background:var(--s3)}
+.qdots i.on{background:var(--primary)}
+.qq{font-size:17px;font-weight:700;color:var(--title);margin:14px 0;line-height:1.35}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;background:var(--surface);border:1px solid var(--border2);border-radius:var(--r-md);padding:12px 15px;font-size:15px;color:var(--text);transition:border .15s,background .15s}
+.opt.correct{border-color:var(--success);background:#f3faf4}
+.opt.wrong{border-color:var(--danger-fg);background:#fdf4f2}
+.opt.correct .mk{color:var(--success)} .opt.wrong .mk{color:var(--danger-fg)}
+.explain-q{font-size:14px;font-style:italic;color:var(--text);margin-top:14px;line-height:1.5}
+.qnav{display:flex;justify-content:flex-end;margin-top:16px}
+.qnext{background:var(--surface);border:1px solid var(--border2);color:var(--text);font-weight:600;font-size:14px;padding:10px 20px;border-radius:var(--pill)}
+.result{margin-top:16px}
+.result .rhead{display:flex;align-items:center;gap:10px}
+.result .ricon{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;color:#fff;flex:none;background:var(--success)}
+.result .rt{font-size:17px;font-weight:700;color:var(--title)}
+.uplift{margin:12px 0 0 0;background:var(--s2);border-radius:var(--r-md);padding:12px 14px;display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--text)}
+.uplift .tn{font-weight:700;color:var(--title)}
+.uplift .arrow{color:var(--success-fg);font-weight:700}
+.deeper{margin-top:14px;width:100%;background:linear-gradient(90deg,#9c27b0,#3092fa);color:#fff;border:0;font-weight:700;font-size:14.5px;padding:13px;border-radius:var(--pill);display:flex;align-items:center;justify-content:center;gap:8px}
+.comeback{display:block;width:100%;text-align:center;background:transparent;border:0;color:var(--text);font-weight:600;font-size:14px;padding:13px 0 2px}
+.rnext{font-size:14px;color:var(--text);margin:10px 0 0;text-align:center}
+.rnext a{color:var(--primary);font-weight:600;text-decoration:none}
+.cta2{margin-top:14px;width:100%;background:var(--primary);color:#fff;border:0;font-weight:700;font-size:15px;padding:13px;border-radius:var(--pill)}
+
+.legend{margin-top:24px;font-size:12px;color:var(--soft);line-height:1.6;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+.legend .lg{display:inline-flex;align-items:center}
+.foot{margin-top:14px;font-size:12px;color:var(--faint);line-height:1.6}
+.foot code{background:var(--s3);padding:1px 5px;border-radius:5px;font-size:11px}
+@media (max-width:600px){ .dfront{flex-direction:column;align-items:stretch} .radar{align-self:center} .exam{flex-direction:column} .herorow{grid-template-columns:1fr} }
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="toolbar">
+    <div class="brandmark"><span class="dot" aria-hidden="true"></span>
+      <span><b>Two layouts × Topics × Confidence</b><span>Same daily card — switch what comes after it</span></span></div>
+    <div class="controls">
+      <div class="ctrl"><label id="varlbl">Layout variant</label>
+        <div class="seg var" role="group" aria-labelledby="varlbl" id="varseg"></div>
+        <div id="vcaption"></div></div>
+      <div class="ctrl"><label id="lvllbl">Data confidence</label>
+        <div class="seg" role="group" aria-labelledby="lvllbl" id="lvlseg"></div></div>
+    </div>
+  </div>
+
+  <div class="explain" id="explain"></div>
+  <div class="page"><div id="page"></div></div>
+
+  <div class="legend" id="legend"></div>
+  <p class="foot" id="foot"></p>
+</div>
+
+<script>
+const LEVELS=[{k:1,name:"L1 · estimated"},{k:2,name:"L2 · enriched"},{k:3,name:"L3 · confirmed"},{k:4,name:"L4 · full"}];
+const VARIANTS=[{k:"A",name:"1 · Materials feed"},{k:"B",name:"2 · Topic spine"}];
+const VCAP={
+  A:"Default. After the daily card, pushes your artifacts & materials directly (reason-tagged). Familiar, conversion-safe, works even when topics are thin — best at L1–L2.",
+  B:"After the daily card, the time-ordered spine with topic tags. Leans into Infinite Practice — best when topics + mastery are rich (L3–L4)."
+};
+
+const TOPICS=["Sampling Methods","Validity & Reliability","Statistical Inference","Experimental Design","Measurement","Research Ethics"];
+const SHORT={"Sampling Methods":"Sampling","Validity & Reliability":"Validity","Statistical Inference":"Stats","Experimental Design":"Design","Measurement":"Measure","Research Ethics":"Ethics"};
+const MV={un:0.15,nf:0.38,bu:0.66,st:0.92};
+const MASTERY={1:null,
+  2:{"Sampling Methods":"un","Validity & Reliability":"un","Statistical Inference":"un","Experimental Design":"un","Measurement":"un","Research Ethics":"un"},
+  3:{"Sampling Methods":"st","Validity & Reliability":"bu","Statistical Inference":"nf","Experimental Design":"bu","Measurement":"nf","Research Ethics":"st"},
+  4:{"Sampling Methods":"st","Validity & Reliability":"st","Statistical Inference":"bu","Experimental Design":"st","Measurement":"bu","Research Ethics":"st"}};
+function counts(m){const c={st:0,bu:0,nf:0,un:0};TOPICS.forEach(t=>c[m[t]]++);return c;}
+function focusTopic(m){for(const s of["nf","bu","un"]){const t=TOPICS.find(x=>m[x]===s);if(t)return t;}return TOPICS[0];}
+
+const EXPLAIN={
+ 1:{tag:"L1",html:"<b>No canonical topics yet.</b> Warm-up only — no radar, no mastery. Topics appear once the syllabus is mapped (we mount on Infinite Practice's topics).",meta:"Source: none · Tier 0",unlock:"Unlocks: one session + a date → topics & estimates"},
+ 2:{tag:"L2",html:"<b>Topics extracted from the syllabus (estimated)</b> → they become the radar's axes. Every topic starts <b>Unstarted</b>; a quick check seeds the baseline.",meta:"Source: AI extraction · Tier 1",unlock:"Unlocks: confirm date + sessions → real mastery"},
+ 3:{tag:"L3",html:"<b>Confirmed + practice history → mastery is real.</b> The radar fills, <b>Statistical Inference</b> surfaces as <b>Needs focus</b>, review is spaced.",meta:"Source: confirm + your sessions · Tier 2",unlock:"Unlocks: more history + peers → personalised"},
+ 4:{tag:"L4",html:"<b>Full.</b> Mastery high, cross-course, peers — <b>“Go deeper” opens the Infinite Practice stream</b>.",meta:"Source: + materials / LMS · Tier 3",unlock:"End state — re-ranks itself every session"}};
+
+const DECK={qs:[
+  {tags:["Statistical Inference","Needs focus"],q:"A p-value of 0.03 means:",opts:["The null hypothesis is false","There's a 3% chance the result is due to chance","Data this extreme would occur 3% of the time if the null were true","The effect size is small"],correct:2,explain:"A p-value is the probability of data at least this extreme assuming the null is true — not the probability the null is true."},
+  {tags:["Validity & Reliability","Building"],q:"A test that accurately measures what it claims to measure has high:",opts:["Reliability","Construct validity","Internal consistency","Test-retest correlation"],correct:1,explain:"Construct validity reflects how well an instrument measures the theoretical concept it is designed to assess."}]};
+
+const DAILY={
+ 1:{mode:"warmup",emoji:"👋",title:"Warm up",sub:"A quick quiz from what's popular in this course",cta:"Try a quick quiz",q:1},
+ 2:{mode:"check",emoji:"🧭",title:"Quick check",sub:"Set a baseline across your 6 topics · ~5 min",cta:"Take a quick check",q:2},
+ 3:{mode:"full",emoji:"🧪",title:"Research methods — Midterm",sub:"3 to review today · keeps your memory fresh",cta:"Start review · 3 to review",q:2},
+ 4:{mode:"full",emoji:"🧪",title:"Research methods — Midterm",sub:"3 to review · across your courses",cta:"Start review · 3 to review",q:2}};
+
+function radar(size,mode,vals){
+  if(mode==="none")return"";
+  const c=size/2,R=size/2-26,N=TOPICS.length;
+  const pt=(r,i)=>{const a=-Math.PI/2+i*2*Math.PI/N;return[c+r*Math.cos(a),c+r*Math.sin(a)];};
+  let grid="";[.33,.66,1].forEach(g=>{grid+=`<polygon points="${TOPICS.map((_,i)=>pt(R*g,i).join(",")).join(" ")}" fill="none" stroke="#e6ebef" stroke-width="1"/>`;});
+  let ax="",lab="";for(let i=0;i<N;i++){const[x,y]=pt(R,i);ax+=`<line x1="${c}" y1="${c}" x2="${x}" y2="${y}" stroke="#eef1f6"/>`;const[lx,ly]=pt(R+14,i);lab+=`<text x="${lx}" y="${ly}" font-size="8.5" fill="#9aa4ad" text-anchor="middle" dominant-baseline="middle">${SHORT[TOPICS[i]]}</text>`;}
+  let fill="";if(mode==="full"&&vals){const poly=vals.map((v,i)=>pt(R*v,i).join(",")).join(" ");fill=`<polygon points="${poly}" fill="rgba(48,146,250,.16)" stroke="var(--primary)" stroke-width="2" stroke-linejoin="round"/>`;vals.forEach((v,i)=>{if(v<=MV.nf){const[wx,wy]=pt(R*v,i);fill+=`<circle cx="${wx}" cy="${wy}" r="3.5" fill="var(--m-nf)"/>`;}});}
+  return `<svg class="radar" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" role="img" aria-label="Topic mastery radar">${grid}${ax}${fill}${lab}</svg>`;
+}
+
+let q={phase:"front",qi:0,picks:[]};
+function dailyHTML(level){
+  const d=DAILY[level],m=MASTERY[level];let inner="";
+  if(q.phase==="front"){
+    if(d.mode==="warmup"){inner=`<div class="dsub" style="margin-top:14px">${d.sub}</div><button class="dstart" data-dact="start">${d.cta}</button>`;}
+    else if(d.mode==="check"){inner=`<div class="dfront">${radar(118,"outline")}<div class="dready"><div class="notmeasured">Mastery not measured yet — your 6 topics:</div><div class="toplist">${TOPICS.slice(0,4).map(t=>`<div class="toprow"><span class="tn">${t}</span><span class="mst un">Unstarted</span></div>`).join("")}</div></div></div><button class="dstart" data-dact="start">${d.cta}</button>`;}
+    else{const c=counts(m),ft=focusTopic(m),vals=TOPICS.map(t=>MV[m[t]]);
+      inner=`<div class="dfront">${radar(124,"full",vals)}<div class="dready">
+        <div class="mbar">${c.st?`<i class="st" style="width:${c.st/6*100}%"></i>`:''}${c.bu?`<i class="bu" style="width:${c.bu/6*100}%"></i>`:''}${c.nf?`<i class="nf" style="width:${c.nf/6*100}%"></i>`:''}${c.un?`<i class="un" style="width:${c.un/6*100}%"></i>`:''}</div>
+        <div class="mcount"><span><span class="dot st"></span><b>${c.st}</b> strong</span><span><span class="dot bu"></span><b>${c.bu}</b> building</span><span><span class="dot nf"></span><b>${c.nf}</b> need focus</span></div>
+        <div class="focusline">🎯 Focus today: <b>${ft}</b></div></div></div>
+        <button class="dstart" data-dact="start">${d.cta}</button>`;}
+  } else if(q.phase==="quiz"){
+    const n=d.q,item=DECK.qs[q.qi],picked=q.picks[q.qi],answered=picked!=null,dots=Array.from({length:n},(_,i)=>`<i class="${i<=q.qi?'on':''}"></i>`).join("");
+    inner=`<div class="qtags"><span class="iplabel">∞ Infinite Practice</span>${item.tags.map(t=>`<span class="qtag">${t}</span>`).join("")}<span class="qdots" aria-hidden="true">${dots}</span></div>
+      <div class="qq">${item.q}</div>
+      <div class="opts">${item.opts.map((o,i)=>{let cls="";if(answered){if(i===item.correct)cls=" correct";else if(i===picked)cls=" wrong";}const mk=answered&&i===item.correct?'<span class="mk" aria-hidden="true">✓</span>':(answered&&i===picked?'<span class="mk" aria-hidden="true">✕</span>':'');return `<button class="opt${cls}" ${answered?'disabled':''} data-dact="answer" data-i="${i}"><span>${o}</span>${mk}</button>`;}).join("")}</div>
+      ${answered?`<div class="explain-q">${item.explain}</div><div class="qnav"><button class="qnext" data-dact="next">${q.qi+1<n?'Next →':'See result →'}</button></div>`:''}`;
+  } else {
+    if(level<=2){const r=level===1?{t:"Nice start 🎉",s:"Your topic mastery appears once we map this course."}:{t:"Baseline set",s:"Confirm your exam date and we'll schedule your daily review."};
+      inner=`<div class="result"><div class="rhead"><span class="ricon" aria-hidden="true">✓</span><span class="rt">${r.t}</span></div><div style="font-size:13px;color:var(--faint);margin:8px 0 0 36px">${r.s}</div>${level===2?`<button class="cta2" data-dact="restart">Confirm exam date</button>`:`<button class="comeback" data-dact="restart">Come back tomorrow</button>`}</div>`;}
+    else{inner=`<div class="result"><div class="rhead"><span class="ricon" aria-hidden="true">✓</span><span class="rt">Checkpoint — nice work</span></div>
+      <div class="uplift"><span aria-hidden="true">📈</span><span><span class="tn">Statistical Inference</span> &nbsp;<span style="color:var(--m-nf);font-weight:700">Needs focus</span> <span class="arrow">→</span> <span style="color:var(--m-bu);font-weight:700">Building</span></span></div>
+      <button class="deeper" data-dact="restart"><span aria-hidden="true">∞</span> Go deeper · 40+ more on this topic</button>
+      ${level===4?`<div class="rnext">Next up: <a href="#" data-dact="restart">Organic Chemistry — Final →</a></div>`:`<button class="comeback" data-dact="restart">Come back tomorrow</button>`}</div>`;}
+  }
+  return `<div class="daily"><div class="dtop"><span class="demoji" aria-hidden="true">${d.emoji}</span><div style="flex:1"><div class="dtitle">${d.title}</div>${q.phase==="front"&&d.mode!=="warmup"?`<div class="dsub">${d.sub}</div>`:''}</div></div>${inner}</div>`;
+}
+
+/* ---- variant A: materials feed ---- */
+function rchip(c){return `<span class="rchip rchip-${c[0]}"><span aria-hidden="true">${c[1]}</span>${c[2]}</span>`;}
+function heroHTML(level){
+  const read=level<=1?{t:"Sampling basics — overview",m:"Trending · 38 views today",c:["popular","🔥","Most viewed"]}
+           :level===2?{t:"Sampling Methods — Key Concepts",m:"Relevant to your midterm · ~Jun 20",c:["exam","🔥","Relevant to your midterm"]}
+           :{t:"Sampling Methods — Key Concepts",m:"Summary · shared by 3 students",c:["continue","▶","Pick up where you left off"]};
+  const prac=level<=1?{t:"Research Methods — Full Practice Set",m:"Most attempted · 43 students",c:["popular","🔥","Most attempted"]}
+           :{t:"Research Methods Midterm Practice Quiz",m:"15 questions · updated Jun 7",c:["exam","⏰",level===2?"Midterm in ~4 days":"Midterm in 4 days"]};
+  return `<div class="herorow">
+    <div class="hero read"><div class="hlabel">Read</div><div class="htitle">${read.t}</div><div class="hmeta">${read.m}</div>${rchip(read.c)}<button class="hcta">Open →</button></div>
+    <div class="hero practice"><div class="hlabel">Practice</div><div class="htitle">${prac.t}</div><div class="hmeta">${prac.m}</div>${rchip(prac.c)}<button class="hcta">Start</button></div></div>`;
+}
+function feedHTML(level){
+  const examChip=level<=1?["popular","🔥","Most attempted"]:["exam","⏰",level===2?"Midterm · ~Jun 20":"Midterm · Jun 20"];
+  const items=[
+    {e:"📋",ty:"Mock exam",n:"Research Methods Midterm Mock",d:"Covers all topics · 40 q",acc:"var(--primary)",c:examChip},
+    {e:"🎯",ty:"Quiz",n:"Validity & Reliability",d:"20 q · high yield",acc:"var(--secondary)",c:["popular","🔥","High yield"]},
+    {e:"📊",ty:"Quiz",n:"Statistical inference drills",d:"15 q",acc:"var(--secondary)",c:level>=3?["nf","⚠","Needs focus"]:["trending","✨","Trending"]},
+    {e:"📝",ty:"Note",n:"Midterm high-yield summary",d:"Community favourite · 4.8★",acc:"var(--success)",c:["fav","⭐","Community favourite"]},
+    {e:"🧩",ty:"Quiz",n:"Experimental design",d:"18 q",acc:"var(--secondary)",c:["trending","✨","Trending"]},
+    {e:"⚖️",ty:"Note",n:"Research ethics — case studies",d:level>=4?"Shared by a classmate":"Community favourite",acc:"var(--success)",c:level>=4?["shared","👥","Shared by a classmate"]:["fav","⭐","Community favourite"]}
+  ];
+  return items.map(it=>`<article class="fcard"><div class="thumb"><span class="acc" style="background:${it.acc}"></span><span aria-hidden="true">${it.e}</span></div><div class="fmeta"><div class="ftype">${it.ty}</div><div class="fname">${it.n}</div><div class="fdesc">${it.d}</div>${rchip(it.c)}</div></article>`).join("");
+}
+/* ---- live-data (Tier 1) inputs students can add: dates + materials ---- */
+function setupRow(level){
+  if(level>=3) return ''; // dates confirmed — prompt retires
+  return `<div class="srow setup"><div class="sl"><div class="slab">Setup <span class="sdots"><i class="on"></i><i></i><i></i></span></div><div class="stitle">When are your exams?</div><div class="ssub">Add your dates and we'll show you what to study each week until finals.</div></div><button class="scta">Get started →</button></div>`;
+}
+function addRow(){
+  return `<div class="srow"><div class="sl"><div class="slab">Add</div><div class="stitle">Add your materials</div><div class="ssub">Your notes make recommendations sharper — and map this course even without a syllabus.</div></div><button class="scta add">+ Add</button></div>`;
+}
+
+function variantA(level){
+  return `<div class="content">
+    <div class="sec"><div class="sechead"><span class="st">Today's review</span><span class="sd">${DAILY[level].mode==="warmup"?"practice once to start tracking":(DAILY[level].mode==="check"?"set your baseline":"3 to review · keeps your memory fresh")}</span></div><div id="dailyslot"></div></div>
+    ${setupRow(level)}
+    ${heroHTML(level)}
+    ${addRow()}
+    <div class="sec"><div class="sechead"><span class="st">Up next</span><span class="sd">everything else for this course · reason-tagged</span></div><div class="feedgrid">${feedHTML(level)}</div></div>
+  </div>`;
+}
+
+/* ---- variant B: topic spine ---- */
+const ACC={mock:"var(--primary)",quiz:"var(--secondary)",summary:"var(--success)",note:"var(--success)"};
+function srow(emoji,type,name,meta,topic,opts){opts=opts||{};const chip=topic?`<span class="tchip${opts.nf?' nf':''}${opts.peer?' peer':''}">${opts.nf?'⚠ ':''}${topic}</span>`:'';
+  return `<button class="row"><span class="ricn"><span class="racc" style="background:${ACC[type]}"></span><span aria-hidden="true">${emoji}</span></span><span class="rtxt"><span class="rname">${name}</span><span class="rmeta">${meta}</span></span>${chip}<span class="rchev" aria-hidden="true">›</span></button>`;}
+function lockedBucket(title){return `<div class="bucket locked"><div class="bhead"><span class="bt"><span class="lockico" aria-hidden="true">🔒</span>${title}</span></div><div class="locked-box"><div class="lt"><b>Add your exam date to line up what to study here.</b></div><button class="lcta">Add date</button></div></div>`;}
+function bucket(cls,title,date,inner,esttag){return `<div class="bucket ${cls}"><div class="bhead"><span class="bt">${title}</span>${date?`<span class="bd">${date}</span>`:''}${esttag?`<span class="esttag">${esttag}</span>`:''}</div>${inner}</div>`;}
+function spineHTML(level){
+  const d=DAILY[level],nowSub=d.mode==="warmup"?"practice once to start tracking":(d.mode==="check"?"set your baseline":d.sub);
+  let out=`<div class="spine">`+bucket("now","Today's review",nowSub,`<div id="dailyslot"></div>`);
+  if(level===1){
+    out+=bucket("","Popular in this course","what other students use most",`<div class="rows">${srow("📋","mock","Midterm mock (full)","Most attempted · 43 students")}${srow("🎯","quiz","Research methods — intro quiz","Most attempted")}${srow("📝","summary","Sampling basics — recap","Community favourite")}</div>`);
+    out+=lockedBucket("Before your midterm");
+  } else {
+    const est=level===2;
+    out+=bucket(est?"est":"","This week","lock in the foundations",`<div class="rows">${srow("🎯","quiz","Validity & Reliability — practice","12 q · ~10 min","Validity & Reliability")}${srow("📝","summary","Sampling methods — recap","5 min read","Sampling Methods")}</div>`,est?"estimated":"");
+    out+=bucket(est?"est":"","Before your midterm",est?"~Jun 20":"Jun 20 · 4 days away",`<div class="rows">${srow("📋","mock","Research Methods Midterm Mock","40 q · all topics","All topics")}${srow("📊","quiz","Statistical inference drills","15 q · close your gap","Statistical Inference",{nf:level>=3})}${srow("🧩","quiz","Experimental design","18 q","Experimental Design")}</div>`,est?"estimated":"");
+    if(level>=4){out+=bucket("soft","Keep building","shared by peers in your course",`<div class="rows">${srow("⚖️","note","Research ethics — case studies","Shared by a classmate","Research Ethics",{peer:true})}${srow("📐","note","Measurement & scaling notes","Shared by a classmate","Measurement",{peer:true})}</div>`);}
+    else{out+=bucket("soft","Keep building","more for this course",`<div class="rows">${srow("⚖️","note","Research ethics — case studies","Community favourite","Research Ethics")}</div>`);}
+  }
+  return `<div class="content">`+out+`</div>`+addRow()+`</div>`;
+}
+
+function chromeHTML(level){
+  const noDate=level===1,est=level===2,confirmed=level>=3;
+  const midRight=noDate?`<button class="setDate">Set date</button>`:`<div class="cd"><div class="num urgent">${est?'~4':'4'}</div><div class="lbl">days away</div></div>`;
+  const finRight=noDate?`<button class="setDate">Set date</button>`:`<div class="cd"><div class="num far">${level<=2?'~32':'32'}</div><div class="lbl">days away</div></div>`;
+  const midTag=confirmed?'<span class="ok">✓ confirmed</span>':(est?'<span class="est">est</span>':'');
+  const finTag=level<=2?'<span class="est">est</span>':'';
+  return `<div class="ph"><div class="courseIcon" aria-hidden="true">🧪</div><div><h1 class="courseTitle">Research methods</h1><div class="subRow">${level>=2?'Dr. Lentz · ':''}PSYC 250 · ${level>=2?'6 topics':'mapping topics…'}</div></div></div>
+  <div class="exam"><div class="examItem"><div class="examL"><span class="examDot" aria-hidden="true"></span><div><div class="examName">Midterm ${midTag}</div><div class="examMeta">${noDate?'Date unknown':(est?'~Jun 20':'Jun 20')} · 25% of grade</div></div></div>${midRight}</div>
+    <div class="examItem"><div class="examL"><span class="examDot far" aria-hidden="true"></span><div><div class="examName">Final ${finTag}</div><div class="examMeta">${noDate?'Date unknown':(level<=2?'~Jul 18':'Jul 18')} · 40% of grade</div></div></div>${finRight}</div></div>
+  <nav class="tabs" aria-label="Course sections"><button class="tab active">Today</button><button class="tab">Topics</button><button class="tab">Mock Exams</button><button class="tab">Quizzes</button><button class="tab">Notes</button></nav>`;
+}
+
+let state={variant:"A",level:3};
+function renderControls(){
+  document.getElementById("varseg").innerHTML=VARIANTS.map(v=>`<button data-var="${v.k}" aria-pressed="${state.variant===v.k}">${v.name}</button>`).join("");
+  document.getElementById("lvlseg").innerHTML=LEVELS.map(l=>`<button data-lvl="${l.k}" aria-pressed="${state.level===l.k}">${l.name}</button>`).join("");
+  document.getElementById("vcaption").textContent=VCAP[state.variant];
+}
+function renderExplain(){const e=EXPLAIN[state.level];document.getElementById("explain").innerHTML=`<span class="etag">${e.tag}</span><div>${e.html}<span class="meta2">${e.meta} · <span class="unlock">${e.unlock}</span></span></div>`;}
+function renderDaily(){const s=document.getElementById("dailyslot");if(s)s.innerHTML=dailyHTML(state.level);}
+function render(){
+  renderControls();renderExplain();
+  document.getElementById("page").innerHTML=chromeHTML(state.level)+(state.variant==="A"?variantA(state.level):spineHTML(state.level));
+  renderDaily();
+  document.getElementById("legend").innerHTML=`<span style="font-weight:600;color:var(--text)">Mastery:</span>`+[["un","Unstarted"],["nf","Needs focus"],["bu","Building"],["st","Strong"]].map(([k,l])=>`<span class="lg"><span class="dot ${k}"></span>${l}</span>`).join("");
+  document.getElementById("foot").innerHTML=`Both layouts share the same mastery daily card. <b>Materials feed</b> (default) pushes artifacts after it; <b>Topic spine</b> pushes the time-ordered, topic-tagged spine. Radar axes = canonical topics, readiness = mastery states (Infinite Practice). <code>“Go deeper”</code> opens the infinite stream. Edu's L1→L4 model unchanged.`;
+}
+document.addEventListener("click",e=>{
+  const v=e.target.closest("[data-var]");if(v){state.variant=v.dataset.var;q={phase:"front",qi:0,picks:[]};render();return;}
+  const l=e.target.closest("[data-lvl]");if(l){state.level=+l.dataset.lvl;q={phase:"front",qi:0,picks:[]};render();return;}
+  const d=e.target.closest("[data-dact]");if(!d)return;const act=d.dataset.dact;
+  if(act==="start"){q.phase="quiz";q.qi=0;q.picks=[];renderDaily();}
+  else if(act==="answer"){q.picks[q.qi]=+d.dataset.i;renderDaily();}
+  else if(act==="next"){if(q.qi+1<DAILY[state.level].q){q.qi++;}else{q.phase="result";}renderDaily();}
+  else if(act==="restart"){q.phase="front";q.qi=0;q.picks=[];renderDaily();}
+});
+render();
+</script>
+</body>
+</html>
