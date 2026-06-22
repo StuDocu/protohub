@@ -298,7 +298,7 @@ mark.cmark.resolved{background:#eef1f6;border-bottom-color:#d3d9e0}
         <span class="pill">PRD · v1 · Hackquisition build draft</span>
         <h1>Drop a check where students already study</h1>
         <p class="sub">One embeddable URL — a course/topic-scoped practice check — that a student pastes into their <b>own Notion page</b> or a <b>shared Google Doc</b>, where the next classmate can't help but try it. It's a detachable piece of Anchor: <b>Infinite Practice</b> supplies the questions, the <b>Course Companion</b> is where the CTA lands, and the paste itself is the sign-up event. No SEO, no ads-to-survive, no peer-social system to maintain.</p>
-        <p class="meta"><b>Mission Anchor</b> · Education AI &nbsp;·&nbsp; Contributors: Ömer Polat (design + FE), <b>Edu Gregorio</b> (PM), Akos Horvath &amp; Ruby (eng), Tiago Avelar (data), Sri Majji (eng mgmt), Stephen Ballot (CPO) &nbsp;·&nbsp; <b>Infinite Practice:</b> Jo Huang (mission), Ryan Papetti (canonical topics RFC), Pieter Fourie (topic extraction + API), Emiel de Heij (data model) &nbsp;·&nbsp; <b>Event:</b> The Hackquisition (24–26 Jun build · seed to 3 Jul)</p>
+        <p class="meta"><b>Mission Anchor</b> · Education AI &nbsp;·&nbsp; <b>Proposed by Ömer Polat</b> &nbsp;·&nbsp; Connects to <b>Infinite Practice</b> (canonical topics + question widgets) and the <b>Course Companion</b> &nbsp;·&nbsp; <b>Event:</b> The Hackquisition (24–26 Jun build · seed to 3 Jul)</p>
       </header>
 
       <div class="body">
@@ -362,7 +362,7 @@ mark.cmark.resolved{background:#eef1f6;border-bottom-color:#d3d9e0}
             <div class="dps-cap"><span class="ld">● Live preview</span> Topic Check — embedded in a Notion page · mock data</div>
 
             <div class="nb">
-              <div class="nb-bar"><span class="dotg"></span><span class="dotg"></span><span class="dotg"></span> &nbsp;Maya's Notion · BIOL 201 study page</div>
+              <div class="nb-bar"><span class="dotg"></span><span class="dotg"></span><span class="dotg"></span> &nbsp;A student's Notion · BIOL 201 study page</div>
               <h3>🧬 Cell Biology — exam prep</h3>
               <div class="nbline">Week 6 notes · lecture slides · past papers…</div>
               <div class="nbline">Lipids, membranes, transport — still shaky on respiration.</div>
@@ -427,7 +427,7 @@ mark.cmark.resolved{background:#eef1f6;border-bottom-color:#d3d9e0}
               </div></div>
             <div class="level l3"><div class="lh"><span class="badge">P2</span><span class="ln">Phase 2 · Guest-readable cached bank</span></div>
               <div class="lgrid">
-                <div><span class="k">Data</span><span class="v">A cached, course/topic-scoped, <b>no-auth</b> question source (the real ask of Jo's team).</span></div>
+                <div><span class="k">Data</span><span class="v">A cached, course/topic-scoped, <b>no-auth</b> question source (the real ask of the Infinite Practice team).</span></div>
                 <div><span class="k">Ship</span><span class="v">Any seeded course works without manual pre-gen — unblocks scale.</span></div>
                 <div class="gate"><span class="k">Exit gate</span><span class="v">Embed serves arbitrary live topics within latency budget for a guest.</span></div>
               </div></div>
@@ -456,11 +456,11 @@ mark.cmark.resolved{background:#eef1f6;border-bottom-color:#d3d9e0}
               <li>A <b>CTA → live Course Companion</b> deep-link carrying an attribution param (so a sign-up is traceable to the embed + topic).</li>
               <li>OG / oEmbed metadata so a pasted link unfurls richly (Docs chip, chat preview, Notion bookmark).</li>
             </ul>
-            <div class="callout warn"><span class="ic" aria-hidden="true">🚧</span><p><b>Blocking pre-req for scale (not for the mock demo):</b> a <b>guest-readable, cached, course/topic-scoped question source</b>. Today questions are generated <i>on the fly</i> and scoped <i>per project + per user</i> — an anonymous viewer has none. Phase 0/1 sidestep this with a static bank; <b>Phase 2 needs Jo's team to expose a cached bank.</b></p></div>
+            <div class="callout warn"><span class="ic" aria-hidden="true">🚧</span><p><b>Blocking pre-req for scale (not for the mock demo):</b> a <b>guest-readable, cached, course/topic-scoped question source</b>. Today questions are generated <i>on the fly</i> and scoped <i>per project + per user</i> — an anonymous viewer has none. Phase 0/1 sidestep this with a static bank; <b>Phase 2 needs the Infinite Practice team to expose a cached bank.</b></p></div>
           </div>
           <div class="reqgrp"><span class="reqlabel p1">P1 · fast follow</span>
             <ul>
-              <li>Pre-generation pipeline: run question-gen offline for the seeded topics → static bank (piggybacks Pieter's bulk-extraction-to-S3).</li>
+              <li>Pre-generation pipeline: run question-gen offline for the seeded topics → static bank (piggybacks Infinite Practice's bulk-extraction-to-S3).</li>
               <li>Per-topic OG image generator (the chat/Docs preview).</li>
               <li>Bot / rate-limit handling on the public embed endpoint (we've fought this on course pages before).</li>
             </ul>
@@ -517,14 +517,14 @@ mark.cmark.resolved{background:#eef1f6;border-bottom-color:#d3d9e0}
           <h2><span class="n">11</span> Open questions &amp; dependencies</h2>
           <ul>
             <li><b>[Product]</b> <b>Mock demo or real APIs for Fri 26?</b> The §6 decision. <i>(decide first — everything else forks here)</i></li>
-            <li><b>[Eng/Data]</b> Can IP expose a <b>guest-readable, cached, topic-scoped</b> question bank? Today it's on-the-fly + per-project/per-user. <i>(blocking scale — Pieter / Ryan)</i></li>
-            <li><b>[Data]</b> Which <b>Anchor-live courses already have canonical topics</b> generated? Defines the seed list. <i>(blocking seed — Ruby / Edu)</i></li>
-            <li><b>[Eng]</b> Can the check <b>reuse the Mini App</b> sandboxed-iframe + shareable-URL primitive instead of a bespoke embed host? <i>(Jo)</i></li>
-            <li><b>[Eng]</b> Embed host: iframe <code>frame-ancestors</code> policy + oEmbed endpoint + bot handling — who owns it? <i>(Akos / Ruby)</i></li>
-            <li><b>[Data]</b> Topic model: course-level canonical vs project-level (Emiel's concern) — does the embed's reliance on a stable course-topic ID hold? <i>(Emiel / Jo)</i></li>
+            <li><b>[Eng/Data]</b> Can IP expose a <b>guest-readable, cached, topic-scoped</b> question bank? Today it's on-the-fly + per-project/per-user. <i>(blocking scale — Infinite Practice)</i></li>
+            <li><b>[Data]</b> Which <b>Anchor-live courses already have canonical topics</b> generated? Defines the seed list. <i>(blocking seed — Anchor)</i></li>
+            <li><b>[Eng]</b> Can the check <b>reuse the Mini App</b> sandboxed-iframe + shareable-URL primitive instead of a bespoke embed host? <i>(Infinite Practice / Exam Ready)</i></li>
+            <li><b>[Eng]</b> Embed host: iframe <code>frame-ancestors</code> policy + oEmbed endpoint + bot handling — who owns it? <i>(Anchor eng)</i></li>
+            <li><b>[Data]</b> Topic model: course-level canonical vs project-level (an open data-model question) — does the embed's reliance on a stable course-topic ID hold? <i>(Infinite Practice)</i></li>
             <li><b>[Design]</b> The CTA wording + the post-try sign-in moment — what's the smallest ask that still converts a guest?</li>
           </ul>
-          <p class="muted"><b>Dependency chain:</b> 1) decide mock-vs-real (§6) → 2) seed list = Anchor-live ∩ topics (Ruby/Edu) → 3) pre-gen static bank for those topics (Pieter) → 4) embed host + oEmbed (Akos/Ruby) → 5) attribution event <code>Signup From Embed</code> (Tiago) → 6) durable cached bank (IP) unblocks scale.</p>
+          <p class="muted"><b>Dependency chain:</b> 1) decide mock-vs-real (§6) → 2) seed list = Anchor-live ∩ topics (Anchor) → 3) pre-gen static bank for those topics (Infinite Practice) → 4) embed host + oEmbed (Anchor eng) → 5) attribution event <code>Signup From Embed</code> (Anchor data) → 6) durable cached bank (Infinite Practice) unblocks scale.</p>
         </section>
 
         <p class="legal">© 2026 <b>Studocu</b>. Confidential &amp; proprietary. Internal use only — do not distribute, share externally, or reproduce without permission.</p>
@@ -633,7 +633,7 @@ mark.cmark.resolved{background:#eef1f6;border-bottom-color:#d3d9e0}
         '<div class="row2">＋ Make this for <b>any</b> of your courses</div>'+
         '<div class="row2">＋ See your readiness across the whole course</div>'+
         '<div class="row2">＋ Save your progress</div></div>'+
-      '<div class="dps-why">That is the entire loop. Maya pasted this into her own Notion page because it was a useful self-test. You opened her page, answered one question, and now you have a reason to sign up. <b>What Studocu owns: the format, the landing, and the sign-up</b> — the spread was just Maya sharing her notes.</div>'+
+      '<div class="dps-why">That is the entire loop. A classmate pasted this into their own Notion page because it was a useful self-test. You opened their page, answered one question, and now you have a reason to sign up. <b>What Studocu owns: the format, the landing, and the sign-up</b> — the spread was just a student sharing their notes.</div>'+
       '<div class="dps-foot-row" style="justify-content:center;gap:10px">'+
         '<button class="dps-btn grad" data-cta>Make your own → sign up</button>'+
         '<button class="dps-btn ghost" data-replay>↺ Replay</button></div>';
@@ -809,7 +809,7 @@ $("toggleResolved").onclick=()=>{ state.hideResolved=!state.hideResolved; $("tog
     {ph:"Now",t:"Concept + artifact defined",badge:"done",accent:"#f57c00",d:"Ready Check prototype built; the Embeddable Topic Check spec'd. It connects to Infinite Practice's canonical topics (engine) and the Course Companion (destination)."},
     {ph:"Wed–Fri",t:"Mock demo — the build",accent:"#3092fa",d:"The §5 check running on a static mock bank: full UX, client-side grading, zero backend. On stage: paste it into a real Notion page, a viewer answers, signs up. Architecture explained on slides."},
     {ph:"Jun 29–Jul 3",t:"Seed on a pre-gen bank",accent:"#3092fa",d:"Pre-generate questions for ~30 topics on Anchor-live ∩ syllabus courses; place into real student Notion/Docs; count attributed sign-ups (directional — post-finals lull)."},
-    {ph:"Durable",t:"Guest-readable question bank",accent:"#9c27b0",d:"The one real ask of Jo's team: a cached, course/topic-scoped, no-auth question source. Unblocks scale beyond hand-seeded topics."},
+    {ph:"Durable",t:"Guest-readable question bank",accent:"#9c27b0",d:"The one real ask of the Infinite Practice team: a cached, course/topic-scoped, no-auth question source. Unblocks scale beyond hand-seeded topics."},
     {ph:"Mid-Aug",t:"Back-to-school",badge:"campaign",accent:"#9c27b0",d:"When exam urgency returns — the artifact's real payoff window, and the purpose of the €5k seed prize."},
     {ph:"Native",t:"Ride the Mini App primitive",accent:"#9c27b0",d:"Fold the check into Exam Ready's sandboxed-iframe / shareable-URL Mini App instead of a bespoke embed host; widen topic coverage."}
   ];
