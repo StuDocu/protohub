@@ -1,0 +1,834 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Embeddable Topic Check — PRD v1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#3092fa; --primary-700:#1976d2; --secondary:#9c27b0; --success:#43a047; --warning:#f57c00;
+  --bg:#f6f7fb; --surface:#fff; --surface-2:#f6f7fb; --surface-3:#eef1f6;
+  --title:#0a0a0a; --text:#384149; --soft:#6b7681; --faint:#9aa4ad;
+  --border:#e6eaef; --border-2:#d3d9e0;
+  --info-c:#e8f1fd; --info-fg:#1168c3;
+  --success-c:#e8f5e9; --success-fg:#2e7d32;
+  --warning-c:#fff3e0; --warning-fg:#e65100;
+  --purple-c:#f5eaf7; --purple-fg:#7b1fa2;
+  --grad:linear-gradient(90deg,#f064fc,#3092fa);
+  --grad-soft:linear-gradient(135deg,#faf0ff,#eaf3ff);
+  --hl:#fff1bf; --hl-line:#f0c419;
+  --r:14px; --r-lg:20px; --r-pill:9999px;
+  --shadow:0 1px 3px rgba(16,24,40,.06),0 1px 2px rgba(16,24,40,.04);
+  --shadow-lg:0 12px 32px rgba(16,24,40,.14),0 2px 8px rgba(16,24,40,.06);
+  --font:"DM Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;line-height:1.62;font-size:16px}
+button{font-family:inherit;cursor:pointer}
+a{color:var(--primary-700)}
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px;border-radius:6px}
+::selection{background:#cfe3ff}
+
+/* app bar */
+.appbar{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.86);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+.appbar .inner{max-width:1240px;margin:0 auto;padding:13px 24px;display:flex;align-items:center;gap:14px}
+.mk{width:28px;height:28px;border-radius:8px;background:var(--grad);flex:none}
+.appbar .name{font-weight:700;font-size:15px;color:var(--title);letter-spacing:-.01em}
+.appbar .name small{display:block;font-weight:500;font-size:11px;color:var(--faint)}
+.appbar .right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.hint{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--info-fg);background:var(--info-c);padding:6px 12px;border-radius:var(--r-pill)}
+.whoami{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:var(--text);background:var(--surface-3);padding:6px 8px 6px 12px;border-radius:var(--r-pill);border:0}
+.whoami .av{width:20px;height:20px;border-radius:50%;background:var(--grad);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.progress{height:3px;background:transparent}
+.progress > i{display:block;height:100%;width:0;background:var(--grad);transition:width .1s linear}
+
+/* layout */
+.layout{max-width:1240px;margin:0 auto;padding:28px 24px 80px;display:grid;grid-template-columns:190px minmax(0,1fr) 320px;gap:34px;align-items:start}
+.toc{position:sticky;top:78px;display:flex;flex-direction:column;gap:2px}
+.toc a{font-size:13px;color:var(--soft);text-decoration:none;padding:7px 11px;border-radius:8px;border-left:2px solid transparent;transition:all .15s}
+.toc a:hover{color:var(--text);background:var(--surface-3)}
+.toc a.active{color:var(--primary-700);background:#eef5ff;border-left-color:var(--primary);font-weight:600}
+
+main{min-width:0}
+.doc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--shadow);overflow:hidden}
+
+/* hero */
+.hero{background:var(--grad-soft);padding:38px 44px 32px;border-bottom:1px solid var(--border)}
+.hero .pill{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;letter-spacing:.03em;color:#fff;background:var(--grad);padding:6px 13px;border-radius:var(--r-pill)}
+.hero h1{font-size:34px;line-height:1.12;letter-spacing:-.025em;color:var(--title);margin:16px 0 8px;font-weight:700}
+.hero .sub{font-size:16.5px;color:var(--text);max-width:54ch;margin:0}
+.hero .meta{margin-top:18px;font-size:12.5px;color:var(--soft)}
+.hero .meta b{color:var(--text)}
+
+.body{padding:8px 44px 44px}
+section{padding:26px 0;border-bottom:1px solid var(--border)}
+section:last-child{border-bottom:0}
+h2{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--primary-700);margin:0 0 4px;display:flex;align-items:center;gap:9px}
+h2 .n{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:7px;background:#eef5ff;color:var(--primary-700);font-size:11px;font-weight:700}
+.lede{font-size:20px;font-weight:700;color:var(--title);letter-spacing:-.01em;margin:2px 0 14px;line-height:1.3}
+p{margin:0 0 12px}
+ul{margin:0 0 12px;padding-left:0;list-style:none}
+li{position:relative;padding-left:22px;margin-bottom:9px}
+li::before{content:"";position:absolute;left:4px;top:10px;width:6px;height:6px;border-radius:50%;background:var(--primary)}
+li.no::before{background:var(--faint)}
+b,strong{color:var(--title);font-weight:700}
+.muted{color:var(--soft);font-size:14px}
+
+/* callouts */
+.callout{border-radius:var(--r);padding:16px 18px;margin:6px 0 14px;display:flex;gap:13px;align-items:flex-start}
+.callout .ic{flex:none;font-size:18px;line-height:1.4}
+.callout.warn{background:var(--warning-c);border:1px solid #ffd9a8}
+.callout.warn b{color:var(--warning-fg)}
+.callout.key{background:var(--grad-soft);border:1px solid #e4d4f5}
+.callout p{margin:0;font-size:14.5px}
+
+/* concept two-clocks */
+.clocks{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:8px 0 14px}
+.clock{border:1px solid var(--border);border-radius:var(--r);padding:18px;background:var(--surface)}
+.clock .tag{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--soft)}
+.clock h4{margin:8px 0 4px;font-size:17px;color:var(--title)}
+.clock.cal{border-top:3px solid var(--warning)}
+.clock.mem{border-top:3px solid var(--primary)}
+.clock p{font-size:14px;color:var(--soft);margin:0}
+
+/* level cards */
+.levels{display:flex;flex-direction:column;gap:12px;margin:8px 0 6px}
+.level{border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;background:var(--surface);position:relative;overflow:hidden}
+.level::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px}
+.level.l1::before{background:var(--faint)} .level.l2::before{background:var(--warning)}
+.level.l3::before{background:var(--primary)} .level.l4::before{background:linear-gradient(180deg,#f064fc,#3092fa)}
+.level .lh{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.level .badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:var(--r-pill)}
+.level.l1 .badge{background:var(--surface-3);color:var(--soft)} .level.l2 .badge{background:var(--warning-c);color:var(--warning-fg)}
+.level.l3 .badge{background:var(--info-c);color:var(--info-fg)} .level.l4 .badge{background:var(--purple-c);color:var(--purple-fg)}
+.level .ln{font-weight:700;color:var(--title);font-size:16px}
+.lgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px 22px;font-size:13.5px}
+.lgrid .k{color:var(--faint);font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;display:block;margin-bottom:2px}
+.lgrid .v{color:var(--text)}
+.lgrid .gate{grid-column:1/-1;border-top:1px dashed var(--border-2);padding-top:9px;margin-top:3px}
+.lgrid .gate .v{color:var(--success-fg);font-weight:600}
+
+/* tables */
+.tbl{width:100%;border-collapse:separate;border-spacing:0;font-size:13.5px;margin:6px 0 8px;border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.tbl th{text-align:left;background:var(--surface-3);color:var(--soft);font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:11px 14px}
+.tbl td{padding:12px 14px;border-top:1px solid var(--border);vertical-align:top;color:var(--text)}
+.tbl tr.star td{background:#fffaf0}
+.tbl td b{color:var(--title)}
+.star-pill{display:inline-block;font-size:10px;font-weight:700;color:var(--warning-fg);background:var(--warning-c);padding:2px 7px;border-radius:var(--r-pill);margin-left:6px}
+
+/* requirements pills */
+.reqgrp{margin-bottom:14px}
+.reqlabel{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:4px 10px;border-radius:var(--r-pill);margin-bottom:8px}
+.p0{background:#fde7e7;color:#c62828} .p1{background:var(--info-c);color:var(--info-fg)} .p2{background:var(--surface-3);color:var(--soft)}
+
+/* comment marks */
+mark.cmark{background:var(--hl);border-bottom:2px solid var(--hl-line);border-radius:3px;padding:0 1px;cursor:pointer;transition:background .15s}
+mark.cmark:hover,mark.cmark.focus{background:#ffe585}
+mark.cmark.resolved{background:#eef1f6;border-bottom-color:#d3d9e0}
+
+/* comment rail */
+.rail{position:sticky;top:78px;display:flex;flex-direction:column;gap:12px;max-height:calc(100vh - 100px);overflow:auto;padding-right:2px}
+.railhead{display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--soft);padding:2px}
+.railhead .toggle{border:0;background:transparent;color:var(--primary-700);font-size:12px;font-weight:600;text-transform:none;letter-spacing:0}
+.ccard{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:13px 14px;box-shadow:var(--shadow);transition:box-shadow .15s,transform .15s}
+.ccard:hover{box-shadow:var(--shadow-lg)}
+.ccard.focus{border-color:var(--hl-line);box-shadow:0 0 0 3px rgba(240,196,25,.25)}
+.ccard.resolved{opacity:.6}
+.ccard .quote{font-size:12.5px;color:var(--soft);border-left:3px solid var(--hl-line);padding:3px 0 3px 9px;margin-bottom:9px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.ccard.resolved .quote{border-left-color:#cdd4db;text-decoration:line-through}
+.ccard .who{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.ccard .who .av{width:24px;height:24px;border-radius:50%;background:var(--grad);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.ccard .who .nm{font-size:13px;font-weight:700;color:var(--title)}
+.ccard .who .tm{font-size:11px;color:var(--faint);margin-left:auto}
+.ccard .bd{font-size:14px;color:var(--text);line-height:1.5}
+.ccard .acts{display:flex;gap:14px;margin-top:9px}
+.ccard .acts button{border:0;background:transparent;color:var(--soft);font-size:12px;font-weight:600;padding:0}
+.ccard .acts button:hover{color:var(--primary-700)}
+.ccard .acts .res.on{color:var(--success-fg)}
+.railempty{text-align:center;color:var(--faint);font-size:13px;padding:30px 16px;border:1px dashed var(--border-2);border-radius:var(--r)}
+.railempty .big{font-size:24px;margin-bottom:8px}
+
+/* selection pill */
+.selpill{position:fixed;z-index:80;display:none;align-items:center;gap:7px;background:#1c2430;color:#fff;font-size:13px;font-weight:600;padding:9px 14px;border-radius:var(--r-pill);box-shadow:var(--shadow-lg);border:0}
+.selpill.show{display:inline-flex}
+/* composer */
+.composer{position:fixed;z-index:85;display:none;width:300px;background:var(--surface);border:1px solid var(--border-2);border-radius:var(--r);box-shadow:var(--shadow-lg);padding:14px}
+.composer.show{display:block}
+.composer .cq{font-size:12px;color:var(--soft);border-left:3px solid var(--hl-line);padding:3px 0 3px 9px;margin-bottom:10px;max-height:54px;overflow:hidden}
+.composer input,.composer textarea{width:100%;border:1px solid var(--border-2);border-radius:9px;padding:9px 11px;font-family:inherit;font-size:14px;color:var(--text);outline:none}
+.composer input:focus,.composer textarea:focus{border-color:var(--primary)}
+.composer textarea{min-height:74px;resize:vertical;margin-top:8px}
+.composer .row{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
+.composer .btn{border:0;border-radius:var(--r-pill);font-weight:600;font-size:13.5px;padding:9px 16px}
+.composer .btn.primary{background:var(--primary);color:#fff}
+.composer .btn.ghost{background:transparent;color:var(--soft)}
+
+.flash{animation:fl 1.2s ease}
+@keyframes fl{0%{background:#fff6d6}100%{background:transparent}}
+.fallback{font-size:12px;color:var(--warning-fg);background:var(--warning-c);border-radius:8px;padding:8px 12px;margin-bottom:10px;display:none}
+
+@media (max-width:1080px){
+  .layout{grid-template-columns:minmax(0,1fr) 300px;gap:24px}
+  .toc{display:none}
+}
+@media (max-width:820px){
+  .layout{grid-template-columns:1fr}
+  .rail{position:static;max-height:none;order:3}
+  .hero,.body{padding-left:24px;padding-right:24px}
+  .clocks,.lgrid{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* prototypes */
+.protos{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin:8px 0 10px}
+.proto{display:block;border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;background:var(--surface);text-decoration:none;transition:transform .15s,box-shadow .15s,border-color .15s}
+.proto:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:var(--primary)}
+.proto.main{grid-column:1/-1;background:var(--grad-soft);border-color:#e4d4f5}
+.proto .pt{font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--primary-700)}
+.proto h4{margin:7px 0 5px;font-size:16px;color:var(--title)}
+.proto p{margin:0;font-size:13.5px;color:var(--soft)}
+.proto .open{display:inline-block;margin-top:10px;font-size:13px;font-weight:700;color:var(--primary-700)}
+
+/* interactive roadmap */
+.rmap{position:relative;display:flex;justify-content:space-between;gap:6px;margin:18px 0 16px;padding-top:4px}
+.rmline{position:absolute;left:16px;right:16px;top:17px;height:3px;background:linear-gradient(90deg,#f57c00,#3092fa 55%,#9c27b0);border-radius:3px;z-index:0}
+.rmnode{position:relative;z-index:1;flex:1;background:transparent;border:0;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;padding:0}
+.rmnode .dot{width:26px;height:26px;border-radius:50%;background:var(--surface);border:3px solid var(--border-2);transition:box-shadow .15s,background .15s}
+.rmnode .rl{font-size:11px;font-weight:700;color:var(--soft);text-align:center;line-height:1.2;max-width:92px}
+.rmnode[aria-pressed="true"] .rl{color:var(--title)}
+.rmpanel{border:1px solid var(--border);border-radius:var(--r);background:var(--surface);padding:18px 20px;min-height:84px}
+.rmpanel .pw{display:flex;align-items:center;gap:9px;margin-bottom:6px}
+.rmpanel .pph{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--primary-700)}
+.rmpanel .pbadge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:var(--r-pill);background:var(--success-c);color:var(--success-fg)}
+.rmpanel h4{margin:0 0 5px;font-size:18px;color:var(--title)}
+.rmpanel p{margin:0;font-size:14.5px;color:var(--text)}
+@media (max-width:820px){ .protos{grid-template-columns:1fr} .rmnode .rl{font-size:10px} }
+
+/* live prototype highlight + legal */
+.proto.main.live{border-color:var(--primary);box-shadow:0 0 0 3px rgba(48,146,250,.18)}
+.proto.main.live:hover{box-shadow:0 0 0 3px rgba(48,146,250,.28),var(--shadow-lg)}
+.livedot{display:inline-block;font-size:10px;font-weight:700;color:var(--success-fg);background:var(--success-c);padding:2px 9px;border-radius:var(--r-pill);margin-left:6px;letter-spacing:0;text-transform:none}
+.legal{margin:30px 0 4px;padding-top:16px;border-top:1px solid var(--border);font-size:11.5px;color:var(--faint);line-height:1.5}
+.legal b{color:var(--soft)}
+
+/* ===== embedded demo (scoped, uses PRD tokens) — reused class skin from the gold ===== */
+.dps-frame{border:1px solid #e4d4f5;border-radius:var(--r-lg);background:var(--grad-soft);padding:20px;margin:14px 0 6px}
+.dps-frame *{box-sizing:border-box}
+.dps-cap{display:flex;align-items:center;gap:9px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--soft);margin-bottom:14px}
+.dps-cap .ld{font-size:10px;font-weight:700;color:var(--success-fg);background:var(--success-c);padding:2px 9px;border-radius:var(--r-pill);letter-spacing:0;text-transform:none}
+.dps-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px;flex-wrap:wrap}
+.dps-course{font-weight:700;color:var(--title);font-size:15px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.dps-due{font-size:12px;font-weight:700;color:var(--warning-fg);background:var(--warning-c);padding:3px 10px;border-radius:var(--r-pill)}
+.dps-ready{font-size:12.5px;color:var(--soft);display:flex;align-items:center;gap:8px}
+.dps-ready b{color:var(--title);font-size:15px;transition:color .3s}
+.dps-track{height:8px;border-radius:var(--r-pill);background:#fff;border:1px solid var(--border);overflow:hidden;margin-bottom:16px}
+.dps-track > i{display:block;height:100%;width:41%;background:var(--grad);border-radius:var(--r-pill);transition:width .7s cubic-bezier(.22,.61,.36,1)}
+.dps-sub{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--faint);margin-bottom:10px}
+.dps-stack{position:relative;min-height:236px;transition:min-height .35s cubic-bezier(.22,.61,.36,1)}
+.dps-card{position:absolute;left:0;right:0;top:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px;box-shadow:var(--shadow-lg);transition:transform .4s cubic-bezier(.22,.61,.36,1),opacity .4s}
+.dps-card.peek{box-shadow:var(--shadow)}
+.dps-card.leaving{transform:translateY(-22px) scale(.96)!important;opacity:0}
+.dps-reason{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;padding:4px 11px;border-radius:var(--r-pill);margin-bottom:12px}
+.dps-reason.weak{background:var(--warning-c);color:var(--warning-fg)}
+.dps-reason.due{background:var(--info-c);color:var(--info-fg)}
+.dps-reason.soon{background:var(--purple-c);color:var(--purple-fg)}
+.dps-topic{font-size:19px;font-weight:700;color:var(--title);margin-bottom:4px;line-height:1.25}
+.dps-hint{font-size:13px;color:var(--soft);margin-bottom:16px}
+.dps-q{font-size:15px;font-weight:600;color:var(--title);margin:4px 0 12px}
+.dps-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.dps-opt{display:flex;align-items:center;gap:11px;text-align:left;width:100%;padding:10px 13px;border-radius:10px;border:1px solid var(--border-2);background:var(--surface);color:var(--text);font-family:inherit;font-size:14px;cursor:pointer;transition:border-color .15s,background .15s}
+.dps-opt:hover:not(:disabled){border-color:var(--primary)}
+.dps-opt .dps-key{flex:none;width:23px;height:23px;border-radius:6px;display:grid;place-items:center;font-size:12px;font-weight:700;background:var(--surface-3);color:var(--soft)}
+.dps-opt.ok{border-color:var(--success-fg);background:var(--success-c)} .dps-opt.ok .dps-key{background:var(--success-fg);color:#fff}
+.dps-opt.no{border-color:#c62828;background:#fde7e7} .dps-opt.no .dps-key{background:#c62828;color:#fff}
+.dps-opt:disabled{cursor:default}
+.dps-res{font-size:13.5px;font-weight:600;margin-bottom:10px}
+.dps-res.ok{color:var(--success-fg)} .dps-res.no{color:#c62828}
+.dps-by{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--faint);margin-bottom:14px}
+.dps-foot-row{display:flex;align-items:center;justify-content:space-between}
+.dps-count{font-size:12px;color:var(--faint)}
+.dps-btn{display:inline-flex;align-items:center;gap:7px;border:0;background:var(--primary);color:#fff;font-weight:700;font-size:13.5px;padding:9px 16px;border-radius:var(--r-pill);cursor:pointer}
+.dps-btn.ghost{background:transparent;color:var(--soft)}
+.dps-btn.grad{background:var(--grad)}
+.dps-done{text-align:center;padding:8px 4px}
+.dps-big{font-size:24px;font-weight:800;color:var(--title);margin-bottom:4px}
+.dps-delta{font-size:17px;font-weight:700;margin-bottom:16px;color:var(--soft)}
+.dps-delta .to{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.dps-tom{text-align:left;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:14px}
+.dps-tom h5{margin:0 0 8px;font-size:13px;color:var(--title)}
+.dps-tom .row2{font-size:13.5px;color:var(--text);margin-bottom:5px;padding-left:0}
+.dps-why{text-align:left;font-size:13.5px;color:var(--soft);line-height:1.55;border-left:2px solid var(--primary);padding-left:14px;margin-bottom:16px}
+.dps-why b{color:var(--title)}
+.dps-fade{animation:dpsfade .45s cubic-bezier(.22,.61,.36,1)}
+@keyframes dpsfade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.dps-foot{margin-top:6px;font-size:11px;color:var(--faint);text-align:center}
+/* tiny notion chrome around the embed */
+.nb{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:16px 18px 6px;margin-bottom:14px;box-shadow:var(--shadow)}
+.nb-bar{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--faint);margin-bottom:10px}
+.nb-bar .dotg{width:9px;height:9px;border-radius:50%;background:var(--surface-3)}
+.nb h3{font-size:18px;color:var(--title);margin:2px 0 4px}
+.nb .nbline{font-size:13.5px;color:var(--soft);margin-bottom:4px;padding-left:0}
+.nb .nbembed{font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--faint);margin:12px 0 6px}
+</style>
+</head>
+<body>
+
+<div class="appbar">
+  <div class="inner">
+    <span class="mk" aria-hidden="true"></span>
+    <span class="name">Embeddable Topic Check<small>Product Requirements · Mission Anchor × Hackquisition</small></span>
+    <div class="right">
+      <span class="hint" id="hint">💬 Select any text to comment</span>
+      <button class="whoami" id="whoami"><span class="av" id="whoav">?</span><span id="whoname">Set your name</span></button>
+    </div>
+  </div>
+  <div class="progress"><i id="prog"></i></div>
+</div>
+
+<div class="layout">
+  <nav class="toc" id="toc" aria-label="Contents"></nav>
+
+  <main>
+    <article class="doc" id="doc">
+      <header class="hero" data-c="hero" data-label="Overview">
+        <span class="pill">PRD · v1 · Hackquisition build draft</span>
+        <h1>Drop a check where students already study</h1>
+        <p class="sub">One embeddable URL — a course/topic-scoped practice check — that a student pastes into their <b>own Notion page</b> or a <b>shared Google Doc</b>, where the next classmate can't help but try it. It's a detachable piece of Anchor: <b>Infinite Practice</b> supplies the questions, the <b>Course Companion</b> is where the CTA lands, and the paste itself is the sign-up event. No SEO, no ads-to-survive, no peer-social system to maintain.</p>
+        <p class="meta"><b>Mission Anchor</b> · Education AI &nbsp;·&nbsp; Contributors: Ömer Polat (design + FE), <b>Edu Gregorio</b> (PM), Akos Horvath &amp; Ruby (eng), Tiago Avelar (data), Sri Majji (eng mgmt), Stephen Ballot (CPO) &nbsp;·&nbsp; <b>Infinite Practice:</b> Jo Huang (mission), Ryan Papetti (canonical topics RFC), Pieter Fourie (topic extraction + API), Emiel de Heij (data model) &nbsp;·&nbsp; <b>Event:</b> The Hackquisition (24–26 Jun build · seed to 3 Jul)</p>
+      </header>
+
+      <div class="body">
+
+        <section data-c="problem" data-label="Problem">
+          <h2><span class="n">1</span> Problem</h2>
+          <ul>
+            <li>Studocu's acquisition is <b>overwhelmingly search-dependent</b>, and the channel is eroding: Google's Sept-2025 <code>num=100</code> change already scrambled impressions, and AI-mode is rising. The Hackquisition rule bans an <b>SEO-reliant</b> loop outright.</li>
+            <li>Even the app channel is rented: <b>~54% of installs come from app-store search</b>, ~50% of installs are <b>branded organic</b> — i.e. people who already knew us. We own almost no <b>net-new</b> discovery surface.</li>
+            <li>Students live in tools we have <b>zero presence inside</b>: interview synthesis repeatedly shows them storing and accessing study materials in <b>Notion, Google Drive, and the LMS</b>; one recurring participant uses Notion AI specifically <i>because it already holds her notes</i>.</li>
+            <li>The fast, viral fix — student-to-student social systems — is a path we've <b>been burned on before</b> and explicitly don't want to rebuild.</li>
+          </ul>
+          <p class="muted">Cost of not solving: we keep renting Google (and the app stores) for users while the rent goes up — with no owned channel of our own as search fragments into AI.</p>
+        </section>
+
+        <section data-c="tldr" data-label="TL;DR">
+          <h2><span class="n">2</span> The pitch</h2>
+          <p class="lede">One embeddable check, dropped into the note app a student already uses, that the next classmate can't help but try — and a try ends in a sign-up.</p>
+          <p>It rides the student's <b>existing</b> note-sharing instead of building a new social network: a student adds it to their own study page because it's a useful self-test, and every co-editor or viewer of that page meets a live, gradeable question with a <b>"make your own → sign up"</b> exit. The questions come from Infinite Practice's <b>canonical topics</b>; multiple-choice is <b>graded in the browser</b> (no auth to try); the CTA deep-links into the <b>live Course Companion</b>.</p>
+        </section>
+
+        <section data-c="prototypes" data-label="Prototypes">
+          <h2><span class="n">▶</span> See it — the prototype</h2>
+          <p class="lede">The artifact is playable in §5 below, embedded in a mock Notion page and running on mock data — the full UX with zero backend.</p>
+          <div class="protos">
+            <a class="proto main live" href="#concept" data-proto><span class="pt">Main <span class="livedot">● Live below</span></span><h4>Topic Check, embedded in a Notion page</h4><p>Jump to §5 and play the loop: a classmate's check → answer in-browser → readiness ticks → <b>“make your own → sign up.”</b> Mock data; real APIs swap in behind it.</p><span class="open">Go to the live demo →</span></a>
+            <a class="proto" href="#" data-proto target="_blank"><span class="pt">Sibling</span><h4>“Ready Check” share card</h4><p>The earlier readiness-card concept — same engine, social-share framing. Placeholder: paste its published URL to go live.</p><span class="open">Open →</span></a>
+            <a class="proto" href="#" data-proto target="_blank"><span class="pt">To build</span><h4>Notion live-embed + Docs fallback</h4><p>The real re-skin: live iframe in Notion, smart-chip/link preview in Google Docs. Placeholder.</p><span class="open">Open →</span></a>
+          </div>
+          <p class="muted">The main demo is <b>live, inline, below</b>. The two cards are placeholders — paste published URLs and they go live.</p>
+        </section>
+
+        <section data-c="goals" data-label="Goals & Non-Goals">
+          <h2><span class="n">3</span> Goals &amp; Non-Goals</h2>
+          <ul>
+            <li><b>An owned, non-SEO sign-up loop</b> — discovery that doesn't route through Google or paid.</li>
+            <li><b>Demoable Fri 26</b> — a clean stage moment: paste a link, it renders live, a viewer signs up.</li>
+            <li><b>Durable to Jul 3 and beyond</b> — keeps pulling sign-ups async; real payoff is back-to-school.</li>
+            <li><b>Reuse, don't rebuild</b> — stand on Infinite Practice's topics + question widgets and the existing Course Companion.</li>
+          </ul>
+          <p class="muted" style="margin-top:14px"><b>Not in v1:</b></p>
+          <ul>
+            <li class="no">Any <b>two-sided / peer-social</b> mechanic (share-to-unlock, invite-to-see). The spread rides a student's <i>own</i> placement, full stop.</li>
+            <li class="no"><b>Live on-the-fly generation</b> inside the embed — use a pre-generated / cached bank; generation latency kills the "instant try."</li>
+            <li class="no"><b>Google Workspace Marketplace add-on / Notion gallery listing</b> — real distribution, but OAuth + review runs weeks; can't prove sign-ups in the window.</li>
+            <li class="no">New question types — reuse the existing widget model (MCQ / fill-in-the-blank first).</li>
+          </ul>
+        </section>
+
+        <section data-c="concept" data-label="The concept">
+          <h2><span class="n">4</span> The concept — a detachable piece of Anchor</h2>
+          <div class="clocks">
+            <div class="clock mem"><span class="tag">Content engine</span><h4>Infinite Practice</h4><p>Canonical topics + question widgets. Supplies the body of the check.</p></div>
+            <div class="clock cal"><span class="tag">Destination</span><h4>Course Companion</h4><p>Where the CTA lands the new user. The bottom of the funnel.</p></div>
+          </div>
+          <p>The check is the piece in between: it <b>travels</b> out of Studocu into the surfaces students already use, and points back home. It connects to <b>both</b> missions — IP is the engine, Anchor is the destination.</p>
+          <div class="callout key"><span class="ic" aria-hidden="true">💡</span><p><b>Key insight:</b> the artifact is <b>useful to its owner first</b> (a real self-test on their topic), so they place it for their own reasons. Distribution is the <b>byproduct</b> — and <b>interactivity is the hook</b>: a viewer who lands on a live question can't help but answer one, and one answer is enough to earn the "make your own" ask.</p></div>
+
+          <!-- ===== embedded live demo: the Topic Check inside a Notion page (mock data) ===== -->
+          <div class="dps-frame" data-c="concept-demo" data-label="Topic Check (demo)">
+            <div class="dps-cap"><span class="ld">● Live preview</span> Topic Check — embedded in a Notion page · mock data</div>
+
+            <div class="nb">
+              <div class="nb-bar"><span class="dotg"></span><span class="dotg"></span><span class="dotg"></span> &nbsp;Maya's Notion · BIOL 201 study page</div>
+              <h3>🧬 Cell Biology — exam prep</h3>
+              <div class="nbline">Week 6 notes · lecture slides · past papers…</div>
+              <div class="nbline">Lipids, membranes, transport — still shaky on respiration.</div>
+              <div class="nbembed">▾ embedded · studocu topic check</div>
+            </div>
+
+            <div class="dps-head">
+              <div class="dps-course">Cellular respiration <span class="dps-due">🔗 anyone can try</span></div>
+              <div class="dps-ready"><span>Topic readiness</span> <b id="dps-pct">38%</b></div>
+            </div>
+            <div class="dps-track"><i id="dps-fill"></i></div>
+            <div class="dps-sub" id="dps-sub">3-question check</div>
+            <div class="dps-stack" id="dps-stack"></div>
+            <div class="dps-foot">Mock data. In production: questions come from Infinite Practice's canonical-topic widget API; MCQ is graded in-browser; the CTA deep-links into the live Course Companion.</div>
+          </div>
+        </section>
+
+        <section data-c="surfaces" data-label="Surface fidelity">
+          <h2><span class="n">5</span> Surface fidelity ladder</h2>
+          <p class="lede">The same URL renders differently depending on where it's pasted. Lead the demo with Notion; be honest about the rest.</p>
+          <div class="levels">
+            <div class="level l4"><div class="lh"><span class="badge">Best</span><span class="ln">Notion — live interactive embed</span></div>
+              <div class="lgrid">
+                <div><span class="k">What renders</span><span class="v">Full live check: answer in place, readiness ticks, CTA. Notion iframes the embed URL.</span></div>
+                <div><span class="k">Needs</span><span class="v">Iframe-able page (permissive <code>frame-ancestors</code>) + oEmbed for a clean unfurl.</span></div>
+              </div></div>
+            <div class="level l3"><div class="lh"><span class="badge">Strong</span><span class="ln">Native Studocu Mini App</span></div>
+              <div class="lgrid">
+                <div><span class="k">What renders</span><span class="v">Same check as a first-class Mini App (Exam Ready's sandboxed-iframe + shareable-URL primitive).</span></div>
+                <div><span class="k">Needs</span><span class="v">Reuse IP's Mini App container rather than a bespoke embed host.</span></div>
+              </div></div>
+            <div class="level l2"><div class="lh"><span class="badge">OK</span><span class="ln">Chat (WhatsApp / iMessage) — static unfurl</span></div>
+              <div class="lgrid">
+                <div><span class="k">What renders</span><span class="v">A rich link preview (OG image of the check) → tap → play on the landing page.</span></div>
+                <div><span class="k">Needs</span><span class="v">Good OG image per topic. Interactivity lives after the tap, not in the chat.</span></div>
+              </div></div>
+            <div class="level l1"><div class="lh"><span class="badge">Fallback</span><span class="ln">Google Docs — smart-chip / link</span></div>
+              <div class="lgrid">
+                <div><span class="k">What renders</span><span class="v">Clickable link/chip in a shared doc → play on the landing page. No live iframe in Docs.</span></div>
+                <div><span class="k">Needs</span><span class="v">Nothing extra; works on day one.</span></div>
+              </div></div>
+          </div>
+          <div class="callout key"><span class="ic" aria-hidden="true">🧭</span><p><b>Fidelity ≠ distribution strength.</b> A <i>shared Google Doc</i> distributes well (collaborative, high-intent) even at the lowest fidelity, because several classmates already co-edit it. So: <b>lead the wow with Notion, but don't dismiss the Docs fallback as the weak option</b> — it may seed just as many sign-ups.</p></div>
+        </section>
+
+        <section data-c="build" data-label="Build phases">
+          <h2><span class="n">6</span> Build phases — mock first, then real</h2>
+          <p class="lede">The whole "mock vs real APIs" decision lives here. Each phase is independently shippable.</p>
+          <div class="callout key"><span class="ic" aria-hidden="true">🎯</span><p><b>The decision this PRD exists to make:</b> demo on <b>mock data</b> (Phase 0 — zero backend, full UX, architecture explained on slides) <i>or</i> wire the <b>real APIs on a pre-generated bank</b> (Phase 1) for Fri 26. Mock is faster and removes every dependency; real is more convincing but needs IP's bank. <b>We pick after this read.</b></p></div>
+          <div class="levels">
+            <div class="level l1"><div class="lh"><span class="badge">P0</span><span class="ln">Phase 0 · Mock demo (Hackquisition build)</span></div>
+              <div class="lgrid">
+                <div><span class="k">Data</span><span class="v">Hand-written mock topics + questions (the §5 demo).</span></div>
+                <div><span class="k">Ship</span><span class="v">Embeddable page, client-side grading, CTA, Notion + Docs framing. Architecture shown on slides.</span></div>
+                <div class="gate"><span class="k">Exit gate</span><span class="v">Clean Fri-26 stage run: paste → live render → a viewer signs up (even a teammate).</span></div>
+              </div></div>
+            <div class="level l2"><div class="lh"><span class="badge">P1</span><span class="ln">Phase 1 · Real APIs on a pre-gen bank</span></div>
+              <div class="lgrid">
+                <div><span class="k">Data</span><span class="v">Real canonical topics; questions <b>pre-generated</b> for ~30 seeded topics, stored static.</span></div>
+                <div><span class="k">Ship</span><span class="v">Embed reads the static bank; CTA → real companion. Real content, no live-gen latency.</span></div>
+                <div class="gate"><span class="k">Exit gate</span><span class="v">Seeded into real student Notion/Docs; first attributed sign-ups by Jul 3.</span></div>
+              </div></div>
+            <div class="level l3"><div class="lh"><span class="badge">P2</span><span class="ln">Phase 2 · Guest-readable cached bank</span></div>
+              <div class="lgrid">
+                <div><span class="k">Data</span><span class="v">A cached, course/topic-scoped, <b>no-auth</b> question source (the real ask of Jo's team).</span></div>
+                <div><span class="k">Ship</span><span class="v">Any seeded course works without manual pre-gen — unblocks scale.</span></div>
+                <div class="gate"><span class="k">Exit gate</span><span class="v">Embed serves arbitrary live topics within latency budget for a guest.</span></div>
+              </div></div>
+            <div class="level l4"><div class="lh"><span class="badge">P3</span><span class="ln">Phase 3 · Native Mini App + breadth</span></div>
+              <div class="lgrid">
+                <div><span class="k">Data</span><span class="v">Canonical topics widening nightly beyond syllabus-only.</span></div>
+                <div><span class="k">Ship</span><span class="v">Fold the check into Exam Ready's Mini App primitive; broaden course coverage.</span></div>
+                <div class="gate"><span class="k">Exit gate</span><span class="v">Sustained sign-ups at back-to-school.</span></div>
+              </div></div>
+          </div>
+        </section>
+
+        <section data-c="roadmap" data-label="Roadmap">
+          <h2><span class="n">🗺</span> The roadmap</h2>
+          <p class="lede">Each step ships and learns. Tap a phase.</p>
+          <div class="rmap" id="rmap"><div class="rmline"></div></div>
+          <div class="rmpanel" id="rmpanel"></div>
+        </section>
+
+        <section data-c="reqs" data-label="Requirements">
+          <h2><span class="n">7</span> Requirements</h2>
+          <div class="reqgrp"><span class="reqlabel p0">P0 · must ship</span>
+            <ul>
+              <li>An embeddable page that renders a question-widget JSON payload and is <b>iframe-able</b> (permissive <code>frame-ancestors</code> so Notion can embed it).</li>
+              <li><b>Client-side grading</b> for MCQ / fill-in-the-blank — a guest can answer with <b>no auth, no round-trip</b>.</li>
+              <li>A <b>CTA → live Course Companion</b> deep-link carrying an attribution param (so a sign-up is traceable to the embed + topic).</li>
+              <li>OG / oEmbed metadata so a pasted link unfurls richly (Docs chip, chat preview, Notion bookmark).</li>
+            </ul>
+            <div class="callout warn"><span class="ic" aria-hidden="true">🚧</span><p><b>Blocking pre-req for scale (not for the mock demo):</b> a <b>guest-readable, cached, course/topic-scoped question source</b>. Today questions are generated <i>on the fly</i> and scoped <i>per project + per user</i> — an anonymous viewer has none. Phase 0/1 sidestep this with a static bank; <b>Phase 2 needs Jo's team to expose a cached bank.</b></p></div>
+          </div>
+          <div class="reqgrp"><span class="reqlabel p1">P1 · fast follow</span>
+            <ul>
+              <li>Pre-generation pipeline: run question-gen offline for the seeded topics → static bank (piggybacks Pieter's bulk-extraction-to-S3).</li>
+              <li>Per-topic OG image generator (the chat/Docs preview).</li>
+              <li>Bot / rate-limit handling on the public embed endpoint (we've fought this on course pages before).</li>
+            </ul>
+          </div>
+          <div class="reqgrp"><span class="reqlabel p2">P2 · design for, don't build</span>
+            <ul>
+              <li class="no">Guest-readable cached bank (the durable dependency above) — design the contract now, build when IP's ready.</li>
+              <li class="no">Workspace Marketplace add-on / Notion gallery listing — real channel, too slow for the window.</li>
+              <li class="no">Open / short-answer grading via the feedback agent — MCQ-only keeps the guest path zero-backend.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section data-c="testing" data-label="Testing plan">
+          <h2><span class="n">8</span> Testing plan</h2>
+          <table class="tbl"><thead><tr><th>Layer</th><th>What</th><th>Tool</th></tr></thead><tbody>
+            <tr><td><b>Unit</b></td><td>widget render per type; client-side grader; readiness calc</td><td>Jest</td></tr>
+            <tr><td><b>Integration</b></td><td>topics API → pre-gen bank → embed payload</td><td>—</td></tr>
+            <tr><td><b>E2E</b></td><td>paste URL into a real Notion test page → renders + plays; Docs link fallback</td><td>Playwright</td></tr>
+            <tr><td><b>Visual</b></td><td>Notion live embed vs Docs chip vs chat OG image don't regress</td><td>Snapshot</td></tr>
+            <tr><td><b>Usability</b></td><td>does a cold viewer actually answer a question? (the core behavioral bet)</td><td>hallway + Dovetail</td></tr>
+            <tr><td><b>Live</b></td><td>seed → attributed sign-ups, by surface</td><td>Mixpanel</td></tr>
+          </tbody></table>
+          <p class="muted"><b>Seed rules:</b> place only into courses that are <b>Anchor-live ∩ have canonical topics</b>, picked for nearest exam date. Hand-seed ~20–50 real Notion/Docs pages via the team + research-participant pool. Jul-3 number is <b>directional</b> (post-finals lull) — read it as signal, not peak.</p>
+        </section>
+
+        <section data-c="measure" data-label="What to measure">
+          <h2><span class="n">9</span> What to measure &amp; how</h2>
+          <p class="muted">Mixpanel project <b>657741</b>. Add events: <code>Embed Rendered</code> (surface, topic), <code>Check Started</code>, <code>Question Answered</code> (correct, topic), <code>Embed CTA Clicked</code>, <code>Signup From Embed</code>.</p>
+          <table class="tbl"><thead><tr><th>Metric</th><th>Tells us</th><th>How</th></tr></thead><tbody>
+            <tr class="star"><td><b>Sign-ups attributed to the embed</b><span class="star-pill">★ primary</span></td><td>The Hackquisition bet — owned, durable acquisition</td><td><code>Signup From Embed</code> by topic + surface, to Jul 3</td></tr>
+            <tr><td><b>Try-rate</b></td><td>Does interactivity hook the viewer?</td><td>answered ≥1 Q / embed renders</td></tr>
+            <tr><td><b>CTA click-through</b></td><td>Does a try convert to intent?</td><td><code>Embed CTA Clicked</code> / checks completed</td></tr>
+            <tr><td><b>Placements</b></td><td>Do students actually paste it?</td><td>distinct pages/docs embedding the URL</td></tr>
+            <tr><td><b>Surface split</b></td><td>Where the loop really works</td><td>renders &amp; sign-ups by Notion / Docs / chat</td></tr>
+            <tr><td><b>Topic coverage</b> <span class="muted">(supply)</span></td><td>Can it scale past the seed?</td><td>courses with a usable bank ∩ Anchor-live</td></tr>
+          </tbody></table>
+        </section>
+
+        <section data-c="risks" data-label="Risks">
+          <h2><span class="n">10</span> Risks &amp; mitigations</h2>
+          <ul>
+            <li><b>Peer-sharing creep</b> (the thing we got burned on) → keep it strictly <b>one-sided</b>: a student places it for their own use; no invite/unlock mechanic. The loop is "your own note page," not a network.</li>
+            <li><b>Post-finals timing kills the Jul-3 number</b> → seed summer / resit / quarter-system / southern-hemisphere courses; frame Jul-3 as directional, real payoff is the Aug back-to-school window (what the €5k prize is for).</li>
+            <li><b>No guest question bank exists</b> → Phase 0/1 use a pre-generated static bank; only Phase 2 needs the cached source from IP.</li>
+            <li><b>Topics interim + syllabus-only</b> → small Anchor-live ∩ topics intersection today → seed exactly that intersection; don't over-promise breadth.</li>
+            <li><b>Notion/CSP blocks the iframe</b> → test the Notion embed on day one; ship oEmbed + a hosted fallback page.</li>
+            <li><b>Generated-question quality / cringe</b> → human spot-check the seeded bank before it goes into real student pages.</li>
+            <li><b>Building embedding twice</b> → check whether to ride Exam Ready's Mini App primitive before building a bespoke host.</li>
+          </ul>
+        </section>
+
+        <section data-c="open" data-label="Open questions & deps">
+          <h2><span class="n">11</span> Open questions &amp; dependencies</h2>
+          <ul>
+            <li><b>[Product]</b> <b>Mock demo or real APIs for Fri 26?</b> The §6 decision. <i>(decide first — everything else forks here)</i></li>
+            <li><b>[Eng/Data]</b> Can IP expose a <b>guest-readable, cached, topic-scoped</b> question bank? Today it's on-the-fly + per-project/per-user. <i>(blocking scale — Pieter / Ryan)</i></li>
+            <li><b>[Data]</b> Which <b>Anchor-live courses already have canonical topics</b> generated? Defines the seed list. <i>(blocking seed — Ruby / Edu)</i></li>
+            <li><b>[Eng]</b> Can the check <b>reuse the Mini App</b> sandboxed-iframe + shareable-URL primitive instead of a bespoke embed host? <i>(Jo)</i></li>
+            <li><b>[Eng]</b> Embed host: iframe <code>frame-ancestors</code> policy + oEmbed endpoint + bot handling — who owns it? <i>(Akos / Ruby)</i></li>
+            <li><b>[Data]</b> Topic model: course-level canonical vs project-level (Emiel's concern) — does the embed's reliance on a stable course-topic ID hold? <i>(Emiel / Jo)</i></li>
+            <li><b>[Design]</b> The CTA wording + the post-try sign-in moment — what's the smallest ask that still converts a guest?</li>
+          </ul>
+          <p class="muted"><b>Dependency chain:</b> 1) decide mock-vs-real (§6) → 2) seed list = Anchor-live ∩ topics (Ruby/Edu) → 3) pre-gen static bank for those topics (Pieter) → 4) embed host + oEmbed (Akos/Ruby) → 5) attribution event <code>Signup From Embed</code> (Tiago) → 6) durable cached bank (IP) unblocks scale.</p>
+        </section>
+
+        <p class="legal">© 2026 <b>Studocu</b>. Confidential &amp; proprietary. Internal use only — do not distribute, share externally, or reproduce without permission.</p>
+
+      </div>
+    </article>
+  </main>
+
+  <aside class="rail" id="rail">
+    <div class="railhead"><span id="railcount">Comments</span><button class="toggle" id="toggleResolved">Hide resolved</button></div>
+    <div class="fallback" id="fallback">Comments are saved per browser only here — share the published artifact link so the whole team's notes sync.</div>
+    <div id="comments"></div>
+  </aside>
+</div>
+
+<button class="selpill" id="selpill" aria-label="Add comment on selection">💬 Comment</button>
+
+<div class="composer" id="composer" role="dialog" aria-label="New comment">
+  <div class="cq" id="cq"></div>
+  <input id="cauthor" placeholder="Your name" autocomplete="name" />
+  <textarea id="cbody" placeholder="Add a comment…"></textarea>
+  <div class="row"><button class="btn ghost" id="ccancel">Cancel</button><button class="btn primary" id="csave">Comment</button></div>
+</div>
+
+<!-- ===== embedded Topic Check demo logic — IIFE, namespaced ids (reuses dps-* skin) ===== -->
+<script>
+(function(){
+  const DATA=[
+    {q:"Most ATP from cellular respiration is produced during:",
+     opts:["Glycolysis","The Krebs cycle","Oxidative phosphorylation","Fermentation"], answer:2},
+    {q:"In eukaryotes, the Krebs (citric acid) cycle takes place in the:",
+     opts:["Cytoplasm","Mitochondrial matrix","Inner membrane","Nucleus"], answer:1},
+    {q:"The final electron acceptor in the electron transport chain is:",
+     opts:["NAD⁺","Pyruvate","Oxygen","Carbon dioxide"], answer:2}
+  ];
+  const START=38, OK=18, NO=5, KEYS=["A","B","C","D"];
+  let idx=0, ready=START, missed=0;
+  const stack=document.getElementById("dps-stack");
+  const pct=document.getElementById("dps-pct");
+  const fill=document.getElementById("dps-fill");
+  const sub=document.getElementById("dps-sub");
+  if(!stack) return;
+  let ro=null;
+  function fit(c){ if(c&&c.offsetHeight) stack.style.minHeight=c.offsetHeight+"px"; }
+  fill.style.width=START+"%";
+  function setReady(v){ ready=Math.min(100,v); fill.style.width=ready+"%"; pct.textContent=ready+"%"; }
+  function esc(s){ return (s+"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+  function render(){
+    stack.innerHTML="";
+    if(idx>=DATA.length){ done(); return; }
+    sub.textContent=(DATA.length-idx)+" left in this check";
+    const remaining=DATA.length-idx;
+    for(let p=Math.min(remaining-1,2); p>=1; p--){
+      const peek=document.createElement("div");
+      peek.className="dps-card peek";
+      peek.style.transform="translateY("+(p*10)+"px) scale("+(1-p*0.04)+")";
+      peek.style.zIndex=String(10-p); peek.style.opacity=String(1-p*0.18);
+      peek.innerHTML='<div class="dps-topic" style="opacity:.5;font-size:16px">Question '+(idx+p+1)+'</div>';
+      stack.appendChild(peek);
+    }
+    const it=DATA[idx];
+    const card=document.createElement("div");
+    card.className="dps-card dps-fade"; card.style.zIndex="11";
+    card.innerHTML=
+      '<span class="dps-reason due">Cellular respiration · Q'+(idx+1)+' of '+DATA.length+'</span>'+
+      '<div class="dps-q">'+esc(it.q)+'</div><div class="dps-opts" data-opts></div>'+
+      '<div class="dps-foot-row"><span class="dps-count">No account needed to try</span></div>';
+    stack.appendChild(card);
+    const wrap=card.querySelector("[data-opts]");
+    it.opts.forEach((o,i)=>{
+      const b=document.createElement("button");
+      b.className="dps-opt"; b.innerHTML='<span class="dps-key">'+KEYS[i]+'</span><span>'+esc(o)+'</span>';
+      b.onclick=()=>grade(card,it,i,b); wrap.appendChild(b);
+    });
+    fit(card);
+    if(ro) ro.disconnect();
+    ro=new ResizeObserver(()=>fit(card));
+    ro.observe(card);
+  }
+  function grade(card,it,picked,btn){
+    const good=picked===it.answer;
+    [...card.querySelectorAll(".dps-opt")].forEach((b,i)=>{ b.disabled=true; if(i===it.answer) b.classList.add("ok"); });
+    if(!good){ btn.classList.add("no"); missed++; }
+    setReady(ready+(good?OK:NO));
+    const res=document.createElement("div");
+    res.className="dps-res dps-fade "+(good?"ok":"no");
+    res.textContent=good?"✓ Correct — graded right here in the page.":"✕ Not quite — the right answer's marked.";
+    card.appendChild(res);
+    const last=idx===DATA.length-1;
+    const foot=document.createElement("div");
+    foot.className="dps-foot-row dps-fade";
+    foot.innerHTML='<span class="dps-count">'+(DATA.length-idx-1)+' left</span>'+
+      '<button class="dps-btn" data-next>'+(last?"See result":"Next")+' →</button>';
+    card.appendChild(foot);
+    card.querySelector("[data-next]").onclick=()=>{ card.classList.add("leaving"); setTimeout(()=>{ idx++; render(); },380); };
+  }
+  function done(){
+    if(ro){ro.disconnect();ro=null;} stack.style.minHeight="";
+    sub.textContent="Check complete";
+    const d=document.createElement("div");
+    d.className="dps-done dps-fade";
+    d.innerHTML='<div class="dps-big">You just tried a classmate\'s check 🎯</div>'+
+      '<div class="dps-delta">readiness '+START+'% → <span class="to">'+ready+'%</span></div>'+
+      '<div class="dps-tom"><h5>👇 What you (the next person) see now</h5>'+
+        '<div class="row2">＋ Make this for <b>any</b> of your courses</div>'+
+        '<div class="row2">＋ See your readiness across the whole course</div>'+
+        '<div class="row2">＋ Save your progress</div></div>'+
+      '<div class="dps-why">That is the entire loop. Maya pasted this into her own Notion page because it was a useful self-test. You opened her page, answered one question, and now you have a reason to sign up. <b>What Studocu owns: the format, the landing, and the sign-up</b> — the spread was just Maya sharing her notes.</div>'+
+      '<div class="dps-foot-row" style="justify-content:center;gap:10px">'+
+        '<button class="dps-btn grad" data-cta>Make your own → sign up</button>'+
+        '<button class="dps-btn ghost" data-replay>↺ Replay</button></div>';
+    stack.appendChild(d);
+    d.querySelector("[data-replay]").onclick=()=>{ idx=0; ready=START; missed=0; setReady(START); render(); };
+    d.querySelector("[data-cta]").onclick=()=>{
+      const w=d.querySelector("[data-cta]");
+      w.textContent="↗ (demo) deep-links into the live Course Companion";
+      w.disabled=true; w.style.opacity=".7"; w.style.cursor="default";
+    };
+  }
+  render();
+})();
+</script>
+
+<script>
+const HAS = (()=>{ try{ return !!(window.storage && window.storage.set); }catch(e){ return false; } })();
+const state = { comments:[], author:"", hideResolved:false, pending:null };
+const $ = id => document.getElementById(id);
+const initials = n => (n||"?").trim().split(/\s+/).map(w=>w[0]).slice(0,2).join("").toUpperCase() || "?";
+const esc = s => s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const ago = ts => { const d=(Date.now()-ts)/1000; if(d<60)return"now"; if(d<3600)return Math.floor(d/60)+"m"; if(d<86400)return Math.floor(d/3600)+"h"; return Math.floor(d/86400)+"d"; };
+
+/* ---------- storage ---------- */
+async function loadAuthor(){
+  if(!HAS) return;
+  try{ const r=await window.storage.get("author",false); if(r&&r.value) state.author=r.value; }catch(e){}
+}
+async function saveAuthor(n){ state.author=n; if(HAS){ try{ await window.storage.set("author",n,false); }catch(e){} } }
+async function loadComments(){
+  if(!HAS){ $("fallback").style.display="block"; return; }
+  try{
+    const res=await window.storage.list("comment:",true);
+    const keys=(res&&res.keys)||[];
+    const out=[];
+    for(const k of keys){ try{ const r=await window.storage.get(k,true); if(r&&r.value) out.push(JSON.parse(r.value)); }catch(e){} }
+    state.comments=out.sort((a,b)=>a.ts-b.ts);
+  }catch(e){ $("fallback").style.display="block"; }
+}
+async function persist(c){ state.comments.push(c); if(HAS){ try{ await window.storage.set("comment:"+c.id,JSON.stringify(c),true);}catch(e){} } }
+async function update(c){ if(HAS){ try{ await window.storage.set("comment:"+c.id,JSON.stringify(c),true);}catch(e){} } }
+async function remove(c){ state.comments=state.comments.filter(x=>x.id!==c.id); if(HAS){ try{ await window.storage.delete("comment:"+c.id,true);}catch(e){} } }
+
+/* ---------- highlights ---------- */
+function clearMarks(){
+  document.querySelectorAll("mark.cmark").forEach(m=>{ const p=m.parentNode; while(m.firstChild)p.insertBefore(m.firstChild,m); p.removeChild(m); p.normalize&&p.normalize(); });
+}
+function highlight(c){
+  const scope = document.querySelector('[data-c="'+c.anchorId+'"]') || $("doc");
+  if(!scope||!c.quote) return;
+  const w=document.createTreeWalker(scope,NodeFilter.SHOW_TEXT,null); let node;
+  while(node=w.nextNode()){
+    if(node.parentElement && node.parentElement.closest("mark.cmark")) continue;
+    const i=node.nodeValue.indexOf(c.quote);
+    if(i!==-1){
+      try{
+        const r=document.createRange(); r.setStart(node,i); r.setEnd(node,i+c.quote.length);
+        const m=document.createElement("mark"); m.className="cmark"+(c.resolved?" resolved":""); m.dataset.cid=c.id;
+        r.surroundContents(m); m.addEventListener("click",()=>focusCard(c.id));
+      }catch(e){}
+      return;
+    }
+  }
+}
+function reHighlight(){ clearMarks(); state.comments.forEach(highlight); }
+
+/* ---------- render ---------- */
+function renderComments(){
+  reHighlight();
+  const open = state.comments.filter(c=>!c.resolved).length;
+  $("railcount").textContent = state.comments.length ? open+" open · "+state.comments.length+" total" : "Comments";
+  const box=$("comments"); box.innerHTML="";
+  const list=state.comments.filter(c=>state.hideResolved? !c.resolved : true);
+  if(!list.length){ box.innerHTML='<div class="railempty"><div class="big">💬</div>No comments yet.<br>Select any text to start.</div>'; return; }
+  list.forEach(c=>{
+    const el=document.createElement("div");
+    el.className="ccard"+(c.resolved?" resolved":""); el.dataset.cid=c.id;
+    el.innerHTML=
+      '<div class="quote">“'+esc(c.quote)+'”</div>'+
+      '<div class="who"><span class="av">'+esc(initials(c.author))+'</span><span class="nm">'+esc(c.author||"Anon")+'</span><span class="tm">'+ago(c.ts)+'</span></div>'+
+      '<div class="bd">'+esc(c.body)+'</div>'+
+      '<div class="acts"><button class="res'+(c.resolved?' on':'')+'">'+(c.resolved?'✓ Resolved':'Resolve')+'</button><button class="jump">Jump to</button><button class="del">Delete</button></div>';
+    el.querySelector(".res").onclick=async()=>{ c.resolved=!c.resolved; await update(c); renderComments(); };
+    el.querySelector(".del").onclick=async()=>{ await remove(c); renderComments(); };
+    el.querySelector(".jump").onclick=()=>jumpTo(c);
+    el.onclick=e=>{ if(e.target.closest(".acts"))return; jumpTo(c); };
+    box.appendChild(el);
+  });
+}
+function jumpTo(c){
+  const m=document.querySelector('mark.cmark[data-cid="'+c.id+'"]') || document.querySelector('[data-c="'+c.anchorId+'"]');
+  if(m){ m.scrollIntoView({behavior:"smooth",block:"center"}); m.classList.add("flash"); setTimeout(()=>m.classList.remove("flash"),1200); }
+}
+function focusCard(id){
+  document.querySelectorAll(".ccard").forEach(x=>x.classList.remove("focus"));
+  const card=document.querySelector('.ccard[data-cid="'+id+'"]');
+  if(card){ card.classList.add("focus"); card.scrollIntoView({behavior:"smooth",block:"center"}); setTimeout(()=>card.classList.remove("focus"),1600); }
+}
+
+/* ---------- selection → comment ---------- */
+const pill=$("selpill"), composer=$("composer");
+function hidePill(){ pill.classList.remove("show"); }
+document.addEventListener("mouseup",e=>{
+  if(composer.contains(e.target)||pill.contains(e.target)) return;
+  setTimeout(()=>{
+    const sel=window.getSelection();
+    if(!sel||sel.isCollapsed){ hidePill(); return; }
+    const text=sel.toString().trim().replace(/\s+/g," ");
+    if(text.length<3){ hidePill(); return; }
+    const doc=$("doc");
+    if(!doc.contains(sel.anchorNode)){ hidePill(); return; }
+    let el=sel.anchorNode.nodeType===3?sel.anchorNode.parentElement:sel.anchorNode;
+    const sec=el.closest("[data-c]");
+    const rect=sel.getRangeAt(0).getBoundingClientRect();
+    state.pending={ quote:text.slice(0,300), anchorId:sec?sec.dataset.c:"", anchorLabel:sec?sec.dataset.label:"" };
+    pill.style.top=Math.max(8,rect.top-46)+"px";
+    pill.style.left=Math.min(window.innerWidth-130, Math.max(8,rect.left+rect.width/2-60))+"px";
+    pill.classList.add("show");
+  },10);
+});
+document.addEventListener("mousedown",e=>{ if(!pill.contains(e.target)&&!composer.contains(e.target)) hidePill(); });
+window.addEventListener("scroll",hidePill,{passive:true});
+
+pill.onclick=()=>{
+  hidePill();
+  if(!state.pending) return;
+  $("cq").textContent="“"+state.pending.quote.slice(0,140)+(state.pending.quote.length>140?"…":"")+"”";
+  const ai=$("cauthor"); ai.value=state.author||""; ai.style.display=state.author?"none":"block";
+  $("cbody").value="";
+  const r=pill.getBoundingClientRect();
+  composer.style.top=Math.min(window.innerHeight-230, r.top+8)+"px";
+  composer.style.left=Math.min(window.innerWidth-316, Math.max(8, r.left-120))+"px";
+  composer.classList.add("show");
+  $("cbody").focus();
+};
+$("ccancel").onclick=()=>composer.classList.remove("show");
+$("csave").onclick=async()=>{
+  const body=$("cbody").value.trim(); if(!body) return;
+  let author=state.author;
+  if(!author){ author=$("cauthor").value.trim()||"Anon"; await saveAuthor(author); renderWhoami(); }
+  const c={ id:"c"+Date.now().toString(36)+Math.random().toString(36).slice(2,6), quote:state.pending.quote, anchorId:state.pending.anchorId, anchorLabel:state.pending.anchorLabel, author, body, ts:Date.now(), resolved:false };
+  await persist(c); composer.classList.remove("show"); window.getSelection().removeAllRanges();
+  renderComments(); setTimeout(()=>focusCard(c.id),50);
+};
+
+/* ---------- whoami ---------- */
+function renderWhoami(){ $("whoname").textContent=state.author||"Set your name"; $("whoav").textContent=state.author?initials(state.author):"?"; }
+$("whoami").onclick=async()=>{ const n=prompt("Your name (shown on your comments):",state.author||""); if(n!=null){ await saveAuthor(n.trim()); renderWhoami(); } };
+
+/* ---------- toc + progress ---------- */
+function buildTOC(){
+  const toc=$("toc"); const secs=[...document.querySelectorAll("section[data-c]")];
+  secs.forEach(s=>{ const a=document.createElement("a"); a.href="#"; a.textContent=s.dataset.label; a.dataset.t=s.dataset.c;
+    a.onclick=e=>{ e.preventDefault(); s.scrollIntoView({behavior:"smooth",block:"start"}); }; toc.appendChild(a); });
+  const io=new IntersectionObserver(es=>{ es.forEach(en=>{ if(en.isIntersecting){ document.querySelectorAll(".toc a").forEach(a=>a.classList.toggle("active",a.dataset.t===en.target.dataset.c)); } }); },{rootMargin:"-30% 0px -60% 0px"});
+  secs.forEach(s=>io.observe(s));
+}
+window.addEventListener("scroll",()=>{ const h=document.documentElement; const p=h.scrollTop/(h.scrollHeight-h.clientHeight||1); $("prog").style.width=Math.min(100,p*100)+"%"; },{passive:true});
+$("toggleResolved").onclick=()=>{ state.hideResolved=!state.hideResolved; $("toggleResolved").textContent=state.hideResolved?"Show resolved":"Hide resolved"; renderComments(); };
+
+/* ---------- init ---------- */
+(async()=>{
+  buildTOC();
+  await loadAuthor(); renderWhoami();
+  renderComments();          // render shell immediately
+  await loadComments();      // then hydrate
+  renderComments();
+})();
+</script>
+<script>
+(function(){
+  const phases=[
+    {ph:"Now",t:"Concept + artifact defined",badge:"done",accent:"#f57c00",d:"Ready Check prototype built; the Embeddable Topic Check spec'd. It connects to Infinite Practice's canonical topics (engine) and the Course Companion (destination)."},
+    {ph:"Wed–Fri",t:"Mock demo — the build",accent:"#3092fa",d:"The §5 check running on a static mock bank: full UX, client-side grading, zero backend. On stage: paste it into a real Notion page, a viewer answers, signs up. Architecture explained on slides."},
+    {ph:"Jun 29–Jul 3",t:"Seed on a pre-gen bank",accent:"#3092fa",d:"Pre-generate questions for ~30 topics on Anchor-live ∩ syllabus courses; place into real student Notion/Docs; count attributed sign-ups (directional — post-finals lull)."},
+    {ph:"Durable",t:"Guest-readable question bank",accent:"#9c27b0",d:"The one real ask of Jo's team: a cached, course/topic-scoped, no-auth question source. Unblocks scale beyond hand-seeded topics."},
+    {ph:"Mid-Aug",t:"Back-to-school",badge:"campaign",accent:"#9c27b0",d:"When exam urgency returns — the artifact's real payoff window, and the purpose of the €5k seed prize."},
+    {ph:"Native",t:"Ride the Mini App primitive",accent:"#9c27b0",d:"Fold the check into Exam Ready's sandboxed-iframe / shareable-URL Mini App instead of a bespoke embed host; widen topic coverage."}
+  ];
+  const map=document.getElementById("rmap"), panel=document.getElementById("rmpanel"); if(!map||!panel) return;
+  let active=0;
+  function render(){
+    map.querySelectorAll(".rmnode").forEach(n=>n.remove());
+    phases.forEach((p,i)=>{
+      const b=document.createElement("button");
+      b.className="rmnode"; b.type="button"; b.setAttribute("aria-pressed", i===active?"true":"false");
+      b.innerHTML='<span class="dot" style="border-color:'+p.accent+(i===active?(';background:'+p.accent+';box-shadow:0 0 0 4px '+p.accent+'2e;'):'')+'"></span><span class="rl">'+p.ph+'</span>';
+      b.addEventListener("click",function(){active=i;render();});
+      map.appendChild(b);
+    });
+    const p=phases[active];
+    panel.innerHTML='<div class="pw"><span class="pph">'+p.ph+'</span>'+(p.badge?'<span class="pbadge">'+p.badge+'</span>':'')+'</div><h4>'+p.t+'</h4><p>'+p.d+'</p>';
+  }
+  render();
+})();
+</script>
+</body>
+</html>
