@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cell Biology — Study Hub · Notion template (Studocu)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Notion chrome */
+  --n-bg:#ffffff; --n-text:#37352f; --n-subtle:#787774; --n-faint:#9b9a97;
+  --n-divider:#e9e9e7; --n-gray-bg:#f7f6f3; --n-callout:#f1f1ef;
+  --n-blue:#2383e2; --n-blue-bg:#e7f3f8;
+  --n-font:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,"Apple Color Emoji",Arial,sans-serif;
+  /* Studocu brand */
+  --s-blue:#3092fa; --s-blue-700:#1976d2;
+  --s-grad:linear-gradient(90deg,#f064fc,#3092fa);
+  --s-dm:"DM Sans",var(--n-font);
+  --s-green:#2e7d32; --s-green-bg:#e8f5e9; --s-red:#c62828; --s-red-bg:#fde7e7;
+  --s-amber:#e65100; --s-amber-bg:#fff3e0;
+  --radius:10px;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:#ebeced;color:var(--n-text);font-family:var(--n-font);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer}
+a{color:inherit}
+
+/* ===== fake Notion app frame ===== */
+.win{max-width:1080px;margin:22px auto;background:var(--n-bg);border-radius:12px;box-shadow:0 10px 40px rgba(15,15,15,.16);overflow:hidden}
+.topbar{height:45px;display:flex;align-items:center;gap:14px;padding:0 14px;border-bottom:1px solid var(--n-divider);color:var(--n-subtle);font-size:14px}
+.topbar .crumb{display:flex;align-items:center;gap:7px;font-weight:500}
+.topbar .crumb .ic{opacity:.7}
+.topbar .spacer{flex:1}
+.topbar .tb-btn{font-size:13.5px;color:var(--n-subtle);padding:5px 9px;border-radius:6px;border:0;background:transparent}
+.topbar .tb-btn:hover{background:var(--n-gray-bg)}
+.topbar .tb-dupe{color:#fff;background:var(--s-blue);font-weight:600}
+.topbar .tb-dupe:hover{background:var(--s-blue-700)}
+.dots{display:flex;gap:6px;padding-right:6px}
+.dots i{width:11px;height:11px;border-radius:50%;display:block}
+.dots .r{background:#ff5f57}.dots .y{background:#febc2e}.dots .g{background:#28c840}
+
+/* page cover + header */
+.cover{height:120px;background:linear-gradient(120deg,#cfe3ff,#f7e6ff 55%,#ffe9d6)}
+.page{max-width:720px;margin:0 auto;padding:0 28px 80px}
+.pageicon{font-size:64px;line-height:1;margin-top:-40px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.12))}
+h1.title{font-size:40px;font-weight:800;letter-spacing:-.02em;margin:8px 0 2px;color:#111}
+.subtitle{color:var(--n-subtle);font-size:15.5px;margin:0 0 6px}
+.props{display:flex;flex-wrap:wrap;gap:8px 22px;margin:14px 0 6px;font-size:13.5px;color:var(--n-subtle)}
+.props .p{display:flex;align-items:center;gap:7px}
+.props .p b{color:var(--n-text);font-weight:600}
+.props .tag{padding:2px 9px;border-radius:var(--radius);font-weight:600;font-size:12px}
+.tag.blue{background:#e7f0fd;color:#1763c4}.tag.amber{background:var(--s-amber-bg);color:var(--s-amber)}
+
+/* notion blocks */
+h2.h{font-size:22px;font-weight:700;letter-spacing:-.01em;margin:30px 0 6px;color:#1a1a1a;display:flex;align-items:center;gap:9px}
+p.b{margin:6px 0}
+.muted{color:var(--n-subtle)}
+.callout{display:flex;gap:12px;background:var(--n-callout);border-radius:var(--radius);padding:14px 16px;margin:14px 0;font-size:15px}
+.callout .ic{font-size:18px;line-height:1.5}
+.callout.blue{background:var(--n-blue-bg)}
+.divider{height:1px;background:var(--n-divider);margin:26px 0}
+
+/* the Studocu "duplicate this template" hero callout */
+.dupe{position:relative;border-radius:14px;padding:20px 20px 18px;margin:20px 0 8px;background:linear-gradient(135deg,#faf0ff,#eaf3ff);border:1px solid #e4d4f5;overflow:hidden}
+.dupe .badge{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--s-blue-700);margin-bottom:8px}
+.dupe .badge svg{height:15px;width:auto}
+.dupe h3{margin:0 0 4px;font-size:19px;font-weight:800;color:#141414;letter-spacing:-.01em}
+.dupe p{margin:0 0 14px;font-size:14.5px;color:#46506b;max-width:46ch}
+.s-btn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:999px;font-weight:700;font-size:14px;padding:10px 18px;color:#fff;background:var(--s-blue)}
+.s-btn:hover{background:var(--s-blue-700)}
+.s-btn.grad{background:var(--s-grad)}
+.s-btn.ghost{background:#fff;color:var(--s-blue-700);border:1px solid #d9c7ee}
+.dupe .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.dupe .by{font-size:12px;color:#7a6f86;display:flex;align-items:center;gap:6px}
+
+/* topics table */
+.tbl{width:100%;border-collapse:collapse;font-size:14.5px;margin:8px 0}
+.tbl th{text-align:left;color:var(--n-faint);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.03em;padding:7px 10px;border-bottom:1px solid var(--n-divider)}
+.tbl td{padding:9px 10px;border-bottom:1px solid var(--n-divider);vertical-align:middle}
+.tbl tr:hover td{background:var(--n-gray-bg)}
+.chip{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:999px}
+.chip.g{background:var(--s-green-bg);color:var(--s-green)} .chip.a{background:var(--s-amber-bg);color:var(--s-amber)} .chip.r{background:var(--s-red-bg);color:var(--s-red)}
+.tlink{color:var(--s-blue-700);font-weight:600;font-size:13.5px;text-decoration:none}
+.tlink:hover{text-decoration:underline}
+.ttype{font-size:12px;color:var(--n-subtle)}
+.doc-ic{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:5px;font-size:12px;margin-right:8px;vertical-align:-5px}
+.di-sum{background:#e7f0fd}.di-past{background:#fff3e0}.di-note{background:#e8f5e9}.di-fc{background:#f5eaf7}.di-quiz{background:#e0f7f4}
+
+/* to-do plan */
+.todo{display:flex;align-items:flex-start;gap:10px;padding:5px 0;font-size:15px}
+.todo input{width:16px;height:16px;margin-top:3px;accent-color:var(--s-blue)}
+.todo .wk{color:var(--n-faint);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;margin:14px 0 2px}
+.todo.done label{color:var(--n-faint);text-decoration:line-through}
+
+/* footer */
+.foot{margin-top:30px;padding-top:18px;border-top:1px solid var(--n-divider);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.foot .by{font-size:13px;color:var(--n-subtle);display:flex;align-items:center;gap:8px}
+.foot .by svg{height:16px;width:auto}
+
+/* ===== embedded Studocu Topic Check ===== */
+.tc{font-family:var(--s-dm);border:1px solid #e3e3e0;border-radius:14px;overflow:hidden;margin:14px 0;box-shadow:0 1px 3px rgba(16,24,40,.05)}
+.tc-bar{display:flex;align-items:center;gap:10px;padding:11px 16px;background:#0b0b0c;color:#fff}
+.tc-bar svg{height:16px;width:auto}
+.tc-bar .lbl{font-weight:700;font-size:13px;letter-spacing:.01em}
+.tc-bar .live{margin-left:auto;font-size:10.5px;font-weight:700;color:#74e39b;display:flex;align-items:center;gap:6px}
+.tc-bar .live i{width:7px;height:7px;border-radius:50%;background:#74e39b;display:block}
+.tc-body{padding:18px}
+.tc-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.tc-topic{font-weight:700;color:#141414;font-size:15px}
+.tc-ready{font-size:12.5px;color:var(--n-subtle);display:flex;align-items:center;gap:8px}
+.tc-ready b{color:#141414;font-size:15px}
+.tc-track{height:8px;border-radius:999px;background:#eef1f6;overflow:hidden;margin-bottom:16px}
+.tc-track>i{display:block;height:100%;width:38%;background:var(--s-grad);border-radius:999px;transition:width .7s cubic-bezier(.22,.61,.36,1)}
+.tc-q{font-size:15.5px;font-weight:600;color:#141414;margin:2px 0 12px}
+.tc-meta{font-size:11.5px;font-weight:700;color:#9aa4ad;letter-spacing:.03em;text-transform:uppercase;margin-bottom:10px}
+.tc-opts{display:flex;flex-direction:column;gap:8px}
+.tc-opt{display:flex;align-items:center;gap:11px;text-align:left;width:100%;padding:11px 13px;border-radius:10px;border:1px solid #d3d9e0;background:#fff;color:#384149;font-family:inherit;font-size:14.5px;transition:border-color .15s,background .15s}
+.tc-opt:hover:not(:disabled){border-color:var(--s-blue)}
+.tc-opt .k{flex:none;width:23px;height:23px;border-radius:6px;display:grid;place-items:center;font-size:12px;font-weight:700;background:#eef1f6;color:#6b7681}
+.tc-opt.ok{border-color:var(--s-green);background:var(--s-green-bg)} .tc-opt.ok .k{background:var(--s-green);color:#fff}
+.tc-opt.no{border-color:var(--s-red);background:var(--s-red-bg)} .tc-opt.no .k{background:var(--s-red);color:#fff}
+.tc-opt:disabled{cursor:default}
+.tc-res{font-size:13.5px;font-weight:600;margin:12px 0 0}
+.tc-res.ok{color:var(--s-green)} .tc-res.no{color:var(--s-red)}
+.tc-foot{display:flex;align-items:center;justify-content:space-between;margin-top:14px}
+.tc-count{font-size:12px;color:#9aa4ad}
+.tc-btn{display:inline-flex;align-items:center;gap:7px;border:0;background:var(--s-blue);color:#fff;font-weight:700;font-size:13.5px;padding:9px 16px;border-radius:999px}
+.tc-btn.grad{background:var(--s-grad)}
+.tc-btn.ghost{background:transparent;color:#6b7681}
+.tc-done{text-align:center;padding:6px 2px}
+.tc-big{font-size:21px;font-weight:800;color:#141414;margin-bottom:2px}
+.tc-delta{font-size:15px;font-weight:700;color:#6b7681;margin-bottom:14px}
+.tc-delta .to{background:var(--s-grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.tc-cta-box{background:#f7f8fb;border:1px solid #e6eaef;border-radius:12px;padding:14px 16px;margin-bottom:14px;text-align:left}
+.tc-cta-box h5{margin:0 0 8px;font-size:13px;color:#141414}
+.tc-cta-box .r2{font-size:13.5px;color:#384149;margin-bottom:5px}
+.tc-fade{animation:tcf .4s cubic-bezier(.22,.61,.36,1)}
+@keyframes tcf{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.tc-note{font-size:11px;color:#9aa4ad;text-align:center;padding:10px 14px 14px}
+
+/* signup nudge overlay (mock) */
+.ov{position:fixed;inset:0;background:rgba(10,10,12,.55);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
+.ov.show{display:flex}
+.ov-card{font-family:var(--s-dm);background:#0b0b0c;color:#fff;border-radius:18px;max-width:380px;width:100%;padding:26px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.4)}
+.ov-card svg{height:22px;width:auto;margin-bottom:14px}
+.ov-card h3{margin:0 0 6px;font-size:20px;font-weight:800}
+.ov-card p{margin:0 0 18px;font-size:14px;color:#b9bcc4;line-height:1.55}
+.ov-card .s-btn{width:100%;justify-content:center;margin-bottom:9px}
+.ov-card .x{background:transparent;border:0;color:#8b8f98;font-size:13px;font-weight:600}
+.ov-tag{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#74e39b;background:rgba(116,227,155,.12);padding:4px 10px;border-radius:999px;margin-bottom:14px}
+
+@media (max-width:560px){ .win{margin:0;border-radius:0} .page{padding:0 18px 60px} h1.title{font-size:32px} .topbar .hideSm{display:none} }
+</style>
+</head>
+<body>
+
+<div class="win">
+  <!-- fake Notion top bar -->
+  <div class="topbar">
+    <span class="dots"><i class="r"></i><i class="y"></i><i class="g"></i></span>
+    <span class="crumb"><span class="ic">🧬</span> Cell Biology — Study Hub</span>
+    <span class="spacer"></span>
+    <button class="tb-btn hideSm">Share</button>
+    <button class="tb-btn hideSm">💬</button>
+    <button class="tb-btn hideSm">★</button>
+    <button class="tb-btn tb-dupe" data-signup>Duplicate</button>
+    <button class="tb-btn hideSm">•••</button>
+  </div>
+
+  <div class="cover"></div>
+  <div class="page">
+    <div class="pageicon">🧬</div>
+    <h1 class="title">Cell Biology — Study Hub</h1>
+    <p class="subtitle">Everything for the course in one page — topics, materials, past exams, and a 2-minute self-test.</p>
+    <div class="props">
+      <span class="p">🏫 <b>State University</b></span>
+      <span class="p">📘 <b>BIOL&nbsp;101</b></span>
+      <span class="p">🗓️ Final exam <span class="tag amber">in 12 days</span></span>
+      <span class="p">⚡ <span class="tag blue">Powered by Studocu</span></span>
+    </div>
+
+    <!-- THE LOOP: duplicate-this-template hero -->
+    <div class="dupe">
+      <span class="badge">{{LOGO}} Free template by Studocu</span>
+      <h3>📋 Make this for your own course</h3>
+      <p>Duplicate this page and you get a ready-made study hub — your topics, your materials, and a self-test embedded, in about 30 seconds.</p>
+      <div class="row">
+        <button class="s-btn grad" data-signup>Get this template →</button>
+        <span class="by">{{LOGOSM}} 4.9 ★ · 12k duplicates</span>
+      </div>
+    </div>
+
+    <div class="callout blue"><span class="ic">👋</span><div><b>New here?</b> Try the Topic Check below — no account needed. When you want your <i>own</i> hub for any class, hit <b>Get this template</b>.</div></div>
+
+    <!-- TOPIC CHECK EMBED -->
+    <h2 class="h">🎯 Quick check: where do you stand?</h2>
+    <p class="b muted">A 3-question self-test on a key topic. Answer right here — it's graded instantly.</p>
+
+    <div class="tc" id="tc">
+      <div class="tc-bar">{{LOGOSM}}<span class="lbl">Topic Check</span><span class="live"><i></i> Live</span></div>
+      <div class="tc-body">
+        <div class="tc-head">
+          <div class="tc-topic">🫁 Cellular respiration</div>
+          <div class="tc-ready"><span>Topic readiness</span> <b id="tc-pct">38%</b></div>
+        </div>
+        <div class="tc-track"><i id="tc-fill"></i></div>
+        <div id="tc-stack"></div>
+      </div>
+      <div class="tc-note">Demo runs on mock data · in production: questions from Studocu's canonical topics, graded in-browser, CTA into your course.</div>
+    </div>
+
+    <!-- TOPICS -->
+    <h2 class="h">🧠 Your topics</h2>
+    <p class="b muted">The course broken into the topics that actually show up on the exam. Practice the weak ones.</p>
+    <table class="tbl">
+      <thead><tr><th>Topic</th><th>Readiness</th><th></th></tr></thead>
+      <tbody>
+        <tr><td>Cell structure &amp; organelles</td><td><span class="chip g">Strong · 82%</span></td><td><a class="tlink" href="#" data-signup>Practice →</a></td></tr>
+        <tr><td>Membrane transport</td><td><span class="chip a">Shaky · 54%</span></td><td><a class="tlink" href="#" data-signup>Practice →</a></td></tr>
+        <tr><td>Cellular respiration</td><td><span class="chip r">Weak · 38%</span></td><td><a class="tlink" href="#" data-signup>Practice →</a></td></tr>
+        <tr><td>Photosynthesis</td><td><span class="chip a">Shaky · 49%</span></td><td><a class="tlink" href="#" data-signup>Practice →</a></td></tr>
+        <tr><td>Cell cycle &amp; mitosis</td><td><span class="chip g">Strong · 76%</span></td><td><a class="tlink" href="#" data-signup>Practice →</a></td></tr>
+        <tr><td>DNA replication &amp; protein synthesis</td><td><span class="chip r">Weak · 31%</span></td><td><a class="tlink" href="#" data-signup>Practice →</a></td></tr>
+      </tbody>
+    </table>
+
+    <!-- MATERIALS -->
+    <h2 class="h">📚 Key materials</h2>
+    <p class="b muted">Top-rated docs from students in this course, on Studocu.</p>
+    <table class="tbl">
+      <thead><tr><th>Name</th><th>Type</th><th>Rating</th></tr></thead>
+      <tbody>
+        <tr><td><span class="doc-ic di-sum">📄</span><a class="tlink" href="#" data-signup>Cell Biology — Full Course Summary</a></td><td class="ttype">Summary · 24 pp</td><td>★ 4.8</td></tr>
+        <tr><td><span class="doc-ic di-past">📝</span><a class="tlink" href="#" data-signup>Midterm 2 — Past Paper (2024)</a></td><td class="ttype">Past exam</td><td>★ 4.6</td></tr>
+        <tr><td><span class="doc-ic di-note">🗒️</span><a class="tlink" href="#" data-signup>Respiration &amp; Photosynthesis — Lecture Notes</a></td><td class="ttype">Notes · 12 pp</td><td>★ 4.9</td></tr>
+        <tr><td><span class="doc-ic di-fc">🃏</span><a class="tlink" href="#" data-signup>Mitosis vs Meiosis — Flashcards</a></td><td class="ttype">Flashcards · 120</td><td>★ 4.7</td></tr>
+        <tr><td><span class="doc-ic di-quiz">❓</span><a class="tlink" href="#" data-signup>Practice Quiz — Membrane transport</a></td><td class="ttype">Quiz · 15 Q</td><td>★ 4.5</td></tr>
+      </tbody>
+    </table>
+
+    <!-- MOCK EXAM -->
+    <h2 class="h">📝 Mock exam</h2>
+    <div class="callout"><span class="ic">🤖</span><div>Turn your notes into a full practice exam with Studocu AI. <a class="tlink" href="#" data-signup>Generate a mock exam →</a></div></div>
+
+    <!-- STUDY PLAN -->
+    <h2 class="h">🗓️ Study plan — 12 days to the final</h2>
+    <div class="todo wk">This week</div>
+    <div class="todo"><input type="checkbox" checked><label>Re-watch respiration lecture + redo the Topic Check above</label></div>
+    <div class="todo"><input type="checkbox"><label>Drill <b>membrane transport</b> &amp; <b>DNA replication</b> (weakest topics)</label></div>
+    <div class="todo"><input type="checkbox"><label>Skim the Full Course Summary, flag gaps</label></div>
+    <div class="todo wk">Exam week</div>
+    <div class="todo"><input type="checkbox"><label>Do Midterm 2 past paper under timed conditions</label></div>
+    <div class="todo"><input type="checkbox"><label>Generate a mock exam, review every miss</label></div>
+    <div class="todo"><input type="checkbox"><label>Final flashcard pass the night before</label></div>
+
+    <div class="divider"></div>
+    <div class="foot">
+      <span class="by">{{LOGOSM}} Free study template · duplicate it for any course</span>
+      <button class="s-btn" data-signup>Make your own hub →</button>
+    </div>
+  </div>
+</div>
+
+<!-- mock sign-up nudge -->
+<div class="ov" id="ov">
+  <div class="ov-card">
+    {{LOGO}}
+    <div class="ov-tag">● the acquisition event</div>
+    <h3>Make your own study hub</h3>
+    <p>This is where the student signs up — to duplicate the template, save progress, or practice a topic. One tap, and they're a Studocu user. <i>(Demo — no real sign-up.)</i></p>
+    <button class="s-btn grad" id="ov-go">Continue with Google</button>
+    <button class="x" id="ov-x">Maybe later</button>
+  </div>
+</div>
+
+<script>
+/* ---- Studocu logos (inlined) ---- */
+const MARK='<svg viewBox="0 0 112 112" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="currentColor" d="M79.423 37.6703c-.622-.0861-1.2187-.3037-1.7508-.6384-.5321-.3347-.9873-.7789-1.3358-1.3032-.3484-.5244-.582-1.117-.6855-1.7387-.1034-.6218-.0743-1.2584.0855-1.868l6.8756-26.5214c.1715-.66137.1898-1.35339.0534-2.02296-.1363-.66958-.4236-1.29889-.8399-1.83964-.4163-.54075-.9505-.978576-1.5616-1.27985C79.6528.156867 78.9811.000142347 78.3003 0H37.2091c-9.4221.00902037-18.4897 3.60714-25.3714 10.0676C4.95608 16.5281.77321 25.3694.133978 34.8059c-.639231 9.4365 2.312802 18.7649 8.259862 26.1011 5.94706 7.3361 14.44596 12.1333 23.78006 13.4227.6217.0869 1.2179.3051 1.7495.64.5316.335.9865.7791 1.3348 1.3033.3482.5241.582 1.1163.6858 1.7377.1038.6214.0754 1.2577-.0834 1.8673l-6.8756 26.521c-.1715.661-.1898 1.353-.0535 2.023.1364.67.4237 1.299.8401 1.84.4163.541.9504.978 1.5615 1.279.6111.301 1.2828.458 1.9636.458h41.0913c9.422-.009 18.4896-3.607 25.3713-10.068 6.8817-6.46 11.0646-15.3013 11.7038-24.7378.6393-9.4365-2.3127-18.7649-8.2598-26.1011-5.9469-7.3361-14.4458-12.1333-23.78-13.4227Zm-.7465 36.9847H41.0983c-.9861-.0012-1.9439-.3301-2.724-.9356-.78-.6054-1.3384-1.4532-1.5877-2.4108l-7.3559-28.3747c-.1715-.6613-.1898-1.3534-.0535-2.023.1363-.6695.4237-1.2988.84-1.8396.4163-.5407.9505-.9786 1.5615-1.2798.6111-.3013 1.2828-.458 1.9636-.4582h37.5725c.987-.0001 1.9462.3284 2.7274.9339.7812.6055 1.3404 1.454 1.59 2.4125l7.356 28.3747c.1715.6614.1898 1.3535.0534 2.023-.1363.6696-.4237 1.2989-.84 1.8397-.4163.5407-.9505.9785-1.5615 1.2798-.6111.3013-1.2828.458-1.9636.4581Z"/></svg>';
+const MARK_W='<span style="display:inline-flex;color:var(--s-blue)">'+MARK+'</span>';
+const MARK_DARK='<span style="display:inline-flex;color:#fff">'+MARK+'</span>';
+/* inject inline logo marks into placeholders (one-time, before any binding) */
+document.body.innerHTML=document.body.innerHTML
+  .replaceAll('{{LOGOSM}}','<span class="sx" style="display:inline-flex;width:15px;height:15px;color:var(--s-blue)">'+MARK+'</span>')
+  .replaceAll('{{LOGO}}','<span class="sx" style="display:inline-flex;width:20px;height:20px;color:var(--s-blue)">'+MARK+'</span>');
+
+/* re-bind after innerHTML swap */
+function bindSignup(){
+  document.querySelectorAll('[data-signup]').forEach(el=>{
+    el.addEventListener('click',e=>{ e.preventDefault(); document.getElementById('ov').classList.add('show'); });
+  });
+  const ov=document.getElementById('ov');
+  document.getElementById('ov-x').onclick=()=>ov.classList.remove('show');
+  document.getElementById('ov-go').onclick=()=>ov.classList.remove('show');
+  ov.addEventListener('click',e=>{ if(e.target===ov) ov.classList.remove('show'); });
+}
+
+/* ---- Topic Check loop ---- */
+function initCheck(){
+  const DATA=[
+    {q:"Most ATP from cellular respiration is produced during:",
+     opts:["Glycolysis","The Krebs cycle","Oxidative phosphorylation","Fermentation"], a:2},
+    {q:"In eukaryotes, the Krebs (citric acid) cycle takes place in the:",
+     opts:["Cytoplasm","Mitochondrial matrix","Inner membrane","Nucleus"], a:1},
+    {q:"The final electron acceptor in the electron transport chain is:",
+     opts:["NAD⁺","Pyruvate","Oxygen","Carbon dioxide"], a:2}
+  ];
+  const START=38, OK=18, NO=5, KEYS=["A","B","C","D"];
+  let idx=0, ready=START;
+  const stack=document.getElementById("tc-stack");
+  const pct=document.getElementById("tc-pct");
+  const fill=document.getElementById("tc-fill");
+  if(!stack) return;
+  fill.style.width=START+"%";
+  const esc=s=>(s+"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  function setReady(v){ ready=Math.min(100,v); fill.style.width=ready+"%"; pct.textContent=ready+"%"; }
+  function render(){
+    if(idx>=DATA.length){ done(); return; }
+    const it=DATA[idx];
+    stack.innerHTML='<div class="tc-fade"><div class="tc-meta">Cellular respiration · Q'+(idx+1)+' of '+DATA.length+'</div>'+
+      '<div class="tc-q">'+esc(it.q)+'</div><div class="tc-opts" data-opts></div>'+
+      '<div class="tc-foot"><span class="tc-count">No account needed to try</span></div></div>';
+    const wrap=stack.querySelector("[data-opts]");
+    it.opts.forEach((o,i)=>{
+      const b=document.createElement("button");
+      b.className="tc-opt"; b.innerHTML='<span class="k">'+KEYS[i]+'</span><span>'+esc(o)+'</span>';
+      b.onclick=()=>grade(it,i,b); wrap.appendChild(b);
+    });
+  }
+  function grade(it,picked,btn){
+    [...stack.querySelectorAll(".tc-opt")].forEach((b,i)=>{ b.disabled=true; if(i===it.a) b.classList.add("ok"); });
+    const good=picked===it.a; if(!good) btn.classList.add("no");
+    setReady(ready+(good?OK:NO));
+    const res=document.createElement("div");
+    res.className="tc-res tc-fade "+(good?"ok":"no");
+    res.textContent=good?"✓ Correct — graded right here.":"✕ Not quite — correct answer marked.";
+    stack.querySelector(".tc-fade").appendChild(res);
+    const last=idx===DATA.length-1;
+    const foot=stack.querySelector(".tc-foot");
+    foot.innerHTML='<span class="tc-count">'+(DATA.length-idx-1)+' left</span>'+
+      '<button class="tc-btn" data-next>'+(last?"See result":"Next")+' →</button>';
+    foot.querySelector("[data-next]").onclick=()=>{ idx++; render(); };
+  }
+  function done(){
+    stack.innerHTML='<div class="tc-done tc-fade">'+
+      '<div class="tc-big">Nice — you tried a classmate\'s check 🎯</div>'+
+      '<div class="tc-delta">readiness '+START+'% → <span class="to">'+ready+'%</span></div>'+
+      '<div class="tc-cta-box"><h5>👇 Want this for your courses?</h5>'+
+        '<div class="r2">＋ A self-test for any topic</div>'+
+        '<div class="r2">＋ Your readiness across the whole course</div>'+
+        '<div class="r2">＋ Save your progress</div></div>'+
+      '<button class="tc-btn grad" data-signup>Make your own → sign up</button> '+
+      '<button class="tc-btn ghost" data-replay>↺ Replay</button></div>';
+    stack.querySelector("[data-replay]").onclick=()=>{ idx=0; setReady(START); render(); };
+    bindSignup();
+  }
+  render();
+}
+
+bindSignup();
+initCheck();
+</script>
+</body>
+</html>
