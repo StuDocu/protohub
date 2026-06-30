@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Studocu Course Page on Notion — onboarding demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --n-bg:#fff; --n-text:#37352f; --n-subtle:#787774; --n-faint:#9b9a97;
+  --n-divider:#e9e9e7; --n-gray:#f7f6f3; --n-callout:#f1f1ef;
+  --n-font:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,"Apple Color Emoji",Arial,sans-serif;
+  --s-blue:#3092fa; --s-blue-700:#1976d2; --s-grad:linear-gradient(90deg,#f064fc,#3092fa);
+  --s-dm:"DM Sans",var(--n-font);
+  --g:#2e7d32; --g-bg:#e8f5e9; --r:#c62828; --r-bg:#fde7e7; --a:#e65100; --a-bg:#fff3e0;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:#ebeced;color:var(--n-text);font-family:var(--n-font);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer}
+
+/* notion frame */
+.win{max-width:1040px;margin:22px auto;background:var(--n-bg);border-radius:12px;box-shadow:0 10px 40px rgba(15,15,15,.16);overflow:hidden}
+.topbar{height:44px;display:flex;align-items:center;gap:12px;padding:0 14px;border-bottom:1px solid var(--n-divider);color:var(--n-subtle);font-size:14px}
+.dots{display:flex;gap:6px}.dots i{width:11px;height:11px;border-radius:50%;display:block}
+.dots .x{background:#ff5f57}.dots .y{background:#febc2e}.dots .z{background:#28c840}
+.crumb{display:flex;align-items:center;gap:7px;font-weight:500}
+.spacer{flex:1}
+.tb{font-size:13px;color:var(--n-subtle);padding:5px 9px;border-radius:6px;border:0;background:transparent}.tb:hover{background:var(--n-gray)}
+.cover{height:90px;background:linear-gradient(120deg,#cfe3ff,#f7e6ff 55%,#ffe9d6)}
+.page{max-width:760px;margin:0 auto;padding:0 28px 70px}
+.pico{font-size:54px;line-height:1;margin-top:-34px}
+h1.t{font-size:34px;font-weight:800;letter-spacing:-.02em;margin:6px 0 2px;color:#111}
+.psub{color:var(--n-subtle);font-size:15px;margin:0 0 14px}
+.nline{color:var(--n-text);font-size:15px;margin:3px 0;padding-left:2px}
+.nline.muted{color:var(--n-faint)}
+.nembed-label{font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--n-faint);margin:16px 0 7px}
+
+/* studocu embed shell */
+.sc{font-family:var(--s-dm);border:1px solid #e3e3e0;border-radius:16px;overflow:hidden;box-shadow:0 2px 10px rgba(16,24,40,.06);background:#fff}
+.sc-bar{display:flex;align-items:center;gap:10px;padding:12px 16px;background:#0b0b0c;color:#fff}
+.sc-bar .logo{display:inline-flex;width:18px;height:18px;color:#fff}
+.sc-bar .lbl{font-weight:700;font-size:13.5px}
+.sc-bar .hint{margin-left:auto;font-size:11px;font-weight:700;color:#74e39b;display:flex;align-items:center;gap:6px}
+.sc-bar .hint i{width:7px;height:7px;border-radius:50%;background:#74e39b;display:block}
+.sc-grad{height:3px;background:var(--s-grad)}
+.sc-body{padding:22px}
+.sc-note{font-size:11px;color:var(--n-faint);text-align:center;padding:10px 14px 14px}
+
+/* onboarding */
+.ob{max-width:420px;margin:6px auto;text-align:center}
+.ob .ico{font-size:34px}
+.ob h2{font-size:21px;font-weight:800;color:#141414;margin:8px 0 4px;letter-spacing:-.01em}
+.ob p.s{font-size:14px;color:var(--n-subtle);margin:0 0 18px}
+.fld{text-align:left;margin-bottom:12px}
+.fld label{display:block;font-size:12.5px;font-weight:700;color:#384149;margin-bottom:5px}
+.fld input{width:100%;border:1px solid #d3d9e0;border-radius:10px;padding:11px 13px;font-family:inherit;font-size:15px;color:#141414;outline:none}
+.fld input:focus{border-color:var(--s-blue);box-shadow:0 0 0 3px rgba(48,146,250,.15)}
+.fld .help{font-size:11.5px;color:var(--n-faint);margin-top:4px}
+.s-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;font-weight:700;font-size:14.5px;padding:12px 18px;color:#fff;background:var(--s-blue);width:100%}
+.s-btn:hover{background:var(--s-blue-700)}
+.s-btn.grad{background:var(--s-grad)}
+.s-btn.sm{width:auto;padding:9px 15px;font-size:13.5px}
+.s-btn.ghost{background:transparent;color:var(--s-blue-700)}
+.or{display:flex;align-items:center;gap:12px;color:var(--n-faint);font-size:12px;font-weight:600;margin:16px 0}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--n-divider)}
+.doorb{border:1px dashed #c9b8e6;background:linear-gradient(135deg,#faf0ff,#eaf3ff);border-radius:12px;padding:14px;text-align:left}
+.doorb .dh{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700;color:#6a4fb0;margin-bottom:4px}
+.doorb .dp{font-size:12.5px;color:#6b6275;margin:0 0 11px}
+.appcourses{display:none;margin-top:4px}
+.appcourses.show{display:block;animation:fade .35s}
+.appc{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:#fff;border:1px solid #e6dcf3;border-radius:10px;padding:9px 12px;margin-bottom:7px;font-size:14px;font-weight:600;color:#141414}
+.appc:hover{border-color:var(--s-blue)}
+.appc .ai{font-size:18px}
+.appc .ac{margin-left:auto;font-size:11px;color:var(--s-blue-700);font-weight:700}
+.demolbl{font-size:10.5px;color:var(--n-faint);text-align:center;margin-top:12px}
+
+/* connecting */
+.conn{text-align:center;padding:40px 10px}
+.spin{width:34px;height:34px;border-radius:50%;border:3px solid #e6eaef;border-top-color:var(--s-blue);margin:0 auto 14px;animation:spin .8s linear infinite}
+.conn p{font-size:14.5px;color:var(--n-subtle);margin:0}
+.conn b{color:#141414}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* course page */
+.cp{animation:fade .45s}
+.cp-head{display:flex;align-items:center;gap:13px;margin-bottom:4px;flex-wrap:wrap}
+.cp-ico{font-size:30px}
+.cp-h{font-size:21px;font-weight:800;color:#141414;letter-spacing:-.01em}
+.cp-code{font-size:12px;font-weight:700;color:var(--n-subtle);background:var(--n-gray);padding:2px 9px;border-radius:999px}
+.cp-exam{font-size:12px;font-weight:700;color:var(--a);background:var(--a-bg);padding:3px 10px;border-radius:999px;margin-left:auto}
+.cp-sub{font-size:13px;color:var(--n-subtle);margin:0 0 18px}
+.cp-sub b{color:#141414}
+.sec{font-size:12.5px;font-weight:800;letter-spacing:.01em;color:#141414;margin:20px 0 9px;display:flex;align-items:center;gap:8px}
+.sec .c{font-size:11px;font-weight:700;color:var(--n-faint)}
+.mats{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.mat{display:flex;align-items:center;gap:10px;border:1px solid #eceae5;border-radius:11px;padding:10px 12px;background:#fff;transition:border-color .15s,transform .15s;cursor:pointer}
+.mat:hover{border-color:var(--s-blue);transform:translateY(-1px)}
+.mat .mi{width:30px;height:30px;border-radius:7px;display:grid;place-items:center;font-size:15px;flex:none}
+.mi.sum{background:#e7f0fd}.mi.past{background:#fff3e0}.mi.note{background:#e8f5e9}.mi.fc{background:#f5eaf7}.mi.quiz{background:#e0f7f4}
+.mat .mt{min-width:0}
+.mat .mn{font-size:13px;font-weight:600;color:#141414;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mat .mmeta{font-size:11px;color:var(--n-subtle);margin-top:2px}
+.tops{display:flex;flex-direction:column;gap:0}
+.top{display:flex;align-items:center;gap:12px;padding:9px 2px;border-bottom:1px solid var(--n-divider)}
+.top:last-child{border-bottom:0}
+.top .tn{font-size:14px;color:#141414;flex:1}
+.chip{font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px;white-space:nowrap}
+.chip.g{background:var(--g-bg);color:var(--g)}.chip.a{background:var(--a-bg);color:var(--a)}.chip.r{background:var(--r-bg);color:var(--r)}
+.top .pr{font-size:12.5px;font-weight:700;color:var(--s-blue-700);text-decoration:none}
+.today{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#eef6ff,#faf0ff);border:1px solid #dce9fb;border-radius:13px;padding:15px 16px}
+.today .tdico{font-size:26px}
+.today .tdt{flex:1}
+.today .tdt h4{margin:0 0 2px;font-size:15px;color:#141414;font-weight:800}
+.today .tdt p{margin:0;font-size:12.5px;color:var(--n-subtle)}
+.feed{display:flex;flex-direction:column;gap:7px}
+.fitem{display:flex;align-items:center;gap:10px;font-size:13px;color:#384149}
+.fitem .fd{width:7px;height:7px;border-radius:50%;background:var(--s-blue);flex:none}
+.cp-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:22px;padding-top:16px;border-top:1px solid var(--n-divider);flex-wrap:wrap}
+.ai-btn{display:inline-flex;align-items:center;gap:7px;border:1px solid #cfe3ff;background:#f0f7ff;color:#1763c4;font-weight:700;font-size:13px;padding:9px 14px;border-radius:999px}
+.ai-btn:hover{background:#e3f0ff}
+.ai-btn:disabled{opacity:.85;cursor:default}
+.mini-spin{width:13px;height:13px;border-radius:50%;border:2px solid #bcd6f5;border-top-color:#1763c4;display:inline-block;animation:spin .7s linear infinite}
+
+/* topic check widget */
+.tc{border:1px solid #e6eaef;border-radius:13px;overflow:hidden;margin-top:2px}
+.tc-top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 15px;background:#0b0b0c;color:#fff;flex-wrap:wrap}
+.tc-top .tt{font-weight:700;font-size:13.5px;display:flex;align-items:center;gap:8px}
+.tc-top .tr{font-size:12px;color:#b9bcc4;display:flex;align-items:center;gap:8px}
+.tc-top .tr b{color:#fff;font-size:15px}
+.tc-trk{height:6px;background:#1c1c1f}
+.tc-trk>i{display:block;height:100%;width:38%;background:var(--s-grad);transition:width .7s cubic-bezier(.22,.61,.36,1)}
+.tc-in{padding:16px}
+.tc-meta{font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--n-faint);margin-bottom:8px}
+.tc-q{font-size:15px;font-weight:600;color:#141414;margin:0 0 12px}
+.tc-opts{display:flex;flex-direction:column;gap:8px}
+.tc-opt{display:flex;align-items:center;gap:11px;text-align:left;width:100%;padding:11px 13px;border-radius:10px;border:1px solid #d3d9e0;background:#fff;color:#384149;font-family:inherit;font-size:14px}
+.tc-opt:hover:not(:disabled){border-color:var(--s-blue)}
+.tc-opt .k{flex:none;width:22px;height:22px;border-radius:6px;display:grid;place-items:center;font-size:12px;font-weight:700;background:#eef1f6;color:#6b7681}
+.tc-opt.ok{border-color:var(--g);background:var(--g-bg)}.tc-opt.ok .k{background:var(--g);color:#fff}
+.tc-opt.no{border-color:var(--r);background:var(--r-bg)}.tc-opt.no .k{background:var(--r);color:#fff}
+.tc-opt:disabled{cursor:default}
+.tc-res{font-size:13px;font-weight:600;margin:12px 0 0}
+.tc-res.ok{color:var(--g)}.tc-res.no{color:var(--r)}
+.tc-foot{display:flex;align-items:center;justify-content:space-between;margin-top:13px}
+.tc-cnt{font-size:12px;color:var(--n-faint)}
+.tc-btn{display:inline-flex;align-items:center;gap:7px;border:0;background:var(--s-blue);color:#fff;font-weight:700;font-size:13px;padding:9px 15px;border-radius:999px}
+.tc-btn.grad{background:var(--s-grad)}.tc-btn.ghost{background:transparent;color:#6b7681}
+.tc-done{text-align:center;padding:6px 2px}
+.tc-big{font-size:19px;font-weight:800;color:#141414;margin-bottom:2px}
+.tc-delta{font-size:14px;font-weight:700;color:#6b7681;margin-bottom:13px}
+.tc-delta .to{background:var(--s-grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.tc-fade{animation:fade .4s}
+
+
+/* signup overlay */
+.ov{position:fixed;inset:0;background:rgba(10,10,12,.55);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
+.ov.show{display:flex}
+.ovc{font-family:var(--s-dm);background:#0b0b0c;color:#fff;border-radius:18px;max-width:380px;width:100%;padding:26px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.4)}
+.ovc .logo{display:inline-flex;width:24px;height:24px;color:#fff;margin-bottom:12px}
+.ov-tag{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#74e39b;background:rgba(116,227,155,.12);padding:4px 10px;border-radius:999px;margin-bottom:13px}
+.ovc h3{margin:0 0 6px;font-size:20px;font-weight:800}
+.ovc p{margin:0 0 18px;font-size:13.5px;color:#b9bcc4;line-height:1.55}
+.ovc .x{background:transparent;border:0;color:#8b8f98;font-size:13px;font-weight:600;margin-top:8px}
+
+@media (max-width:600px){.win{margin:0;border-radius:0}.page{padding:0 16px 50px}.mats{grid-template-columns:1fr}.hideSm{display:none}}
+</style>
+</head>
+<body>
+
+<div class="win">
+  <div class="topbar">
+    <span class="dots"><i class="x"></i><i class="y"></i><i class="z"></i></span>
+    <span class="crumb"><span>📒</span> My Semester</span>
+    <span class="spacer"></span>
+    <button class="tb hideSm">Share</button>
+    <button class="tb hideSm">★</button>
+    <button class="tb hideSm">•••</button>
+  </div>
+  <div class="cover"></div>
+  <div class="page">
+    <div class="pico">📒</div>
+    <h1 class="t">My Semester</h1>
+    <p class="psub">Notes, deadlines, and my course pages — all in one place.</p>
+    <div class="nline">Spring term · 4 courses · midterms coming up 😅</div>
+    <div class="nline muted">Lecture notes / readings / group project…</div>
+    <div class="nembed-label">▾ embedded · studocu.com</div>
+
+    <!-- STUDOCU EMBED -->
+    <div class="sc" id="sc">
+      <div class="sc-grad"></div>
+      <div class="sc-bar"><span class="logo" id="logo1"></span><span class="lbl">Studocu · Course page</span><span class="hint"><i></i> Live</span></div>
+      <div class="sc-body" id="sc-body"><!-- state renders here --></div>
+      <div class="sc-note">Demo · mock data. In production: course code connects to your real Studocu course; questions come from canonical topics; the CTA opens the live Course Companion.</div>
+    </div>
+
+  </div>
+</div>
+
+<div class="ov" id="ov">
+  <div class="ovc">
+    <span class="logo" id="logo2"></span>
+    <div class="ov-tag">● the acquisition event</div>
+    <h3 id="ov-h">Make this yours on Studocu</h3>
+    <p id="ov-p">This is where the student signs up — to save progress, practice a topic, or open the full course. One tap and they're a Studocu user. <i>(Demo — no real sign-up.)</i></p>
+    <button class="s-btn grad" id="ov-go">Continue with Google</button>
+    <button class="x" id="ov-x">Maybe later</button>
+  </div>
+</div>
+
+<script>
+const MARK='<svg viewBox="0 0 112 112" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="width:100%;height:100%"><path fill="currentColor" d="M79.423 37.6703c-.622-.0861-1.2187-.3037-1.7508-.6384-.5321-.3347-.9873-.7789-1.3358-1.3032-.3484-.5244-.582-1.117-.6855-1.7387-.1034-.6218-.0743-1.2584.0855-1.868l6.8756-26.5214c.1715-.66137.1898-1.35339.0534-2.02296-.1363-.66958-.4236-1.29889-.8399-1.83964-.4163-.54075-.9505-.978576-1.5616-1.27985C79.6528.156867 78.9811.000142347 78.3003 0H37.2091c-9.4221.00902037-18.4897 3.60714-25.3714 10.0676C4.95608 16.5281.77321 25.3694.133978 34.8059c-.639231 9.4365 2.312802 18.7649 8.259862 26.1011 5.94706 7.3361 14.44596 12.1333 23.78006 13.4227.6217.0869 1.2179.3051 1.7495.64.5316.335.9865.7791 1.3348 1.3033.3482.5241.582 1.1163.6858 1.7377.1038.6214.0754 1.2577-.0834 1.8673l-6.8756 26.521c-.1715.661-.1898 1.353-.0535 2.023.1364.67.4237 1.299.8401 1.84.4163.541.9504.978 1.5615 1.279.6111.301 1.2828.458 1.9636.458h41.0913c9.422-.009 18.4896-3.607 25.3713-10.068 6.8817-6.46 11.0646-15.3013 11.7038-24.7378.6393-9.4365-2.3127-18.7649-8.2598-26.1011-5.9469-7.3361-14.4458-12.1333-23.78-13.4227Zm-.7465 36.9847H41.0983c-.9861-.0012-1.9439-.3301-2.724-.9356-.78-.6054-1.3384-1.4532-1.5877-2.4108l-7.3559-28.3747c-.1715-.6613-.1898-1.3534-.0535-2.023.1363-.6695.4237-1.2988.84-1.8396.4163-.5407.9505-.9786 1.5615-1.2798.6111-.3013 1.2828-.458 1.9636-.4582h37.5725c.987-.0001 1.9462.3284 2.7274.9339.7812.6055 1.3404 1.454 1.59 2.4125l7.356 28.3747c.1715.6614.1898 1.3535.0534 2.023-.1363.6696-.4237 1.2989-.84 1.8397-.4163.5407-.9505.9785-1.5615 1.2798-.6111.3013-1.2828.458-1.9636.4581Z"/></svg>';
+document.getElementById('logo1').innerHTML=MARK;
+document.getElementById('logo2').innerHTML=MARK;
+
+const COURSES={
+  chem201:{ name:"Organic Chemistry", code:"CHEM 201", icon:"⚗️", exam:"in 9 days", school:"State University",
+    keywords:["organic","chem","orgo"],
+    topics:[["Nomenclature & structure",78,"g"],["Stereochemistry",52,"a"],["Reaction mechanisms",34,"r"],["Spectroscopy (NMR/IR)",41,"a"],["Carbonyl chemistry",29,"r"]],
+    materials:[["sum","Organic Chemistry — Full Course Summary","Summary · 26 pp","★ 4.8"],["note","Reaction Mechanisms — Cheat Sheet","Notes · 8 pp","★ 4.9"],["past","Midterm 2 — Past Paper (2024)","Past exam","★ 4.6"],["note","NMR/IR Spectroscopy — Worked Problems","Notes","★ 4.7"],["fc","Functional Groups — Flashcards","Flashcards · 90","★ 4.7"],["quiz","Stereochemistry — Practice Quiz","Quiz · 15 Q","★ 4.5"]],
+    check:{ topic:"Reaction mechanisms", qs:[
+      ["An SN2 reaction proceeds with:",["Retention of configuration","Inversion of configuration (Walden inversion)","Racemization","No stereochemical change"],1],
+      ["A tertiary carbocation is more stable than a primary one mainly due to:",["Steric strain","Hyperconjugation & inductive donation from alkyl groups","Resonance with oxygen","Hydrogen bonding"],1],
+      ["Markovnikov addition of HBr to an alkene places Br on the:",["Less-substituted carbon","More-substituted carbon","Terminal carbon, always","Both carbons equally"],1] ]},
+    today:"Drill 3 stereochemistry problems",
+    feed:["New summary added: Aldol & Claisen reactions","2 past papers added this week","Classmate shared: Exam 2 review sheet"] },
+
+  bio101:{ name:"Cell Biology", code:"BIOL 101", icon:"🧬", exam:"in 12 days", school:"State University",
+    keywords:["cell","bio","biology"],
+    topics:[["Cell structure & organelles",82,"g"],["Membrane transport",54,"a"],["Cellular respiration",38,"r"],["Photosynthesis",49,"a"],["Mitosis & meiosis",76,"g"],["DNA replication",31,"r"]],
+    materials:[["sum","Cell Biology — Full Course Summary","Summary · 24 pp","★ 4.8"],["note","Respiration & Photosynthesis — Notes","Notes · 12 pp","★ 4.9"],["past","Midterm — Past Paper (2024)","Past exam","★ 4.6"],["fc","Mitosis vs Meiosis — Flashcards","Flashcards · 120","★ 4.7"],["quiz","Membrane Transport — Quiz","Quiz · 15 Q","★ 4.5"],["note","Cell Signaling — Summary","Notes","★ 4.6"]],
+    check:{ topic:"Cellular respiration", qs:[
+      ["Most ATP from cellular respiration is produced during:",["Glycolysis","The Krebs cycle","Oxidative phosphorylation","Fermentation"],2],
+      ["In eukaryotes, the Krebs cycle takes place in the:",["Cytoplasm","Mitochondrial matrix","Inner membrane","Nucleus"],1],
+      ["The final electron acceptor in the electron transport chain is:",["NAD⁺","Pyruvate","Oxygen","Carbon dioxide"],2] ]},
+    today:"Review the electron transport chain",
+    feed:["New summary added: Cell signaling pathways","Past paper added: Final 2023","Classmate shared: Organelle flashcards"] },
+
+  econ101:{ name:"Microeconomics", code:"ECON 101", icon:"📈", exam:"in 7 days", school:"State University",
+    keywords:["micro","econ","economics"],
+    topics:[["Supply & demand",80,"g"],["Elasticity",55,"a"],["Consumer theory",42,"a"],["Market structures",33,"r"],["Externalities",29,"r"]],
+    materials:[["sum","Microeconomics — Full Course Summary","Summary · 20 pp","★ 4.8"],["note","Elasticity — Worked Examples","Notes","★ 4.7"],["past","Final — Past Paper (2024)","Past exam","★ 4.6"],["fc","Market Structures — Flashcards","Flashcards · 60","★ 4.7"],["note","Graphs You Must Know — Cheat Sheet","Notes","★ 4.9"],["quiz","Consumer Theory — Quiz","Quiz · 12 Q","★ 4.5"]],
+    check:{ topic:"Elasticity", qs:[
+      ["If demand is price-elastic, a price increase causes total revenue to:",["Rise","Fall","Stay the same","Always double"],1],
+      ["A good with many close substitutes tends to have demand that is:",["Perfectly inelastic","More elastic","Always unit-elastic","Unaffected by price"],1],
+      ["Price elasticity of demand = % change in quantity demanded ÷:",["% change in income","% change in price","% change in supply","change in total revenue"],1] ]},
+    today:"Practice 3 elasticity questions",
+    feed:["New summary added: Game theory basics","Past paper added: Midterm 2024","Classmate shared: Graph cheat sheet"] },
+};
+
+const MI={sum:["mi sum","📄"],past:["mi past","📝"],note:["mi note","🗒️"],fc:["mi fc","🃏"],quiz:["mi quiz","❓"]};
+const KEYS=["A","B","C","D"];
+const $=id=>document.getElementById(id);
+const body=$("sc-body");
+function esc(s){return (s+"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+
+function findCourse(name,code){
+  const n=(name||"").toLowerCase().trim(), c=(code||"").toLowerCase().replace(/\s+/g,"");
+  for(const k in COURSES){ const ck=COURSES[k].code.toLowerCase().replace(/\s+/g,""); if(c&&(c===ck||ck.includes(c)||c.includes(ck))) return COURSES[k]; }
+  for(const k in COURSES){ const C=COURSES[k]; if(n&&C.name.toLowerCase().includes(n)) return C; if(n) for(const kw of C.keywords) if(n.includes(kw)) return C; }
+  return COURSES.chem201;
+}
+
+/* ---------- onboarding ---------- */
+function renderOnboarding(){
+  body.innerHTML=
+   '<div class="ob">'
+   +'<div class="ico">🎓</div>'
+   +'<h2>Set up your course page</h2>'
+   +'<p class="s">Tell us what you\'re studying — we\'ll pull in what other students use.</p>'
+   +'<div class="fld"><label>What are you studying right now?</label><input id="ob-name" value="Organic Chemistry" placeholder="e.g. Organic Chemistry"></div>'
+   +'<div class="fld"><label>Course code</label><input id="ob-code" value="CHEM 201" placeholder="e.g. CHEM 201"><div class="help">The key that connects you to the right course.</div></div>'
+   +'<button class="s-btn" id="ob-connect">Connect →</button>'
+   +'<div class="or">or</div>'
+   +'<div class="doorb">'
+     +'<div class="dh">⚡ Import from the Studocu app</div>'
+     +'<p class="dp">You already picked your courses when you signed up on mobile.</p>'
+     +'<button class="s-btn sm" id="ob-import">Find my courses</button>'
+     +'<div class="appcourses" id="ob-app"></div>'
+   +'</div>'
+   +'<div class="demolbl">Door A = type your course · Door B = import from the app (mocked)</div>'
+   +'</div>';
+  $("ob-connect").onclick=()=>{ connect(findCourse($("ob-name").value,$("ob-code").value)); };
+  $("ob-import").onclick=()=>{
+    const box=$("ob-app");
+    box.innerHTML='<div style="font-size:11.5px;font-weight:700;color:#6a4fb0;margin:4px 0 8px">✓ Found in your Studocu app:</div>'
+      +Object.keys(COURSES).map(k=>{const C=COURSES[k];return '<button class="appc" data-k="'+k+'"><span class="ai">'+C.icon+'</span>'+esc(C.name)+'<span class="ac">Add →</span></button>';}).join("");
+    box.classList.add("show");
+    box.querySelectorAll(".appc").forEach(b=>b.onclick=()=>connect(COURSES[b.dataset.k]));
+  };
+}
+
+/* ---------- connecting ---------- */
+function connect(course){
+  body.innerHTML='<div class="conn"><div class="spin"></div><p>Pulling your course page for <b>'+esc(course.name)+'</b>…</p></div>';
+  setTimeout(()=>renderCourse(course),950);
+}
+
+/* ---------- course page ---------- */
+function todayLabel(){ const d=new Date(); return d.toLocaleDateString(undefined,{weekday:"long"}); }
+function renderCourse(C){
+  const mats=C.materials.map(m=>{const mi=MI[m[0]];return '<div class="mat" data-signup><span class="'+mi[0]+'">'+mi[1]+'</span><div class="mt"><div class="mn">'+esc(m[1])+'</div><div class="mmeta">'+esc(m[2])+' · '+esc(m[3])+'</div></div></div>';}).join("");
+  const tops=C.topics.map(t=>'<div class="top"><span class="tn">'+esc(t[0])+'</span><span class="chip '+t[2]+'">'+t[1]+'%</span><a class="pr" href="#" data-signup>Practice →</a></div>').join("");
+  const feed=C.feed.map(f=>'<div class="fitem"><span class="fd"></span>'+esc(f)+'</div>').join("");
+  body.innerHTML=
+   '<div class="cp">'
+   +'<div class="cp-head"><span class="cp-ico">'+C.icon+'</span><span class="cp-h">'+esc(C.name)+'</span><span class="cp-code">'+esc(C.code)+'</span><span class="cp-exam">🗓️ Final '+esc(C.exam)+'</span></div>'
+   +'<p class="cp-sub">✓ Connected · '+esc(C.school)+'. <b>Here\'s what students use for '+esc(C.name)+'.</b></p>'
+
+   +'<div class="sec">📅 Today\'s card <span class="c">· '+todayLabel()+'</span></div>'
+   +'<div class="today"><span class="tdico">🔥</span><div class="tdt"><h4>'+esc(C.today)+'</h4><p>One quick set — keeps your streak and your readiness moving.</p></div><button class="tc-btn" id="cp-today">Start →</button></div>'
+
+   +'<div class="sec">🎯 Quick check <span class="c">· '+esc(C.check.topic)+'</span></div>'
+   +'<div class="tc" id="tc"><div class="tc-top"><span class="tt">🫀 '+esc(C.check.topic)+'</span><span class="tr">readiness <b id="tc-pct">38%</b></span></div><div class="tc-trk"><i id="tc-fill"></i></div><div class="tc-in" id="tc-in"></div></div>'
+
+   +'<div class="sec">📚 Top materials <span class="c">· '+C.materials.length+'</span></div><div class="mats">'+mats+'</div>'
+
+   +'<div class="sec">🧠 Your topics</div><div class="tops">'+tops+'</div>'
+
+   +'<div class="sec">🆕 New this week</div><div class="feed">'+feed+'</div>'
+
+   +'<div class="cp-foot"><button class="ai-btn" id="cp-mock">📝 Generate a mock exam</button><button class="s-btn sm grad" data-signup>Open full course in Studocu →</button></div>'
+   +'</div>';
+  initCheck(C.check);
+  $("cp-today").onclick=()=>$("tc").scrollIntoView({behavior:"smooth",block:"center"});
+  $("cp-mock").onclick=mockExam;
+  bindSignup();
+}
+
+/* ---------- topic check ---------- */
+function initCheck(check){
+  const START=38,OK=18,NO=5; let idx=0,ready=START;
+  const inb=$("tc-in"),pct=$("tc-pct"),fill=$("tc-fill");
+  fill.style.width=START+"%";
+  function setReady(v){ready=Math.min(100,v);fill.style.width=ready+"%";pct.textContent=ready+"%";}
+  function render(){
+    if(idx>=check.qs.length){return done();}
+    const it=check.qs[idx];
+    inb.innerHTML='<div class="tc-fade"><div class="tc-meta">'+esc(check.topic)+' · Q'+(idx+1)+' of '+check.qs.length+'</div><div class="tc-q">'+esc(it[0])+'</div><div class="tc-opts" data-o></div><div class="tc-foot"><span class="tc-cnt">No account needed to try</span></div></div>';
+    const w=inb.querySelector("[data-o]");
+    it[1].forEach((o,i)=>{const b=document.createElement("button");b.className="tc-opt";b.innerHTML='<span class="k">'+KEYS[i]+'</span><span>'+esc(o)+'</span>';b.onclick=()=>grade(it,i,b);w.appendChild(b);});
+  }
+  function grade(it,picked,btn){
+    [...inb.querySelectorAll(".tc-opt")].forEach((b,i)=>{b.disabled=true;if(i===it[2])b.classList.add("ok");});
+    const good=picked===it[2]; if(!good)btn.classList.add("no");
+    setReady(ready+(good?OK:NO));
+    const r=document.createElement("div");r.className="tc-res tc-fade "+(good?"ok":"no");r.textContent=good?"✓ Correct — graded right here.":"✕ Not quite — correct answer marked.";
+    inb.querySelector(".tc-fade").appendChild(r);
+    const last=idx===check.qs.length-1;
+    const f=inb.querySelector(".tc-foot");
+    f.innerHTML='<span class="tc-cnt">'+(check.qs.length-idx-1)+' left</span><button class="tc-btn" data-next>'+(last?"See result":"Next")+' →</button>';
+    f.querySelector("[data-next]").onclick=()=>{idx++;render();};
+  }
+  function done(){
+    inb.innerHTML='<div class="tc-done tc-fade"><div class="tc-big">Nice — readiness is moving 🎯</div><div class="tc-delta">'+START+'% → <span class="to">'+ready+'%</span></div><button class="tc-btn grad" data-signup>Save your progress → sign up</button> <button class="tc-btn ghost" data-replay>↺ Replay</button></div>';
+    inb.querySelector("[data-replay]").onclick=()=>{idx=0;setReady(START);render();};
+    bindSignup();
+  }
+  render();
+}
+
+/* ---------- Studocu builds the mock exam (work stays in Studocu) ---------- */
+function mockExam(){
+  const b=$("cp-mock");
+  b.disabled=true; b.innerHTML='<span class="mini-spin"></span> Studocu is building your mock exam…';
+  setTimeout(()=>openSignup("Your mock exam is ready","Sign up and <b>Studocu</b> generates a full practice exam from your weakest topics — graded, with explanations. <i>(Demo — no real sign-up.)</i>"),1300);
+}
+
+/* ---------- signup overlay ---------- */
+function openSignup(title,sub){
+  $("ov-h").textContent = title || "Make this yours on Studocu";
+  $("ov-p").innerHTML = sub || "This is where the student signs up — to save progress, practice a topic, or open the full course. One tap and they're a Studocu user. <i>(Demo — no real sign-up.)</i>";
+  $("ov").classList.add("show");
+}
+function closeOv(){
+  $("ov").classList.remove("show");
+  const b=$("cp-mock"); if(b){ b.disabled=false; b.innerHTML="📝 Generate a mock exam"; }
+}
+function bindSignup(){
+  document.querySelectorAll("[data-signup]").forEach(el=>{ if(el._b)return; el._b=1; el.addEventListener("click",e=>{e.preventDefault();openSignup();}); });
+}
+$("ov-x").onclick=closeOv;
+$("ov-go").onclick=closeOv;
+$("ov").addEventListener("click",e=>{if(e.target===$("ov"))closeOv();});
+
+renderOnboarding();
+</script>
+</body>
+</html>

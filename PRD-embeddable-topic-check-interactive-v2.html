@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Embeddable Topic Check — PRD v2</title>
+<title>Studocu Course Page on Notion — PRD v2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
@@ -280,7 +280,7 @@ mark.cmark.resolved{background:#eef1f6;border-bottom-color:#d3d9e0}
 <div class="appbar">
   <div class="inner">
     <span class="mk" aria-hidden="true"></span>
-    <span class="name">Embeddable Topic Check<small>Product Requirements · Mission Anchor × Hackquisition</small></span>
+    <span class="name">Studocu Course Page on Notion<small>Mission Anchor × Hackquisition · Los Infiltrados</small></span>
     <div class="right">
       <span class="hint" id="hint">💬 Select any text to comment</span>
       <button class="whoami" id="whoami"><span class="av" id="whoav">?</span><span id="whoname">Set your name</span></button>
@@ -296,9 +296,9 @@ mark.cmark.resolved{background:#eef1f6;border-bottom-color:#d3d9e0}
     <article class="doc" id="doc">
       <header class="hero" data-c="hero" data-label="Overview">
         <span class="pill">PRD · v2 · Hackquisition build draft</span>
-        <h1>Drop a check where students already study</h1>
-        <p class="sub">A duplicatable <b>Notion "course study hub"</b> with a live Studocu <b>Topic Check</b> embedded — students copy the template, the embed arrives in their workspace, and the next classmate can't help but try it. <b>Infinite Practice</b> supplies the questions, the <b>Course Companion</b> is where the CTA lands, and dynamic content (today's card, exam countdown, new materials) makes it a <b>return habit</b>, not a one-off. Owned distribution: no SEO-reliant loop, no paid-to-survive, no peer-social system.</p>
-        <p class="meta"><b>Mission Anchor</b> · Education AI &nbsp;·&nbsp; <b>Proposed by Ömer Polat</b> &nbsp;·&nbsp; Connects to <b>Infinite Practice</b> (canonical topics + question widgets) and the <b>Course Companion</b> &nbsp;·&nbsp; <b>Event:</b> The Hackquisition (24–26 Jun build · seed to 3 Jul)</p>
+        <h1>Studocu course page — on your Notion</h1>
+        <p class="sub">Your Studocu course page — materials, topics, exam countdown, a self-test — living inside the Notion page where students already study. Tell it what you're taking and it seeds in seconds from your course code, then the embed keeps it alive with dynamic widgets. The Topic Check is one widget on it: the hook that turns a classmate's visit into a sign-up — and when they want a mock exam, Studocu builds it.</p>
+        <p class="meta"><b>Mission Anchor</b> · Education AI · squad <b>“Los Infiltrados”</b> &nbsp;·&nbsp; <b>Proposed by Ömer Polat</b> &nbsp;·&nbsp; Connects to <b>Infinite Practice</b> (canonical topics + question widgets) and the <b>Course Companion</b> &nbsp;·&nbsp; <b>Event:</b> The Hackquisition (24–26 Jun build · seed to 3 Jul)</p>
       </header>
 
       <div class="body">
@@ -316,15 +316,15 @@ mark.cmark.resolved{background:#eef1f6;border-bottom-color:#d3d9e0}
 
         <section data-c="tldr" data-label="TL;DR">
           <h2><span class="n">2</span> The pitch</h2>
-          <p class="lede">One embeddable check, dropped into the note app a student already uses, that the next classmate can't help but try — and a try ends in a sign-up.</p>
-          <p>It rides the student's <b>existing</b> note-sharing instead of building a new social network: a student adds it to their own study page because it's a useful self-test, and every co-editor or viewer of that page meets a live, gradeable question with a <b>"make your own → sign up"</b> exit. The questions come from Infinite Practice's <b>canonical topics</b>; multiple-choice is <b>graded in the browser</b> (no auth to try); the CTA deep-links into the <b>live Course Companion</b>.</p>
+          <p class="lede">Your Studocu course page, living inside the student's own Notion — seeded in seconds from a course code, kept alive by an embed, with a self-test that converts the next visitor.</p>
+          <p>A student adds Studocu to their Notion and answers one question — <i>what are you studying?</i> — and the page instantly fills with the 5–10 materials other students use for that course, plus topics, an exam countdown, and a Topic Check. It rides their <b>existing</b> note-keeping instead of a new social network; the questions come from <b>canonical topics</b>, multiple-choice is <b>graded in the browser</b> (no auth to try), and the CTA deep-links into the <b>live Course Companion</b>. The check is <b>one widget</b> on the page — the part that hooks a classmate who opens it.</p>
         </section>
 
         <section data-c="prototypes" data-label="Prototypes">
           <h2><span class="n">▶</span> See it — the prototype</h2>
-          <p class="lede">The artifact is playable in §4 below, embedded in a mock Notion page and running on mock data — the full UX with zero backend.</p>
+          <p class="lede">A live widget from the course page is playable in §4 below, embedded in a mock Notion page and running on mock data — the full UX with zero backend.</p>
           <div class="protos">
-            <a class="proto main live" href="#concept" data-proto><span class="pt">Main <span class="livedot">● Live below</span></span><h4>Topic Check, embedded in a Notion page</h4><p>Jump to §4 and play the loop: a classmate's check → answer in-browser → readiness ticks → <b>“make your own → sign up.”</b> Mock data; real APIs swap in behind it.</p><span class="open">Go to the live demo →</span></a>
+            <a class="proto main live" href="#concept" data-proto><span class="pt">Main <span class="livedot">● Live below</span></span><h4>Course page on Notion — the Topic Check widget</h4><p>Jump to §4 and play the loop: a classmate's check → answer in-browser → readiness ticks → <b>“make your own → sign up.”</b> Mock data; real APIs swap in behind it.</p><span class="open">Go to the live demo →</span></a>
             <a class="proto" href="#" data-proto target="_blank"><span class="pt">Sibling</span><h4>“Ready Check” share card</h4><p>The earlier readiness-card concept — same engine, social-share framing. Placeholder: paste its published URL to go live.</p><span class="open">Open →</span></a>
             <a class="proto" href="#" data-proto target="_blank"><span class="pt">To build</span><h4>Notion live-embed + Docs fallback</h4><p>The real re-skin: live iframe in Notion, smart-chip/link preview in Google Docs. Placeholder.</p><span class="open">Open →</span></a>
           </div>
@@ -349,17 +349,18 @@ mark.cmark.resolved{background:#eef1f6;border-bottom-color:#d3d9e0}
         </section>
 
         <section data-c="concept" data-label="The concept">
-          <h2><span class="n">4</span> The concept — a detachable piece of Anchor</h2>
+          <h2><span class="n">4</span> The concept — your course page, detached</h2>
           <div class="clocks">
             <div class="clock mem"><span class="tag">Content engine</span><h4>Infinite Practice</h4><p>Canonical topics + question widgets. Supplies the body of the check.</p></div>
             <div class="clock cal"><span class="tag">Destination</span><h4>Course Companion</h4><p>Where the CTA lands the new user. The bottom of the funnel.</p></div>
           </div>
-          <p>The check is the piece in between: it <b>travels</b> out of Studocu into the surfaces students already use, and points back home. It connects to <b>both</b> missions — IP is the engine, Anchor is the destination.</p>
+          <p>The detachable piece is the whole <b>course page</b>: it <b>travels</b> out of Studocu into the surfaces students already use, and points back home. The Topic Check is one widget on it. It connects to <b>both</b> missions — Infinite Practice is the engine, Anchor is the destination.</p>
           <div class="callout key"><span class="ic" aria-hidden="true">💡</span><p><b>Key insight:</b> the artifact is <b>useful to its owner first</b> (a real self-test on their topic), so they place it for their own reasons. Distribution is the <b>byproduct</b> — and <b>interactivity is the hook</b>: a viewer who lands on a live question can't help but answer one, and one answer is enough to earn the "make your own" ask.</p></div>
+          <div class="callout key"><span class="ic" aria-hidden="true">🏠</span><p><b>Principle — Notion is the surface, Studocu does the work.</b> The page lives on Notion, but every bit of value — questions, materials, grading, mock exams — is generated by <b>Studocu</b> and pulls back to Studocu. We hand nothing to Notion's AI; when a student wants more, <b>Studocu builds it</b> — and that ask is the sign-up.</p></div>
 
           <!-- ===== embedded live demo: the Topic Check inside a Notion page (mock data) ===== -->
           <div class="dps-frame" data-c="concept-demo" data-label="Topic Check (demo)">
-            <div class="dps-cap"><span class="ld">● Live preview</span> Topic Check — embedded in a Notion page · mock data</div>
+            <div class="dps-cap"><span class="ld">● Live preview</span> The Topic Check widget — one part of your Notion course page · mock data</div>
 
             <div class="nb">
               <div class="nb-bar"><span class="dotg"></span><span class="dotg"></span><span class="dotg"></span> &nbsp;A student's Notion · BIOL 201 study page</div>
@@ -384,6 +385,7 @@ mark.cmark.resolved{background:#eef1f6;border-bottom-color:#d3d9e0}
           <h2><span class="n">5</span> Distribution &amp; cold-start</h2>
           <p class="lede">How the artifact gets into a workspace and starts working — without paid spend or SEO.</p>
           <p>The unit of distribution is a <b>duplicatable Notion "course study hub"</b> with the Topic Check <b>already embedded</b>. A student duplicates it → the live embed lands in their workspace in second one. We never ask anyone to paste anything.</p>
+          <div class="callout key"><span class="ic" aria-hidden="true">📊</span><p><b>Why Notion — the evidence (and the honest caveat):</b> 100M+ Notion users (Notion, Aug 2024 — registered accounts; active is lower) and <b>9,000+ student orgs across 4,000 campuses</b> on Notion (Notion, Aug 2024) make students a priority segment; study templates are a <b>proven, transacting category</b> (the marketplace lists thousands of School and Study-Planner templates, duplications as the install signal). Adoption <b>over-indexes in Korea, Japan, Brazil &amp; France</b> — where to ignite first. <b>Caveat:</b> no independent survey sizes student Notion share, so "students live in Notion" is a validated <i>niche</i>, not a proven mass-market default — which is exactly what the seed test exists to answer.</p></div>
           <div class="callout key"><span class="ic" aria-hidden="true">✅</span><p><b>Verified we can "be there"</b> (Notion Help Center + 2026 embed/duplication docs): a frame-able URL renders <b>live</b> inside Notion; embeds <b>survive duplication</b> (the full subtree copies); a free Studocu template can be <b>listed in the gallery</b> by a company. <b>The catch:</b> 30k+ templates → <i>listed ≠ found</i>. The gallery gives a durable, brand-owned URL + eligibility, not traffic — so we need an igniter.</p></div>
           <p class="muted" style="margin-top:6px"><b>Channels — sustainer (owned) + igniter (organic):</b></p>
           <div class="reqgrp"><span class="reqlabel p0">Sustainer · owned</span>
@@ -399,7 +401,12 @@ mark.cmark.resolved{background:#eef1f6;border-bottom-color:#d3d9e0}
               <li><b>Hand-seed</b> (hackathon) — we place ~20–50 into real student pages for the Jul-3 read. Honestly manufactured; it tests recipient conversion, not scale.</li>
             </ul>
           </div>
-          <div class="callout key"><span class="ic" aria-hidden="true">🧊</span><p><b>Cold-start = the embed's first-run questions.</b> When a student duplicates the template, the embed's first open asks <b>2–3 basics</b> — "Which course?" and "When's your exam?" — plus an <b>optional</b> "sign in to save progress." Those answers <b>personalize the frozen copy</b> (right topics, real countdown, today's card) and capture intent. Auth stays optional and <b>post-investment</b> — never a wall before the content.</p></div>
+          <p class="muted" style="margin-top:8px"><b>Two doors in</b> — same hub, two ways to arrive:</p>
+          <div class="clocks">
+            <div class="clock mem"><span class="tag">Door A · in Notion</span><h4>Type your course</h4><p>One question + course code → instant board. For students who start in Notion. <b>Buildable now — needs no other team.</b></p></div>
+            <div class="clock cal"><span class="tag">Door B · from the Studocu app</span><h4>Auto-create at onboarding</h4><p>The app onboarding <b>already captures their courses</b> — add <b>one screen</b> ("Add these to your Notion?") → hubs auto-created, pre-filled, zero friction. Built on a flow that already exists; <b>demo it with the real onboarding + our one added screen.</b> (Notion OAuth; API scaffolds the page, widget added after.)</p></div>
+          </div>
+          <div class="callout key"><span class="ic" aria-hidden="true">🧊</span><p><b>Cold-start = one question, instant payoff.</b> The first run asks just <b>"What are you studying right now?"</b> (e.g. "Organic Chemistry") plus a <b>course code</b> — the key that connects to the right course — then <b>connect</b>. The page instantly fills with the <b>5–10 materials other students use</b> for that course ("Here's what students use for Calculus 2"). Low friction, payoff first — and when the student wants more (a mock exam, more practice), <b>Studocu builds it, in Studocu</b>.</p></div>
         </section>
 
         <section data-c="surfaces" data-label="Surface fidelity">
@@ -443,7 +450,7 @@ mark.cmark.resolved{background:#eef1f6;border-bottom-color:#d3d9e0}
             <tr class="star"><td><b>① Remediation</b><span class="star-pill">★ primary</span></td><td>Wrong answer</td><td>A felt gap <i>right now</i> → "see the explanation / the doc it came from." Highest intent.</td></tr>
             <tr><td><b>② Curiosity-gap</b></td><td>Correct answer / end</td><td>"38% on this topic — see where you stand on the other 7 →." A partial number begs completion.</td></tr>
             <tr><td><b>③ Make-your-own</b></td><td>End of check</td><td>Drives the <b>template duplicate</b>, not just the signup — the distribution hook.</td></tr>
-            <tr><td><b>④ Exam urgency</b></td><td>Near the exam date</td><td>"Final in 12 days — generate a full mock exam →." Strongest in the seed window.</td></tr>
+            <tr><td><b>④ Exam urgency</b></td><td>Near the exam date</td><td>"Final in 12 days — Studocu will build you a full mock exam →." Strongest in the seed window; the work happens in Studocu.</td></tr>
             <tr><td><b>⑤ Save progress / streak</b></td><td>Returners only</td><td><b>Weak for a cold guest</b> (nothing invested yet). A <i>retention</i> hook, not acquisition — don't lead with it.</td></tr>
           </tbody></table>
           <div class="callout key"><span class="ic" aria-hidden="true">🎣</span><p><b>Committed:</b> primary in-check CTA = <b>① remediation</b>, with <b>② curiosity-gap</b> as the fallback on a correct answer. "Make-your-own" is the <i>template</i> hook (duplication), not the in-check hook.</p></div>
@@ -460,6 +467,7 @@ mark.cmark.resolved{background:#eef1f6;border-bottom-color:#d3d9e0}
           </ul>
           <div class="callout warn"><span class="ic" aria-hidden="true">🪣</span><p><b>Why this is load-bearing:</b> the mission's binding constraint is <b>retention (~2% D7), not acquisition</b>. A static check is a leaky bucket — fine for the demo, weak for a prize measured over time. The living widget is what makes a placed embed a <b>return habit</b>, not a one-time hit. It mounts on the same daily loop as the Daily Practice Spine.</p></div>
           <div class="callout key"><span class="ic" aria-hidden="true">♻️</span><p><b>Two birds:</b> pushing dynamic content into the embed <b>also solves frozen-copy staleness</b> — the static Notion blocks can age, but the embed (course info, today's card, new materials) never does.</p></div>
+          <div class="callout key"><span class="ic" aria-hidden="true">🎯</span><p><b>This is our wedge against the #1 knock on study-Notion.</b> The loudest critique (and the research's main contrarian signal) is that Notion study setups are <b>aesthetic procrastination</b> — pretty dashboards that hoard notes but don't help you learn or come back. We attack it directly: <b>meaningful, dynamic widgets that do the work</b> — a live Topic Check that grades you, a daily card, an exam countdown, a feed of new course materials — all wired to real Studocu content. <b>Utility, not decoration; a reason to return, not a thing to style.</b></p></div>
         </section>
 
         <section data-c="build" data-label="Build phases">
@@ -508,7 +516,7 @@ mark.cmark.resolved{background:#eef1f6;border-bottom-color:#d3d9e0}
               <li>An embeddable page that renders a question-widget JSON payload and is <b>iframe-able</b> (permissive <code>frame-ancestors</code> so Notion can embed it).</li>
               <li><b>Client-side grading</b> for MCQ / fill-in-the-blank — a guest can answer with <b>no auth, no round-trip</b>.</li>
               <li><b>Course-parameterized embed</b> — the embed reads its course/topic from a URL param, so one template can be made specific on duplication (not a single fixed check for everyone).</li>
-              <li><b>First-run onboarding</b> — on a freshly duplicated template, the embed asks course + exam date (2–3 questions) with <b>optional</b> sign-in; persists the answer so the copy is personalized.</li>
+              <li><b>First-run onboarding</b> — one question ("What are you studying?") + <b>course code</b> (the connection key) + connect/auth → instantly seed <b>5–10 materials</b> for that course. Low friction, payoff first.</li>
               <li><b>CTA → the specific Course Companion</b> (topic pre-loaded) carrying attribution <code>?source=notion&amp;template=…&amp;topic=…</code>, so a sign-up traces to embed + template + topic.</li>
               <li>OG / oEmbed metadata so a pasted link unfurls richly (Docs chip, chat preview, Notion bookmark).</li>
             </ul>
@@ -521,6 +529,7 @@ mark.cmark.resolved{background:#eef1f6;border-bottom-color:#d3d9e0}
               <li>A <b>"continue from your check" Studocu landing page</b> — what the CTA deep-link lands on (not a generic signup wall).</li>
               <li><b>Dual attribution events:</b> <code>Template Duplicated</code> (best-effort, Notion-side), <code>Embed CTA Clicked</code>, <code>Signup From Embed</code> — the two-funnel spine.</li>
               <li>Per-topic OG image generator (the chat/Docs preview); bot / rate-limit handling on the public embed endpoint.</li>
+              <li><b>"Studocu builds it" CTA</b> — "want a mock exam?" deep-links into Studocu's own generation (sign-up-gated). The "want more" path stays in Studocu; we hand nothing to Notion's AI.</li>
             </ul>
           </div>
           <div class="reqgrp"><span class="reqlabel p2">P2 · design for, don't build</span>
@@ -529,6 +538,7 @@ mark.cmark.resolved{background:#eef1f6;border-bottom-color:#d3d9e0}
               <li class="no">Google Workspace Marketplace add-on (for true Docs smart-chips) — real channel, OAuth + review too slow for the window.</li>
               <li class="no">Reverse import — pulling a student's Notion notes <i>into</i> Studocu as a project source. Real, but much heavier; design-for, don't build.</li>
               <li class="no">Open / short-answer grading via the feedback agent — MCQ-only keeps the guest path zero-backend.</li>
+              <li class="no"><b>Door B</b> — auto-provision hubs from Studocu app onboarding (one added screen → courses pre-created in the student's Notion). Demoable now with the real onboarding + our added screen; full build needs Notion OAuth, and the API scaffolds the page while the live widget is added after (embed whitelist). Real integration.</li>
             </ul>
           </div>
         </section>
@@ -577,6 +587,7 @@ mark.cmark.resolved{background:#eef1f6;border-bottom-color:#d3d9e0}
             <li><b>Discovery (listed ≠ found)</b> → organic social is the igniter; treat the gallery as a durable URL, not a traffic source.</li>
             <li><b>Retention leak</b> (one-and-done check) → ship the <b>living widget</b> (today's card, creations feed), not a static check — the prize is measured over time.</li>
             <li><b>Onboarding friction</b> on duplicate → cap at 2 questions, auth optional, skippable; never block the content.</li>
+            <li><b>Notion student usage is overstated / niche</b> (no independent market-share data; adoption is regional) → seed where it over-indexes (KR / JP / BR / FR) and target motivated students; lead with the <b>utility</b> wedge so we win the students who actually keep a hub, not the median who churns.</li>
           </ul>
         </section>
 
@@ -594,6 +605,7 @@ mark.cmark.resolved{background:#eef1f6;border-bottom-color:#d3d9e0}
             <li><b>[Eng/Data]</b> <b>Daily-content endpoint</b> for "today's card" + a new-creations feed — can it serve a (possibly logged-out) embed cheaply?</li>
             <li><b>[Eng]</b> Can the embed <b>persist the duplicator's chosen course / exam date without forcing auth</b> (e.g. written into the embed URL on first run)? Determines how personalized a logged-out copy can be.</li>
             <li><b>[Product]</b> Reverse import (Notion notes → Studocu source) — worth pursuing later, or park? <i>(P2)</i></li>
+            <li><b>[Product/Eng]</b> <b>Door B</b> (one new screen on the existing app onboarding → auto-create Notion hubs): scope of the added screen, Notion OAuth, and how we handle the embed whitelist (API scaffolds the page; the live widget is added after). <i>(P2 build; demo via the real onboarding + our added screen)</i></li>
           </ul>
           <p class="muted"><b>Dependency chain:</b> 1) decide mock-vs-real (§9) → 2) seed list = Anchor-live ∩ topics (Anchor) → 3) pre-gen static bank (Infinite Practice) → 4) embed host + oEmbed + course-param + first-run onboarding (Anchor eng) → 5) "continue from your check" landing page + attribution events (Anchor) → 6) dynamic-content endpoints — today's card + creations feed — for retention → 7) durable cached bank (Infinite Practice) unblocks scale.</p>
         </section>
