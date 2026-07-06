@@ -1,0 +1,619 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wave II — Interview Companion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --s-space-1:4px;--s-space-2:8px;--s-space-3:12px;--s-space-4:16px;--s-space-5:20px;
+  --s-space-6:24px;--s-space-8:32px;--s-space-10:40px;--s-space-12:48px;
+  --s-radius-2:8px;--s-radius-3:12px;--s-radius-5:16px;--s-radius-8:24px;--s-radius-full:999px;
+  --font-dmsans:'DM Sans';
+  --fs-1:12px;--fs-2:14px;--fs-3:16px;--fs-4:18px;--fs-5:22px;--fs-6:26px;--fs-7:30px;--fs-8:40px;
+  --fw-regular:400;--fw-medium:500;--fw-bold:700;
+  --s-brand-gradient:linear-gradient(90deg,#f064fc 0%,#3092fa 100%);
+  --transition-cubic:cubic-bezier(.22,.61,.36,1);
+
+  --bg:#f6f8fb; --surface:#ffffff; --surface-2:#f1f4f8;
+  --title:#14181f; --text:#2b303a; --subtle:#5b6573; --xsubtle:#8b94a3;
+  --border-subtle:#eef1f5; --border:#dde2e9;
+  --blue:#3092fa; --blue-hover:#1a7cee;
+  --blue-sub:#e8f1ff; --blue-bd:#c5ddff; --blue-tx:#0b57d0;
+  --amber-sub:#ffeedc; --amber-bd:#ffd6ad; --amber-tx:#b0530f;
+  --pink:#f064fc; --green:#16a34a; --danger:#d23030;
+  --shadow-1:0 1px 2px rgba(20,24,31,.06); --shadow-2:0 10px 30px rgba(20,24,31,.10);
+}
+html[data-theme="dark"]{
+  --bg:#0b0b0c; --surface:#141416; --surface-2:#1c1c1f;
+  --title:#f5f5f6; --text:#d3d3d6; --subtle:#9a9aa1; --xsubtle:#6c6c73;
+  --border-subtle:#232326; --border:#2e2e32;
+  --blue-hover:#4aa0ff;
+  --blue-sub:#11233d; --blue-bd:#1d3a64; --blue-tx:#8fbcff;
+  --amber-sub:#2c1f12; --amber-bd:#4a3318; --amber-tx:#f6b074;
+  --shadow-1:0 1px 2px rgba(0,0,0,.5); --shadow-2:0 14px 40px rgba(0,0,0,.6);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:var(--font-dmsans),system-ui,sans-serif;
+  background:var(--bg); color:var(--text); font-size:var(--fs-3); line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;animation-duration:.01ms!important}}
+
+.app{max-width:820px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;padding:0 var(--s-space-5)}
+
+/* ---------- top bar ---------- */
+.top{position:sticky;top:0;z-index:10;background:var(--bg);padding:var(--s-space-4) 0 var(--s-space-3)}
+.top-row{display:flex;align-items:center;gap:var(--s-space-4);margin-bottom:var(--s-space-3)}
+.brand{display:flex;align-items:center;gap:var(--s-space-2);font-weight:var(--fw-bold);color:var(--title);font-size:var(--fs-2);letter-spacing:.01em}
+.brand .dot{width:10px;height:10px;border-radius:50%;background:var(--s-brand-gradient)}
+.spacer{flex:1}
+.timer{display:flex;align-items:baseline;gap:6px;font-variant-numeric:tabular-nums}
+.timer .big{font-size:var(--fs-5);font-weight:var(--fw-bold);color:var(--title)}
+.timer .small{font-size:var(--fs-1);color:var(--xsubtle)}
+.phase-timer{font-variant-numeric:tabular-nums;font-size:var(--fs-1);color:var(--subtle);padding:4px 10px;border-radius:var(--s-radius-full);background:var(--surface-2);border:1px solid var(--border-subtle)}
+.phase-timer.over{color:var(--amber-tx);background:var(--amber-sub);border-color:var(--amber-bd)}
+.iconbtn{width:34px;height:34px;border-radius:var(--s-radius-2);display:grid;place-items:center;color:var(--subtle);transition:background .15s}
+.iconbtn:hover{background:var(--surface-2);color:var(--title)}
+
+/* progress rail */
+.rail{display:flex;gap:6px;align-items:center}
+.seg{flex:1;height:6px;border-radius:var(--s-radius-full);background:var(--surface-2);overflow:hidden}
+.seg > span{display:block;height:100%;width:0;background:var(--blue);transition:width .3s var(--transition-cubic)}
+.seg.done > span{width:100%}
+.seg.active > span{background:var(--s-brand-gradient)}
+.rail-labels{display:flex;justify-content:space-between;margin-top:6px}
+.rail-labels span{font-size:10px;color:var(--xsubtle);text-transform:uppercase;letter-spacing:.06em;font-weight:var(--fw-medium)}
+
+/* ---------- step card ---------- */
+.stage{flex:1;padding:var(--s-space-6) 0 var(--s-space-10);display:flex;flex-direction:column}
+.eyebrow{display:flex;align-items:center;gap:var(--s-space-2);color:var(--subtle);font-size:var(--fs-1);font-weight:var(--fw-bold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:var(--s-space-3)}
+.pill{font-size:11px;font-weight:var(--fw-bold);padding:3px 10px;border-radius:var(--s-radius-full);letter-spacing:.02em;text-transform:none}
+.pill.prio{background:var(--s-brand-gradient);color:#fff}
+.pill.time{background:var(--blue-sub);color:var(--blue-tx);border:1px solid var(--blue-bd)}
+h1.step{font-size:var(--fs-7);line-height:1.15;color:var(--title);font-weight:var(--fw-bold);letter-spacing:-.01em;margin-bottom:var(--s-space-5)}
+.lede{font-size:var(--fs-4);color:var(--subtle);margin-top:calc(var(--s-space-5) * -1 + 6px);margin-bottom:var(--s-space-5)}
+
+.say{background:var(--blue-sub);border:1px solid var(--blue-bd);border-radius:var(--s-radius-5);padding:var(--s-space-5) var(--s-space-6);margin-bottom:var(--s-space-5)}
+.say .lbl{font-size:var(--fs-1);font-weight:var(--fw-bold);color:var(--blue-tx);text-transform:uppercase;letter-spacing:.08em;margin-bottom:var(--s-space-2);display:flex;align-items:center;gap:6px}
+.say p{font-size:var(--fs-5);line-height:1.45;color:var(--title);font-weight:var(--fw-medium)}
+
+.block{margin-bottom:var(--s-space-4)}
+.block .k{font-size:var(--fs-1);font-weight:var(--fw-bold);text-transform:uppercase;letter-spacing:.06em;color:var(--xsubtle);margin-bottom:6px}
+.block .k.ask{color:var(--blue-tx)}
+.block .v{font-size:var(--fs-4);color:var(--title);line-height:1.5}
+.block.ask .v{font-weight:var(--fw-medium)}
+
+ul.list{list-style:none;display:flex;flex-direction:column;gap:var(--s-space-3)}
+ul.list li{display:flex;gap:var(--s-space-3);font-size:var(--fs-4);color:var(--title);line-height:1.45}
+ul.list li .b{color:var(--blue);font-weight:var(--fw-bold);flex-shrink:0}
+.branch{background:var(--surface-2);border-radius:var(--s-radius-3);padding:var(--s-space-4);font-size:var(--fs-3)}
+.branch .tag{font-weight:var(--fw-bold);color:var(--title)}
+.watch{border-left:3px solid var(--pink);padding:var(--s-space-2) 0 var(--s-space-2) var(--s-space-4);color:var(--subtle);font-size:var(--fs-3);margin-top:var(--s-space-2)}
+.watch b{color:var(--title)}
+
+/* note field */
+.note{margin-top:var(--s-space-5)}
+.note label{display:flex;align-items:center;gap:6px;font-size:var(--fs-1);font-weight:var(--fw-bold);color:var(--xsubtle);text-transform:uppercase;letter-spacing:.06em;margin-bottom:var(--s-space-2)}
+textarea{width:100%;min-height:84px;resize:vertical;background:var(--surface);border:1px solid var(--border);border-radius:var(--s-radius-3);
+  padding:var(--s-space-3) var(--s-space-4);font-family:inherit;font-size:var(--fs-3);color:var(--text);line-height:1.5}
+textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-sub)}
+input.field{width:100%;height:46px;background:var(--surface);border:1px solid var(--border);border-radius:var(--s-radius-3);
+  padding:0 var(--s-space-4);font-family:inherit;font-size:var(--fs-3);color:var(--text)}
+input.field:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-sub)}
+
+/* checklist */
+.check{display:flex;flex-direction:column;gap:var(--s-space-2)}
+.check .grp-lbl{font-size:var(--fs-1);font-weight:var(--fw-bold);color:var(--xsubtle);text-transform:uppercase;letter-spacing:.06em;margin:var(--s-space-3) 0 4px}
+.chk{display:flex;align-items:flex-start;gap:var(--s-space-3);padding:var(--s-space-3) var(--s-space-4);background:var(--surface);border:1px solid var(--border-subtle);border-radius:var(--s-radius-3);transition:border-color .15s,background .15s}
+.chk:hover{border-color:var(--border)}
+.chk.on{background:var(--blue-sub);border-color:var(--blue-bd)}
+.box{width:22px;height:22px;border-radius:6px;border:2px solid var(--border);flex-shrink:0;display:grid;place-items:center;margin-top:1px;transition:.15s}
+.chk.on .box{background:var(--blue);border-color:var(--blue)}
+.box svg{opacity:0;transition:.15s}
+.chk.on .box svg{opacity:1}
+.chk .txt{font-size:var(--fs-3);color:var(--title);line-height:1.4}
+.chk .txt small{display:block;color:var(--subtle);font-size:var(--fs-1);font-weight:var(--fw-regular);margin-top:2px}
+
+/* setup grid */
+.setup-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-space-4);margin-bottom:var(--s-space-6)}
+.setup-grid .full{grid-column:1/-1}
+.field-lbl{font-size:var(--fs-1);font-weight:var(--fw-bold);color:var(--subtle);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.seg-pick{display:flex;gap:6px;flex-wrap:wrap}
+.seg-pick button{padding:8px 14px;border-radius:var(--s-radius-full);background:var(--surface);border:1px solid var(--border);font-size:var(--fs-2);font-weight:var(--fw-medium);color:var(--subtle)}
+.seg-pick button.on{background:var(--blue);border-color:var(--blue);color:#fff}
+
+/* toolkit / donts drawer */
+.helpbar{position:sticky;bottom:0;background:var(--bg);padding:var(--s-space-3) 0 var(--s-space-5)}
+.helpbtns{display:flex;gap:var(--s-space-2);margin-bottom:var(--s-space-3)}
+.chipbtn{font-size:var(--fs-1);font-weight:var(--fw-bold);padding:7px 12px;border-radius:var(--s-radius-full);background:var(--surface-2);border:1px solid var(--border-subtle);color:var(--subtle);display:flex;align-items:center;gap:6px}
+.chipbtn:hover{color:var(--title);border-color:var(--border)}
+.chipbtn.open{background:var(--title);color:var(--bg);border-color:var(--title)}
+.drawer{overflow:hidden;max-height:0;transition:max-height .28s var(--transition-cubic)}
+.drawer.show{max-height:340px}
+.drawer-inner{background:var(--surface);border:1px solid var(--border-subtle);border-radius:var(--s-radius-5);padding:var(--s-space-4) var(--s-space-5);margin-bottom:var(--s-space-3);box-shadow:var(--shadow-2)}
+.drawer-inner h4{font-size:var(--fs-1);text-transform:uppercase;letter-spacing:.06em;color:var(--xsubtle);margin-bottom:var(--s-space-3)}
+.drawer-inner ul{list-style:none;display:flex;flex-direction:column;gap:var(--s-space-2)}
+.drawer-inner ul li{font-size:var(--fs-3);color:var(--title);display:flex;gap:8px}
+.drawer-inner.dont ul li{color:var(--text)}
+.drawer-inner ul li .mk{flex-shrink:0;font-weight:var(--fw-bold)}
+.drawer-inner ul li .mk.no{color:var(--danger)}
+.drawer-inner ul li .mk.ok{color:var(--blue)}
+
+/* nav */
+.nav{display:flex;gap:var(--s-space-3);align-items:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--s-space-2);height:52px;padding:0 var(--s-space-6);
+  border-radius:var(--s-radius-full);font-weight:var(--fw-bold);font-size:var(--fs-3);transition:.15s var(--transition-cubic)}
+.btn:active{transform:translateY(1px)}
+.btn--primary{background:var(--blue);color:#fff;flex:1}
+.btn--primary:hover{background:var(--blue-hover)}
+.btn--grad{background:var(--s-brand-gradient);color:#fff;flex:1}
+.btn--ghost{background:var(--surface);color:var(--subtle);border:1px solid var(--border);width:52px;padding:0}
+.btn--ghost:hover{color:var(--title)}
+.btn--secondary{background:var(--surface);color:var(--title);border:1px solid var(--border)}
+.kbd-hint{text-align:center;font-size:11px;color:var(--xsubtle);margin-top:var(--s-space-2)}
+
+/* wrap screen */
+.summary{background:var(--surface);border:1px solid var(--border-subtle);border-radius:var(--s-radius-5);padding:var(--s-space-5);margin-bottom:var(--s-space-5)}
+.summary h3{font-size:var(--fs-1);text-transform:uppercase;letter-spacing:.06em;color:var(--xsubtle);margin-bottom:var(--s-space-3)}
+.summary .row{display:flex;justify-content:space-between;padding:var(--s-space-2) 0;border-bottom:1px solid var(--border-subtle);font-size:var(--fs-3)}
+.summary .row:last-child{border-bottom:none}
+.summary .row .lab{color:var(--subtle)}
+.summary .row .val{color:var(--title);font-weight:var(--fw-medium);text-align:right;max-width:60%}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:var(--title);color:var(--bg);
+  padding:12px 20px;border-radius:var(--s-radius-full);font-weight:var(--fw-bold);font-size:var(--fs-2);opacity:0;pointer-events:none;transition:.25s;z-index:50}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media (max-width:560px){
+  h1.step{font-size:var(--fs-6)} .say p{font-size:var(--fs-4)} .setup-grid{grid-template-columns:1fr}
+  .app{padding:0 var(--s-space-4)}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- top bar -->
+  <div class="top">
+    <div class="top-row">
+      <div class="brand"><span class="dot"></span> Wave II · Interview Companion</div>
+      <div class="spacer"></div>
+      <div id="phaseTimer" class="phase-timer" hidden>0:00 / 1:00</div>
+      <div class="timer"><span id="clock" class="big">0:00</span><span class="small">/ 30:00</span></div>
+      <button class="iconbtn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+    </div>
+    <div class="rail" id="rail"></div>
+    <div class="rail-labels" id="railLabels"></div>
+  </div>
+
+  <!-- step content -->
+  <div class="stage" id="stage"></div>
+
+  <!-- help drawers + nav -->
+  <div class="helpbar">
+    <div class="drawer" id="drawerToolkit"><div class="drawer-inner">
+      <h4>Neutral prompts — keep it going without leading</h4>
+      <ul>
+        <li><span class="mk ok">›</span> Walk me through your thinking.</li>
+        <li><span class="mk ok">›</span> What did you expect there?</li>
+        <li><span class="mk ok">›</span> What would you do next?</li>
+        <li><span class="mk ok">›</span> Say more about that.</li>
+        <li><span class="mk ok">›</span> <em>Silence — wait 5 seconds, let them fill it.</em></li>
+      </ul>
+    </div></div>
+    <div class="drawer" id="drawerDont"><div class="drawer-inner dont">
+      <h4>Do not</h4>
+      <ul>
+        <li><span class="mk no">✕</span> "Do you like it?" / "Isn't this useful?"</li>
+        <li><span class="mk no">✕</span> Use our feature names before they do (readiness check, spine, temporal chip).</li>
+        <li><span class="mk no">✕</span> "It's supposed to…" — don't defend. Log the confusion.</li>
+        <li><span class="mk no">✕</span> Rescue them at the first pause. Silence is where reactions come from.</li>
+      </ul>
+    </div></div>
+
+    <div class="helpbtns">
+      <button class="chipbtn" id="btnToolkit">💬 Prompts</button>
+      <button class="chipbtn" id="btnDont">⛔ Don't</button>
+      <div class="spacer"></div>
+    </div>
+
+    <div class="nav" id="nav"></div>
+    <div class="kbd-hint">← / → to move between steps</div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+
+/* ---------------- session model ---------------- */
+const CHECK = "<svg width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='#fff' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'><path d='M5 12l5 5L20 6'/></svg>";
+
+const PHASES = ["Setup","Frame","SAI check","Explore","Probes","Close","Wrap"];
+
+// step.phase indexes into PHASES for the progress rail
+const STEPS = [
+  {
+    id:"setup", phase:0, kind:"setup",
+    eyebrow:"Before you start", title:"Set up the session",
+    target:0
+  },
+  {
+    id:"frame", phase:1, kind:"say", target:60,
+    eyebrow:"Frame", time:"~1 min", title:"Set expectations, get consent",
+    say:"Thanks for making time. This is exploratory, so there's no wrong way to react. I'm testing the page, not you. I'll mostly stay quiet and let you poke around. Just think out loud as you go: what you're looking at, what you expect, what's confusing. I'll ask you to share your screen so I can see how you navigate. All good to record?",
+    after:"<div class='watch'>Wait for a clear <b>yes</b> before you start recording.</div>"
+  },
+  {
+    id:"sai", phase:2, kind:"list", target:300,
+    eyebrow:"Part 1 · SAI usage check", time:"5 min", title:"How are they studying now?",
+    lede:"No prototype yet. Keep it a chat, not a survey. Don't sell anything.",
+    items:[
+      "Lately, when you sit down to study, what do you actually use?",
+      "Where does Studocu / Studocu AI fit in that, if at all?"
+    ],
+    branches:[
+      {tag:"If using:",text:"which parts? Quizzes, mock exams, summaries, chat? Walk me through the last time you used it."},
+      {tag:"If drifted:",text:"what pulled you away? What do you reach for instead now?"}
+    ],
+    tail:"What would bring you back?",
+    watch:"Has their workflow changed since last time, and where SAI sits in the mix now."
+  },
+  {
+    id:"explore", phase:3, kind:"explore", target:240,
+    eyebrow:"Part 2 · Free exploration", time:"3–4 min", title:"Hand over control. Then go quiet.",
+    say:"Here's a course page we're building. This is your {course}. Do whatever you'd naturally do, and think out loud while you're at it.",
+    watch:["First click / where their eyes land first","What they <b>call</b> things (their words, not ours)","Where they hesitate or backtrack"]
+  },
+  { id:"p1", phase:4, kind:"probe", target:120, n:1, title:"First impression",
+    ask:"In your own words, what's this page for?", follow:["What makes you say that?"] },
+  { id:"p2", phase:4, kind:"probe", target:150, n:2, title:"Today's review",
+    ask:"What's this part showing you?", follow:["Why these three? What does '≈10 min for today' mean to you?"],
+    recover:"On a normal study day, would you start here?" },
+  { id:"p3", phase:4, kind:"probe", target:180, n:3, title:"Readiness → practice → infinite practice",
+    hint:"Have them actually answer the question.",
+    ask:"What do you expect to happen after you answer all five?",
+    follow:["Is this the whole study session, or something else?","<em>If they reach practice / infinite practice:</em> Does this still feel like the same page, or like you've been sent somewhere else? <b>(the handoff seam)</b>"] },
+  { id:"p4", phase:4, kind:"probe", target:120, n:4, title:"Come back tomorrow",
+    ask:"What do you think this does? When would you click it?", follow:["Does that feel like help, or like being put off?"] },
+  { id:"p5", phase:4, kind:"probe", target:150, n:5, prio:true, title:"Tomorrow lane",
+    ask:"It says these are saved for tomorrow, \u201Cspaced so it sticks.\u201D Why hold them instead of showing you now?",
+    follow:["Do you trust it to decide that for you?"] },
+  { id:"p6", phase:4, kind:"probe", target:120, n:6, title:"Exam urgency",
+    ask:"Is anything up top telling you about timing?", follow:["Read of the Midterm chips + the \u201CBefore Midterm 1\u201D section."] },
+  { id:"p7", phase:4, kind:"probe", target:150, n:7, title:"Docs among artifacts",
+    ask:"If you wanted the actual lecture notes or a past paper, where would you go?",
+    follow:["Does the doc live where they'd look, or get lost among the artifacts?","And where would you add your own notes?"] },
+  { id:"p8", phase:4, kind:"probe", target:150, n:8, prio:true, title:"Retention intent",
+    ask:"Imagine it's tomorrow and you open this. What do you do?",
+    follow:["Would you actually come back? What would stop you?"] },
+  { id:"close", phase:5, kind:"list", target:120,
+    eyebrow:"Close", time:"~1–2 min", title:"Wrap it up",
+    items:["One thing you'd change?","Compared to how you study now, does this fit in?"],
+    tail:"Thanks. Note payment / next-cycle step." },
+  { id:"wrap", phase:6, kind:"wrap", target:0, eyebrow:"Done", title:"Session complete" }
+];
+
+const PREFLIGHT = {
+  "Build ready":[
+    "Readiness check → practice → infinite-practice flow works end to end (the handoff actually loads).",
+    "Exam chips show a believable \u201Cdays away\u201D state (not the broken empty state).",
+    "Correct participant's mock loaded (course, field, university).",
+    "You can hand them screen-share control."
+  ],
+  "Session setup":[
+    "Participant is on their laptop (tablet only as a fallback).",
+    "Ask permission to record before you start recording.",
+    "Recording on (Dovetail).",
+    "Transcription + Gemini notes on (Google Meet)."
+  ]
+};
+
+/* ---------------- state ---------------- */
+const state = {
+  idx:0,
+  participant:"", course:"", pool:"Active",
+  notes:{},               // id -> text
+  checks:{},              // "grp:i" -> bool
+  started:false,
+  startTs:null,
+  phaseStartTs:null,
+  phaseTick:null
+};
+
+/* best-effort persistence (works in artifact viewer; no-op when opened as a local file) */
+async function save(){
+  try{
+    if(!window.storage) return;
+    const key = "waveII:"+(state.participant||"unnamed");
+    await window.storage.set(key, JSON.stringify({
+      participant:state.participant, course:state.course, pool:state.pool,
+      notes:state.notes, idx:state.idx
+    }), false);
+  }catch(e){/* ignore */}
+}
+async function load(name){
+  try{
+    if(!window.storage) return null;
+    const r = await window.storage.get("waveII:"+name, false);
+    return r ? JSON.parse(r.value) : null;
+  }catch(e){ return null; }
+}
+
+/* ---------------- render ---------------- */
+const stage = document.getElementById("stage");
+const railEl = document.getElementById("rail");
+const railLabels = document.getElementById("railLabels");
+const navEl = document.getElementById("nav");
+const clockEl = document.getElementById("clock");
+const phaseTimerEl = document.getElementById("phaseTimer");
+
+function fmt(s){ s=Math.max(0,Math.floor(s)); const m=Math.floor(s/60); const ss=s%60; return m+":"+String(ss).padStart(2,"0"); }
+function esc(t){ return (t||"").replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c])); }
+
+function renderRail(){
+  const cur = STEPS[state.idx].phase;
+  railEl.innerHTML=""; railLabels.innerHTML="";
+  PHASES.forEach((p,i)=>{
+    const seg=document.createElement("div");
+    seg.className="seg"+(i<cur?" done":"")+(i===cur?" active":"");
+    seg.innerHTML="<span></span>";
+    railEl.appendChild(seg);
+    const lab=document.createElement("span"); lab.textContent=p; railLabels.appendChild(lab);
+  });
+}
+
+function noteField(id){
+  const val = esc(state.notes[id]||"");
+  return `<div class="note"><label>📝 Notes</label>
+    <textarea data-note="${id}" placeholder="Type what they said, verbatim where you can…">${val}</textarea></div>`;
+}
+
+function render(){
+  const s = STEPS[state.idx];
+  renderRail();
+  // phase timer visibility
+  if(s.kind==="setup"||s.kind==="wrap"){ phaseTimerEl.hidden=true; } else { phaseTimerEl.hidden=false; }
+  let html="";
+
+  if(s.kind==="setup"){
+    html = setupHTML();
+  } else if(s.kind==="wrap"){
+    html = wrapHTML();
+  } else {
+    html += `<div class="eyebrow">${esc(s.eyebrow||("Probe "+s.n+" of 8"))}`;
+    if(s.time) html += ` <span class="pill time">${esc(s.time)}</span>`;
+    if(s.prio) html += ` <span class="pill prio">Priority signal</span>`;
+    html += `</div>`;
+    html += `<h1 class="step">${esc(s.title)}</h1>`;
+    if(s.lede) html += `<p class="lede">${esc(s.lede)}</p>`;
+    if(s.hint) html += `<p class="lede">${esc(s.hint)}</p>`;
+
+    if(s.kind==="say"){
+      html += sayBlock(s.say);
+      if(s.after) html += s.after;
+    }
+    if(s.kind==="explore"){
+      html += sayBlock(s.say.replace("{course}", state.course||"course"));
+      html += `<div class="block"><div class="k">Then stay silent. Watch for</div><ul class="list">`+
+        s.watch.map(w=>`<li><span class="b">•</span><span>${w}</span></li>`).join("")+`</ul></div>`;
+    }
+    if(s.kind==="list"){
+      html += `<ul class="list">`+ s.items.map(it=>`<li><span class="b">›</span><span>${esc(it)}</span></li>`).join("") +`</ul>`;
+      if(s.branches){ html += `<div style="height:12px"></div>`; s.branches.forEach(b=>{
+        html += `<div class="branch" style="margin-bottom:8px"><span class="tag">${esc(b.tag)}</span> ${esc(b.text)}</div>`;
+      });}
+      if(s.tail) html += `<div style="margin-top:12px"><ul class="list"><li><span class="b">›</span><span>${esc(s.tail)}</span></li></ul></div>`;
+      if(s.watch) html += `<div class="watch"><b>Listen for:</b> ${esc(s.watch)}</div>`;
+    }
+    if(s.kind==="probe"){
+      html += `<div class="block ask"><div class="k ask">Ask</div><div class="v">${esc(s.ask)}</div></div>`;
+      if(s.follow){ html += `<div class="block"><div class="k">Follow</div><div class="v"><ul class="list" style="gap:10px">`+
+        s.follow.map(f=>`<li><span class="b">›</span><span>${f}</span></li>`).join("")+`</ul></div></div>`; }
+      if(s.recover){ html += `<div class="block"><div class="k">Recover if stuck</div><div class="v">${esc(s.recover)}</div></div>`; }
+    }
+    html += noteField(s.id);
+  }
+  stage.innerHTML = html;
+  renderNav();
+  bindStage();
+  // scroll to top of stage on step change
+  window.scrollTo({top:0, behavior:"smooth"});
+  restartPhaseTimer();
+  save();
+}
+
+function sayBlock(txt){
+  return `<div class="say"><div class="lbl">🗣️ Say this</div><p>${esc(txt)}</p></div>`;
+}
+
+function setupHTML(){
+  let cl="";
+  Object.keys(PREFLIGHT).forEach(grp=>{
+    cl += `<div class="grp-lbl">${grp}</div>`;
+    PREFLIGHT[grp].forEach((item,i)=>{
+      const key=grp+":"+i, on=state.checks[key]?" on":"";
+      cl += `<div class="chk${on}" data-chk="${key}"><div class="box">${CHECK}</div><div class="txt">${esc(item)}</div></div>`;
+    });
+  });
+  return `<div class="eyebrow">Before you start</div>
+    <h1 class="step">Set up the session</h1>
+    <div class="setup-grid">
+      <div class="full"><div class="field-lbl">Participant</div><input class="field" id="pName" placeholder="Name" value="${esc(state.participant)}"></div>
+      <div><div class="field-lbl">Their course (for the script)</div><input class="field" id="pCourse" placeholder="e.g. Contract Law" value="${esc(state.course)}"></div>
+      <div><div class="field-lbl">Pool</div>
+        <div class="seg-pick" id="poolPick">
+          ${["Active","Analyzed","Inactive"].map(p=>`<button data-pool="${p}" class="${state.pool===p?"on":""}">${p}</button>`).join("")}
+        </div>
+      </div>
+    </div>
+    <div class="field-lbl" style="margin-bottom:10px">Pre-flight checklist</div>
+    <div class="check">${cl}</div>`;
+}
+
+function wrapHTML(){
+  const answered = STEPS.filter(s=>state.notes[s.id] && state.notes[s.id].trim()).length;
+  return `<div class="eyebrow">Done</div>
+    <h1 class="step">Session complete 🎉</h1>
+    <div class="summary">
+      <h3>Summary</h3>
+      <div class="row"><span class="lab">Participant</span><span class="val">${esc(state.participant||"—")}</span></div>
+      <div class="row"><span class="lab">Course</span><span class="val">${esc(state.course||"—")}</span></div>
+      <div class="row"><span class="lab">Pool</span><span class="val">${esc(state.pool)}</span></div>
+      <div class="row"><span class="lab">Elapsed</span><span class="val">${fmt(elapsed())}</span></div>
+      <div class="row"><span class="lab">Steps with notes</span><span class="val">${answered}</span></div>
+    </div>
+    <p class="lede" style="margin-bottom:16px">Copy the filled capture sheet into Dovetail / the Wave II synthesis, then reset for the next participant.</p>`;
+}
+
+function renderNav(){
+  const s=STEPS[state.idx];
+  if(s.kind==="setup"){
+    navEl.innerHTML = `<button class="btn btn--grad" id="startBtn">Start session →</button>`;
+    document.getElementById("startBtn").onclick=startSession;
+  } else if(s.kind==="wrap"){
+    navEl.innerHTML = `<button class="btn btn--ghost" id="prevBtn">←</button>
+      <button class="btn btn--primary" id="copyBtn">📋 Copy capture sheet</button>
+      <button class="btn btn--secondary" id="resetBtn">Reset</button>`;
+    document.getElementById("prevBtn").onclick=()=>go(-1);
+    document.getElementById("copyBtn").onclick=copySheet;
+    document.getElementById("resetBtn").onclick=resetSession;
+  } else {
+    const last = state.idx===STEPS.length-2;
+    navEl.innerHTML = `<button class="btn btn--ghost" id="prevBtn" ${state.idx===0?"disabled":""}>←</button>
+      <button class="btn btn--primary" id="nextBtn">${last?"Finish →":"Next →"}</button>`;
+    document.getElementById("prevBtn").onclick=()=>go(-1);
+    document.getElementById("nextBtn").onclick=()=>go(1);
+  }
+}
+
+/* ---------------- interactions ---------------- */
+function bindStage(){
+  stage.querySelectorAll("[data-note]").forEach(t=>{
+    t.addEventListener("input",e=>{ state.notes[e.target.dataset.note]=e.target.value; save(); });
+  });
+  const pName=document.getElementById("pName");
+  if(pName) pName.addEventListener("input",async e=>{
+    state.participant=e.target.value;
+    // try to restore saved notes for this participant
+    const prev=await load(state.participant.trim());
+    if(prev && prev.notes){ /* silent restore only if empty */ }
+  });
+  const pCourse=document.getElementById("pCourse");
+  if(pCourse) pCourse.addEventListener("input",e=>{state.course=e.target.value;save();});
+  const poolPick=document.getElementById("poolPick");
+  if(poolPick) poolPick.querySelectorAll("[data-pool]").forEach(b=>{
+    b.onclick=()=>{ state.pool=b.dataset.pool; poolPick.querySelectorAll("button").forEach(x=>x.classList.remove("on")); b.classList.add("on"); save(); };
+  });
+  stage.querySelectorAll("[data-chk]").forEach(c=>{
+    c.onclick=()=>{ const k=c.dataset.chk; state.checks[k]=!state.checks[k]; c.classList.toggle("on"); };
+  });
+}
+
+function go(dir){
+  const t=STEPS[state.idx].id;
+  const ta=stage.querySelector(`[data-note="${t}"]`); if(ta) state.notes[t]=ta.value;
+  state.idx=Math.min(STEPS.length-1,Math.max(0,state.idx+dir));
+  render();
+}
+
+function startSession(){
+  const nameEl=document.getElementById("pName");
+  state.participant=(nameEl&&nameEl.value.trim())||state.participant;
+  state.started=true; state.startTs=Date.now();
+  state.idx=1; render(); startClock();
+}
+function resetSession(){
+  if(!confirm("Reset for the next participant? Current notes will be cleared from this screen.")) return;
+  state.idx=0; state.participant=""; state.course=""; state.pool="Active";
+  state.notes={}; state.checks={}; state.started=false; state.startTs=null;
+  stopClock(); clockEl.textContent="0:00"; render();
+}
+
+/* ---------------- timers ---------------- */
+let clockInt=null;
+function elapsed(){ return state.startTs? (Date.now()-state.startTs)/1000 : 0; }
+function startClock(){ stopClock(); clockInt=setInterval(()=>{ clockEl.textContent=fmt(elapsed()); },500); }
+function stopClock(){ if(clockInt){clearInterval(clockInt);clockInt=null;} }
+function restartPhaseTimer(){
+  if(state.phaseTick){clearInterval(state.phaseTick);state.phaseTick=null;}
+  const s=STEPS[state.idx];
+  if(!s.target){ phaseTimerEl.hidden=true; return; }
+  const t0=Date.now();
+  const tick=()=>{
+    const e=(Date.now()-t0)/1000;
+    phaseTimerEl.textContent=fmt(e)+" / "+fmt(s.target);
+    phaseTimerEl.classList.toggle("over", e>s.target);
+  };
+  tick(); state.phaseTick=setInterval(tick,500);
+}
+
+/* ---------------- export ---------------- */
+function copySheet(){
+  const g=id=>(state.notes[id]||"").trim()||"—";
+  const sheet =
+`WAVE II — SESSION CAPTURE
+Participant: ${state.participant||"—"}    Course: ${state.course||"—"}    Pool: ${state.pool}
+Elapsed: ${fmt(elapsed())}
+
+— PART 1: SAI USAGE —
+${g("sai")}
+
+— FREE EXPLORATION —
+${g("explore")}
+
+— PROBES —
+1. First impression: ${g("p1")}
+2. Today's review: ${g("p2")}
+3. Readiness → practice → infinite practice (handoff seam): ${g("p3")}
+4. Come back tomorrow (help vs snooze): ${g("p4")}
+5. Tomorrow lane (spacing legible? trust?)  [PRIORITY]: ${g("p5")}
+6. Exam urgency (survives new layout?): ${g("p6")}
+7. Docs among artifacts (found or lost? add-notes?): ${g("p7")}
+8. Retention intent (would return? blocker?)  [PRIORITY]: ${g("p8")}
+
+— CLOSE —
+${g("close")}`;
+  try{
+    navigator.clipboard.writeText(sheet).then(()=>toast("Capture sheet copied"),()=>fallbackCopy(sheet));
+  }catch(e){ fallbackCopy(sheet); }
+}
+function fallbackCopy(txt){
+  const ta=document.createElement("textarea"); ta.value=txt; document.body.appendChild(ta); ta.select();
+  try{document.execCommand("copy");toast("Capture sheet copied");}catch(e){toast("Copy failed — select manually");}
+  document.body.removeChild(ta);
+}
+function toast(msg){
+  const el=document.getElementById("toast"); el.textContent=msg; el.classList.add("show");
+  setTimeout(()=>el.classList.remove("show"),1800);
+}
+
+/* ---------------- drawers + theme + keys ---------------- */
+const dT=document.getElementById("drawerToolkit"), dD=document.getElementById("drawerDont");
+const bT=document.getElementById("btnToolkit"), bD=document.getElementById("btnDont");
+bT.onclick=()=>{ dT.classList.toggle("show"); bT.classList.toggle("open"); dD.classList.remove("show"); bD.classList.remove("open"); };
+bD.onclick=()=>{ dD.classList.toggle("show"); bD.classList.toggle("open"); dT.classList.remove("show"); bT.classList.remove("open"); };
+
+document.getElementById("themeBtn").onclick=()=>{
+  const h=document.documentElement; h.dataset.theme = h.dataset.theme==="dark"?"light":"dark";
+};
+
+document.addEventListener("keydown",e=>{
+  const tag=(e.target.tagName||"").toLowerCase();
+  if(tag==="textarea"||tag==="input") return;
+  if(e.key==="ArrowRight"){ const s=STEPS[state.idx]; if(s.kind!=="setup"&&s.kind!=="wrap") go(1); }
+  if(e.key==="ArrowLeft"){ if(STEPS[state.idx].kind!=="setup") go(-1); }
+});
+
+/* ---------------- boot ---------------- */
+render();
+</script>
+</body>
+</html>
