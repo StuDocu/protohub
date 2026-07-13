@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dev Setup — SSH, Git & Tolaria + Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#090F1A;--surf:#0F1824;--surf2:#182234;--bdr:#1F2E45;
+  --text:#C8D8F0;--muted:#4E6A90;--accent:#4E91F7;--abg:rgba(78,145,247,.12);
+  --green:#35D394;--gbg:rgba(53,211,148,.12);--amber:#F5A623;
+  --code-bg:#050D1A;--code-text:#5EDDA8;--r:14px;--rs:8px;
+}
+body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:32px 16px;}
+#app{width:100%;max-width:900px;}
+
+.sel{padding:52px 20px;text-align:center;}
+.sel h1{font-size:2.1rem;font-weight:700;letter-spacing:-.02em;background:linear-gradient(130deg,#fff 0%,#7BAAD8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px;}
+.sel p{color:var(--muted);font-size:1rem;line-height:1.65;margin-bottom:40px;}
+.cards{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.card{background:var(--surf);border:2px solid var(--bdr);border-radius:var(--r);padding:28px 30px;cursor:pointer;transition:all .2s;min-width:155px;text-align:center;user-select:none;}
+.card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 12px 32px rgba(78,145,247,.18);}
+.card i{font-size:2.4rem;display:block;margin-bottom:10px;font-style:normal;}
+.card b{font-size:1rem;font-weight:600;color:var(--text);display:block;}
+.card s{font-size:.78rem;color:var(--muted);text-decoration:none;display:block;margin-top:3px;}
+
+.back{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:.84rem;cursor:pointer;margin-bottom:20px;background:none;border:none;font-family:inherit;padding:0;transition:color .15s;}
+.back:hover{color:var(--text);}
+
+.wizard{background:var(--surf);border:1.5px solid var(--bdr);border-radius:var(--r);overflow:hidden;display:grid;grid-template-columns:220px 1fr;min-height:560px;animation:fadein .3s ease;}
+@keyframes fadein{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+.wsb{background:var(--bg);border-right:1.5px solid var(--bdr);padding:24px 16px;display:flex;flex-direction:column;}
+.wsb-lbl{font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:0 10px;margin-bottom:14px;font-weight:600;}
+.slist{display:flex;flex-direction:column;gap:3px;flex:1;overflow-y:auto;min-height:0;padding-right:2px;}
+.slist::-webkit-scrollbar{width:5px;}
+.slist::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:4px;}
+.sgrp{font-size:.6rem;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);opacity:.7;font-weight:700;padding:12px 10px 5px;}
+.sgrp:first-child{padding-top:0;}
+.tf-grid{display:flex;flex-direction:column;gap:14px;}
+.tf-row{display:flex;flex-direction:column;gap:6px;}
+.tf-row label{font-size:.8rem;color:var(--text);font-weight:500;display:flex;align-items:center;gap:7px;}
+.tf-row .hint{font-size:.74rem;color:var(--muted);line-height:1.5;}
+.tf-row .hint code{font-family:'JetBrains Mono',monospace;font-size:.9em;background:var(--surf2);padding:1px 5px;border-radius:4px;color:var(--code-text);}
+.tf-row input{background:var(--surf2);border:1.5px solid var(--bdr);border-radius:var(--rs);padding:10px 13px;color:var(--text);font-size:.85rem;font-family:'JetBrains Mono',monospace;outline:none;transition:border-color .15s;}
+.tf-row input:focus{border-color:var(--accent);}
+.tf-req{color:var(--accent);font-size:.7rem;font-weight:700;letter-spacing:.05em;}
+.tf-opt{color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.05em;border:1px solid var(--bdr);border-radius:20px;padding:1px 8px;}
+.tf-out .cbbody{max-height:340px;overflow:auto;}
+.jumps{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:14px;}
+.jchip{font-size:.75rem;font-family:inherit;background:var(--surf);border:1.5px solid var(--bdr);color:var(--muted);border-radius:20px;padding:6px 14px;cursor:pointer;transition:all .15s;}
+.jchip:hover{border-color:var(--accent);color:var(--text);}
+.jchip.active{background:var(--abg);border-color:var(--accent);color:var(--accent);font-weight:600;}
+.jsep{color:var(--muted);opacity:.45;font-size:.85rem;}
+.si{display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:var(--rs);cursor:pointer;transition:all .15s;}
+.si.active{background:var(--abg);}
+.si.done{opacity:.65;}
+.snum{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-size:.64rem;font-family:'JetBrains Mono',monospace;flex-shrink:0;transition:all .2s;}
+.si.active .snum{border-color:var(--accent);background:var(--accent);color:#fff;}
+.si.done .snum{border-color:var(--green);background:var(--green);color:var(--bg);font-size:.7rem;}
+.slbl{font-size:.79rem;color:var(--muted);line-height:1.3;}
+.si.active .slbl{color:var(--accent);font-weight:500;}
+.si.done .slbl{color:var(--green);}
+.wbar{margin-top:auto;padding-top:18px;border-top:1px solid var(--bdr);}
+.wbar-top{display:flex;justify-content:space-between;font-size:.7rem;color:var(--muted);margin-bottom:6px;}
+.wbg{height:4px;background:var(--bdr);border-radius:4px;}
+.wbf{height:100%;background:var(--accent);border-radius:4px;transition:width .4s ease;}
+
+.wc{padding:36px 40px;display:flex;flex-direction:column;gap:20px;animation:stepfade .25s ease;}
+@keyframes stepfade{from{opacity:0;transform:translateX(5px);}to{opacity:1;transform:translateX(0);}}
+.wtitle{font-size:1.5rem;font-weight:700;letter-spacing:-.015em;line-height:1.25;}
+.wdesc{font-size:.91rem;color:var(--muted);line-height:1.75;}
+.wdesc strong{color:var(--text);font-weight:500;}
+.wdesc code{font-family:'JetBrains Mono',monospace;font-size:.82em;background:var(--surf2);padding:1px 5px;border-radius:4px;color:var(--code-text);}
+
+.cb{background:var(--code-bg);border:1.5px solid var(--bdr);border-radius:var(--rs);overflow:hidden;margin-top:2px;}
+.cbh{display:flex;align-items:center;justify-content:space-between;padding:7px 14px;border-bottom:1px solid var(--bdr);background:var(--surf2);}
+.cbtag{font-size:.66rem;font-family:'JetBrains Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
+.cpcpy{font-size:.72rem;font-family:'JetBrains Mono',monospace;background:var(--surf);border:1px solid var(--bdr);border-radius:5px;padding:3px 10px;color:var(--muted);cursor:pointer;transition:all .15s;}
+.cpcpy:hover{color:var(--accent);border-color:var(--accent);background:var(--abg);}
+.cpcpy.ok{color:var(--green);border-color:var(--green);background:var(--gbg);}
+.cbbody{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--code-text);padding:15px;line-height:1.7;white-space:pre-wrap;word-break:break-all;}
+
+.callout{display:flex;gap:10px;background:var(--surf2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 var(--rs) var(--rs) 0;font-size:.83rem;color:var(--muted);line-height:1.65;}
+.callout strong{color:var(--accent);}
+.callout code{font-family:'JetBrains Mono',monospace;font-size:.82em;background:var(--surf);padding:1px 5px;border-radius:4px;color:var(--code-text);}
+.callout.warn{border-color:var(--amber);}
+.callout.warn strong{color:var(--amber);}
+.callout.ok{border-color:var(--green);}
+.callout.ok strong{color:var(--green);}
+
+.field{display:flex;flex-direction:column;gap:6px;}
+.field label{font-size:.8rem;color:var(--muted);font-weight:500;}
+.field input{background:var(--surf2);border:1.5px solid var(--bdr);border-radius:var(--rs);padding:11px 14px;color:var(--text);font-size:.93rem;font-family:inherit;outline:none;transition:border-color .15s;}
+.field input:focus{border-color:var(--accent);}
+.field input::placeholder{color:var(--muted);opacity:.6;}
+
+.platlink{display:inline-flex;align-items:center;gap:8px;background:var(--surf2);border:1.5px solid var(--accent);border-radius:var(--rs);padding:10px 16px;color:var(--accent);text-decoration:none;font-size:.88rem;font-weight:500;transition:all .15s;width:fit-content;}
+.platlink:hover{background:var(--abg);box-shadow:0 4px 14px rgba(78,145,247,.2);}
+
+.wnav{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--bdr);padding-top:18px;margin-top:auto;}
+.stepof{font-size:.75rem;color:var(--muted);}
+.btn{padding:10px 22px;border-radius:var(--rs);font-size:.88rem;font-weight:600;font-family:inherit;cursor:pointer;transition:all .15s;border:none;outline:none;}
+.btn-out{background:transparent;border:1.5px solid var(--bdr);color:var(--muted);}
+.btn-out:hover{border-color:var(--muted);color:var(--text);}
+.btn-pri{background:var(--accent);color:#fff;}
+.btn-pri:hover{filter:brightness(1.1);box-shadow:0 4px 12px rgba(78,145,247,.3);}
+.btn-ok{background:var(--green);color:var(--bg);}
+.btn-ok:hover{filter:brightness(1.1);}
+.btn-dis{opacity:.3;pointer-events:none;}
+
+.done{text-align:center;padding:56px 40px;display:flex;flex-direction:column;align-items:center;gap:14px;animation:fadein .4s ease;background:var(--surf);border:1.5px solid var(--bdr);border-radius:var(--r);}
+.done-e{font-size:4rem;animation:pop .5s cubic-bezier(.175,.885,.32,1.4);}
+@keyframes pop{from{transform:scale(0);opacity:0;}to{transform:scale(1);opacity:1;}}
+.done-t{font-size:2rem;font-weight:700;letter-spacing:-.02em;color:var(--green);}
+.done-s{color:var(--muted);max-width:380px;line-height:1.65;font-size:.93rem;}
+.done-box{background:var(--bg);border:1.5px solid var(--bdr);border-radius:var(--r);padding:20px 24px;text-align:left;width:100%;max-width:520px;margin-top:6px;display:flex;flex-direction:column;gap:12px;}
+.done-box-t{font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600;}
+
+@media(max-width:600px){
+  .wizard{grid-template-columns:1fr;}
+  .wsb{border-right:none;border-bottom:1.5px solid var(--bdr);padding:12px 16px;}
+  .slist{display:none;}
+  .wsb-lbl{display:none;}
+  .wbar{border-top:none;padding-top:0;margin-top:0;}
+  .wc{padding:22px 18px;}
+  .sel h1{font-size:1.65rem;}
+}
+</style>
+</head>
+<body>
+<!-- Studocu dev setup wizard — v2 -->
+<div id="app"></div>
+<script>
+const S={screen:'os',os:null,plat:'github',email:'',step:0,
+  vaultPath:'',nodePath:'',indexPath:'',wsPort:'9711'};
+
+const OS=[
+  {id:'mac',ic:'🍎',label:'Mac',sub:'macOS'},
+  {id:'windows',ic:'🪟',label:'Windows',sub:'Windows 10 / 11'},
+  {id:'linux',ic:'🐧',label:'Linux',sub:'Ubuntu / Debian / etc.'},
+];
+const PM={
+  github:{host:'github.com',url:'https://github.com/settings/ssh/new',name:'GitHub'},
+};
+
+function em(){return S.email||'your@email.com';}
+function pm(){return PM[S.plat]||PM.github;}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function mkCB(cmd){
+  const enc=encodeURIComponent(cmd.text);
+  return `<div class="cb"><div class="cbh"><span class="cbtag">${cmd.lbl||'Terminal'}</span><button class="cpcpy" data-t="${enc}" onclick="doCopy(this)">copy</button></div><div class="cbbody">${esc(cmd.text)}</div></div>`;
+}
+
+function mkNote(html,type=''){
+  return `<div class="callout ${type}"><span>${html}</span></div>`;
+}
+
+function doCopy(btn){
+  const text=decodeURIComponent(btn.dataset.t||'');
+  const done=()=>{btn.textContent='✓ copied';btn.classList.add('ok');setTimeout(()=>{btn.textContent='copy';btn.classList.remove('ok');},2200);};
+  const fallback=()=>{
+    try{
+      const el=document.createElement('textarea');
+      el.value=text;el.setAttribute('readonly','');
+      el.style.position='fixed';el.style.top='-9999px';el.style.opacity='0';
+      document.body.appendChild(el);el.select();el.setSelectionRange(0,text.length);
+      try{document.execCommand('copy');}catch(_){}
+      document.body.removeChild(el);
+    }catch(_){}
+    done();
+  };
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done,fallback);
+    }else{fallback();}
+  }catch(_){fallback();}
+}
+
+function getSteps(){
+  return getGithubSteps().concat(getCoreSteps());
+}
+
+function getPhases(ss){
+  const p=[];
+  ss.forEach((s,i)=>{ if(s.grp) p.push({label:s.grp,index:i}); });
+  return p;
+}
+
+function getGithubSteps(){
+  return [
+    {id:'gh-acct',title:'Create your GitHub account',grp:'GitHub & Studocu',
+     desc:'Already have a GitHub account? Skip ahead with the buttons at the top.<br><br>1. Go to GitHub and sign up with your <strong>@studocu.com</strong> email<br>2. Pick a username — your real name or a recognisable handle makes it easier for admins to find you<br>3. Verify your email address',
+     link:{url:'https://github.com/signup',label:'Create a GitHub account'},
+     n:mkNote('📧 Use your <strong>@studocu.com</strong> email so admins can match your GitHub account to you when they send the org invite.')},
+    {id:'gh-org',title:'Join the Studocu organization',
+     desc:'Your account has to be added to the <strong>Studocu</strong> GitHub org before you can clone private repos like the design vault.<br><br>1. Grab your GitHub username (it\'s in your profile URL: <code>github.com/&lt;username&gt;</code>)<br>2. On Slack, send it to an org admin — <strong>Enrique Garbi</strong> or <strong>Ahmed Meheina</strong><br>3. Wait for the invite from GitHub, then <strong>accept it</strong>',
+     cmds:[{lbl:'Copy this Slack message',text:'Hi! Could you add me to the Studocu GitHub org so I can clone the repos? My GitHub username is <your-username>. Thanks!'}],
+     n:mkNote('⚠️ <strong>You must accept the invite before access works</strong> — it\'s the #1 thing people miss. Look for it in the email on your GitHub account or in your github.com notifications. If an admin says there\'s no seat free, they need to open one up — just nudge them again.','warn')},
+  ];
+}
+
+function getCoreSteps(){
+  const m=pm(),e=em(),pn=m.name,host=m.host;
+
+  const emailStep={
+    id:'email',title:'Enter your email',
+    desc:`This labels your SSH key so you can recognise it. Use the same email as your <strong>${pn}</strong> account.`,
+    input:true,
+    n:mkNote('🔒 Your email only labels the key on your machine — it isn\'t sent anywhere.')
+  };
+  const platStep={
+    id:'plat',title:`Add your key to ${pn}`,
+    desc:`Paste your public key into ${pn}'s settings:<br><br>1. Click the button below to open SSH settings<br>2. Click <strong>"New SSH key"</strong> (or "Add key")<br>3. Give it a name like <em>My Laptop</em><br>4. <strong>Paste</strong> your key in the big text field<br>5. Click <strong>Save</strong>`,
+    platlink:true,
+    n:mkNote(`🔗 You'll need to be logged in to ${pn} first.`)
+  };
+  const testStep={
+    id:'test',title:'Test your connection',
+    desc:'Let\'s confirm everything is working. Run this:',
+    cmds:[{lbl:'Terminal',text:`ssh -T git@${host}`}],
+    n:mkNote(`✅ <strong>Success looks like:</strong> "Hi [username]! You've successfully authenticated…"<br>If asked about authenticity, type <strong>yes</strong> and press Enter.`,'ok')
+  };
+
+  const tol=getTolariaSteps();
+
+  if(S.os==='mac') return [
+    {id:'term',title:'Open the Terminal app',grp:'SSH & Git keys',
+     desc:'Terminal is an app that comes with every Mac, where you run commands. Don\'t worry — you\'ll only copy and paste, no typing required, and this guide gives you every command.<br><br><strong>To open it:</strong><br>1. Press <strong>⌘ Cmd + Space</strong> to open Spotlight search<br>2. Type <strong>Terminal</strong><br>3. Press <strong>Enter</strong><br><br>A window with text and a blinking cursor appears — leave it open. <em>Can\'t find it? Open Finder → Applications → Utilities → Terminal.</em>',
+     n:mkNote('🧭 <strong>How to run any command in this guide:</strong> tap <strong>copy</strong> on the command box → click inside the Terminal window → paste with <strong>⌘ Cmd + V</strong> → press <strong>Enter</strong>. Then come back here for the next step.')},
+    emailStep,
+    {id:'check',title:'Check for existing keys',
+     desc:'Copy the command below, paste it into Terminal, and press <strong>Enter</strong>. This checks whether you already have a key:',
+     cmds:[{lbl:'Terminal',text:'ls ~/.ssh'}],
+     n:mkNote('👀 <strong>Seeing files like id_ed25519?</strong> You might already have a key. "No such file or directory" is fine too — keep going.')},
+    {id:'gen',title:'Generate your SSH key',
+     desc:'Creates a key pair — a private one (stays on your Mac) and a public one (shared with servers):',
+     cmds:[{lbl:'Terminal',text:`ssh-keygen -t ed25519 -C "${e}"`}],
+     n:mkNote('⌨️ <strong>When asked questions:</strong> Press <strong>Enter</strong> to accept defaults. Press <strong>Enter twice</strong> when asked for a passphrase (or type one for extra security).')},
+    {id:'agent',title:'Start the SSH agent',
+     desc:'The SSH agent is a background process that manages your keys:',
+     cmds:[{lbl:'Terminal',text:'eval "$(ssh-agent -s)"'}],
+     n:mkNote('🔢 <strong>Expected output:</strong> Something like <code>Agent pid 1234</code> — the number will be different for you.')},
+    {id:'add',title:'Add key to Mac Keychain',
+     desc:'Stores your key in the Mac Keychain — you\'ll never need to enter a password again, even after restarting:',
+     cmds:[{lbl:'Terminal',text:'ssh-add --apple-use-keychain ~/.ssh/id_ed25519'}],
+     n:mkNote('🍎 <strong>Older Mac?</strong> On macOS Monterey 11 or below, use <code>-K</code> instead of <code>--apple-use-keychain</code>.')},
+    {id:'cfg',title:'Create your SSH config file',
+     desc:'Tells your Mac to always use this key automatically for this host:',
+     cmds:[{lbl:'Terminal',text:`printf 'Host ${host}\\n  AddKeysToAgent yes\\n  UseKeychain yes\\n  IdentityFile ~/.ssh/id_ed25519\\n' >> ~/.ssh/config`}],
+     n:mkNote('⚙️ <strong>What this does:</strong> Creates (or appends to) a config file that tells SSH to auto-use your key and remember it in the Keychain.')},
+    {id:'copy',title:'Copy your public key',
+     desc:'Copies your public key to the clipboard — nothing will appear on screen, but it\'s there:',
+     cmds:[{lbl:'Terminal',text:'pbcopy < ~/.ssh/id_ed25519.pub'}],
+     n:mkNote('📋 <strong>Nothing will appear</strong> — that\'s expected. Your key is now in your clipboard.')},
+    platStep,testStep,
+  ].concat(tol);
+
+  if(S.os==='windows') return [
+    {id:'ps',title:'Open PowerShell as Administrator',grp:'SSH & Git keys',
+     desc:'PowerShell is an app built into Windows where you run commands. You\'ll only copy and paste — no typing needed.<br><br><strong>To open it:</strong><br>1. Press the <strong>Windows key</strong><br>2. Type <strong>PowerShell</strong><br>3. Right-click <strong>Windows PowerShell</strong> and choose <strong>"Run as administrator"</strong><br>4. Click <strong>Yes</strong> on the security popup',
+     n:mkNote('🧭 <strong>How to run a command:</strong> tap <strong>copy</strong> → click inside the PowerShell window → paste with <strong>right-click</strong> (or <strong>Ctrl + V</strong>) → press <strong>Enter</strong>.<br><br>⚠️ Administrator is only needed for the very next step — after that, a normal PowerShell window is fine.','warn')},
+    {id:'svc',title:'Enable the SSH agent service',
+     desc:'These two commands turn on the SSH agent (a background helper that remembers your key). Paste the first, press <strong>Enter</strong>, then do the same with the second:',
+     cmds:[
+       {lbl:'PowerShell (Admin)',text:'Get-Service -Name ssh-agent | Set-Service -StartupType Automatic'},
+       {lbl:'PowerShell (Admin)',text:'Start-Service ssh-agent'}
+     ],
+     n:mkNote('✅ <strong>No output means success.</strong> If you see a red error, make sure the window says "Administrator" at the top.')},
+    emailStep,
+    {id:'gen',title:'Generate your SSH key',
+     desc:'You can use regular (non-admin) PowerShell from here:',
+     cmds:[{lbl:'PowerShell',text:`ssh-keygen -t ed25519 -C "${e}"`}],
+     n:mkNote('⌨️ <strong>Press Enter</strong> to accept defaults. <strong>Enter twice</strong> to skip the passphrase.')},
+    {id:'add',title:'Add your key to the SSH agent',
+     desc:'Registers your key with the agent:',
+     cmds:[{lbl:'PowerShell',text:'ssh-add $env:USERPROFILE\\.ssh\\id_ed25519'}],
+     n:mkNote('✅ <strong>You should see:</strong> "Identity added: …" — that\'s a success.')},
+    {id:'copy',title:'Copy your public key',
+     desc:'Copies your public key invisibly to the clipboard:',
+     cmds:[{lbl:'PowerShell',text:'Get-Content $env:USERPROFILE\\.ssh\\id_ed25519.pub | clip'}],
+     n:mkNote('📋 <strong>Nothing will appear</strong> — that\'s expected. Your key is in the clipboard.')},
+    platStep,testStep,
+  ].concat(tol);
+
+  return [
+    {id:'term',title:'Open a Terminal',grp:'SSH & Git keys',
+     desc:'Terminal is where you run commands — you\'ll only copy and paste, no typing needed.<br><br><strong>To open it:</strong> press <strong>Ctrl + Alt + T</strong>, or find <strong>Terminal</strong> in your applications menu. A window with a blinking cursor appears — leave it open.',
+     n:mkNote('🧭 <strong>How to run a command:</strong> tap <strong>copy</strong> → click inside the Terminal window → paste with <strong>Ctrl + Shift + V</strong> (or right-click → Paste) → press <strong>Enter</strong>.')},
+    emailStep,
+    {id:'check',title:'Check for existing keys',
+     desc:'Copy the command below, paste it into the terminal, and press <strong>Enter</strong>. This checks for an existing key:',
+     cmds:[{lbl:'Terminal',text:'ls ~/.ssh'}],
+     n:mkNote('👀 <strong>Seeing id_ed25519 or id_rsa?</strong> You might already have a key. "No such file or directory" is also fine.')},
+    {id:'gen',title:'Generate your SSH key',
+     desc:'Creates your key pair:',
+     cmds:[{lbl:'Terminal',text:`ssh-keygen -t ed25519 -C "${e}"`}],
+     n:mkNote('⌨️ <strong>Press Enter</strong> to accept defaults. <strong>Enter twice</strong> for no passphrase.')},
+    {id:'agent',title:'Start the SSH agent',
+     desc:'Starts the background key manager:',
+     cmds:[{lbl:'Terminal',text:'eval "$(ssh-agent -s)"'}],
+     n:mkNote('🔢 <strong>Expected:</strong> <code>Agent pid 1234</code> — any number is fine.')},
+    {id:'add',title:'Add your key to the agent',
+     cmds:[{lbl:'Terminal',text:'ssh-add ~/.ssh/id_ed25519'}],
+     n:mkNote('✅ <strong>You should see:</strong> "Identity added: ~/.ssh/id_ed25519"')},
+    {id:'copy',title:'Copy your public key',
+     desc:'Run this to display your key, then select all the output and copy it:',
+     cmds:[{lbl:'Terminal',text:'cat ~/.ssh/id_ed25519.pub'}],
+     n:mkNote('📋 <strong>Select all the output</strong> (starts with "ssh-ed25519") and copy with <strong>Ctrl+C</strong> or right-click → Copy.')},
+    platStep,testStep,
+  ].concat(tol);
+}
+
+function tolDefaults(){
+  if(S.os==='windows') return {
+    node:'C:\\Program Files\\nodejs\\node.exe',
+    index:'C:\\Users\\YOU\\AppData\\Local\\Programs\\Tolaria\\resources\\mcp-server\\index.js',
+    cfg:'%APPDATA%\\Claude\\claude_desktop_config.json'};
+  if(S.os==='linux') return {
+    node:'/usr/bin/node',
+    index:'/opt/Tolaria/resources/mcp-server/index.js',
+    cfg:'~/.config/Claude/claude_desktop_config.json'};
+  return {
+    node:'/opt/homebrew/bin/node',
+    index:'/Applications/Tolaria.app/Contents/Resources/mcp-server/index.js',
+    cfg:'~/Library/Application Support/Claude/claude_desktop_config.json'};
+}
+
+function buildTolariaConfig(){
+  const d=tolDefaults();
+  const cfg={mcpServers:{tolaria:{
+    command:S.nodePath||d.node,
+    args:[S.indexPath||d.index],
+    env:{VAULT_PATH:S.vaultPath||'/path/to/your/Vault',WS_UI_PORT:S.wsPort||'9711'}
+  }}};
+  return JSON.stringify(cfg,null,2);
+}
+
+function updateTolariaPreview(){
+  const g=id=>{const el=document.getElementById(id);return el?el.value.trim():'';};
+  S.vaultPath=g('tf_vault');S.nodePath=g('tf_node');S.indexPath=g('tf_index');S.wsPort=g('tf_port')||'9711';
+  const txt=buildTolariaConfig();
+  const out=document.getElementById('tf_out_body');
+  if(out) out.textContent=txt;
+  const btn=document.getElementById('tf_copy');
+  if(btn) btn.dataset.t=encodeURIComponent(txt);
+}
+
+function mkTolariaFormatter(){
+  const d=tolDefaults();
+  const node=S.nodePath||d.node,index=S.indexPath||d.index,port=S.wsPort||'9711';
+  const which=S.os==='windows'?'(Get-Command node).Source':'which node';
+  const vph=S.os==='windows'?'C:\\Users\\you\\Vaults':'/Users/you/Dev/Vaults';
+  return `<div class="tf-grid">
+    <div class="tf-row">
+      <label>Tolaria vault path <span class="tf-req">REQUIRED</span></label>
+      <div class="hint">The folder Tolaria opens your vault(s) from. In Tolaria, right-click the vault and choose <strong>Reveal in Finder / Explorer</strong> to see it. Using multiple vaults? Point this at the parent folder that holds them all.</div>
+      <input id="tf_vault" value="${esc(S.vaultPath)}" placeholder="${esc(vph)}" oninput="updateTolariaPreview()">
+    </div>
+    <div class="tf-row">
+      <label>Node path <span class="tf-opt">auto-filled</span></label>
+      <div class="hint">The <em>full</em> path to Node. Run <code>${which}</code> in your terminal and paste the result. Intel Macs use <code>/usr/local/bin/node</code>; Apple Silicon uses <code>/opt/homebrew/bin/node</code>.</div>
+      <input id="tf_node" value="${esc(node)}" oninput="updateTolariaPreview()">
+    </div>
+    <div class="tf-row">
+      <label>Tolaria MCP server path <span class="tf-opt">auto-filled</span></label>
+      <div class="hint">Path to Tolaria's bundled <code>index.js</code>. The default is correct for a standard install${S.os==='mac'?'':' — verify it matches where Tolaria landed on your machine'}.</div>
+      <input id="tf_index" value="${esc(index)}" oninput="updateTolariaPreview()">
+    </div>
+    <div class="tf-row">
+      <label>WebSocket UI port <span class="tf-opt">auto-filled</span></label>
+      <div class="hint">Leave as <code>9711</code> unless you changed it inside Tolaria.</div>
+      <input id="tf_port" value="${esc(port)}" oninput="updateTolariaPreview()">
+    </div>
+  </div>
+  <div class="cb tf-out" style="margin-top:2px">
+    <div class="cbh"><span class="cbtag">claude_desktop_config.json — paste all of this</span><button class="cpcpy" id="tf_copy" data-t="" onclick="doCopy(this)">copy</button></div>
+    <div class="cbbody" id="tf_out_body"></div>
+  </div>`;
+}
+
+function getTolariaSteps(){
+  const m=pm(),pn=m.name,host=m.host,d=tolDefaults();
+
+  let install;
+  if(S.os==='windows'){
+    install=[
+      {id:'node',title:'Install Node.js',grp:'Tolaria + Claude',
+       desc:'Tolaria\'s MCP server runs on Node. Install the LTS build:',
+       cmds:[{lbl:'PowerShell',text:'winget install OpenJS.NodeJS.LTS'}],
+       link:{url:'https://nodejs.org/en/download',label:'Or download Node.js manually'},
+       n:mkNote('✅ Close and reopen PowerShell, then run <code>node -v</code> to confirm.')},
+      {id:'tolaria',title:'Install Tolaria',
+       desc:'Homebrew is macOS-only, so on Windows download the signed installer and run it.',
+       link:{url:'https://tolaria.md/start/install',label:'Download Tolaria for Windows'},
+       n:mkNote('🛡️ The installer is Authenticode-signed. On a managed work PC, IT may need to approve the Tolaria publisher first. Don\'t disable SmartScreen to install it.','warn')},
+    ];
+  } else if(S.os==='linux'){
+    install=[
+      {id:'node',title:'Install Node.js',grp:'Tolaria + Claude',
+       desc:'Tolaria\'s bundled MCP server uses your system Node, so install it from your distro:',
+       cmds:[{lbl:'Debian / Ubuntu',text:'sudo apt install nodejs'},{lbl:'Fedora',text:'sudo dnf install nodejs'}],
+       n:mkNote('✅ Run <code>node -v</code> to confirm it\'s installed.')},
+      {id:'tolaria',title:'Install Tolaria',
+       desc:'Download the AppImage (or .deb / .rpm) from the releases page, then make it executable and run it:',
+       cmds:[{lbl:'Terminal',text:'chmod +x Tolaria-x86_64.AppImage && ./Tolaria-x86_64.AppImage'}],
+       link:{url:'https://tolaria.md/start/install',label:'Download Tolaria for Linux'},
+       n:mkNote('🐧 <strong>Heads up:</strong> Claude Desktop officially supports macOS and Windows. On Linux you can still use the Tolaria MCP server with clients like Claude Code or Cursor.','warn')},
+    ];
+  } else {
+    install=[
+      {id:'brew',title:'Install Homebrew',grp:'Tolaria + Claude',
+       desc:'Homebrew is a free, trusted tool that installs the other apps for you. Paste this into Terminal and press <strong>Enter</strong>:',
+       cmds:[{lbl:'Terminal',text:'/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'}],
+       n:mkNote('⏳ <strong>This step takes a few minutes.</strong> It may ask for your Mac login password — as you type it, nothing appears on screen (that\'s normal), then press <strong>Enter</strong>.<br><br>🍺 <strong>On an Apple Silicon Mac (M1–M4)?</strong> When it finishes, Homebrew prints two lines starting with <code>echo</code> and <code>eval</code> — copy and run those too, or the next steps won\'t find <code>brew</code>.')},
+      {id:'node',title:'Install Node.js',
+       desc:'Tolaria\'s MCP server runs on Node. Install it with Homebrew:',
+       cmds:[{lbl:'Terminal',text:'brew install node'}],
+       n:mkNote('✅ <strong>Check it worked:</strong> run <code>node -v</code> — you should see something like <code>v22.x</code>.')},
+      {id:'tolaria',title:'Install Tolaria',
+       desc:'Install the Tolaria app itself:',
+       cmds:[{lbl:'Terminal',text:'brew install --cask tolaria'}],
+       link:{url:'https://tolaria.md/start/install',label:'Tolaria install docs'},
+       n:mkNote('📖 Open Tolaria once installed. First launch offers a <strong>"Getting Started"</strong> vault — a guided tour of the app.')},
+    ];
+  }
+
+  const findDesc = S.os==='windows'
+    ? 'This is where you tell Claude Desktop about Tolaria.<br><br><strong>Easiest way:</strong> in Claude Desktop go to <strong>Settings → Developer → Edit Config</strong> — it creates the file if needed and opens it.<br><br><strong>Or open the folder manually:</strong>'
+    : 'This is where you tell Claude Desktop about Tolaria.<br><br><strong>Easiest way:</strong> in Claude Desktop go to <strong>Settings → Developer → Edit Config</strong> — it creates the file if needed and opens it.<br><br><strong>Or open the folder manually:</strong>';
+  const findCmd = S.os==='windows'
+    ? [{lbl:'PowerShell',text:'explorer $env:APPDATA\\Claude'}]
+    : S.os==='linux'
+    ? [{lbl:'Terminal',text:'xdg-open ~/.config/Claude/'}]
+    : [{lbl:'Terminal',text:'open ~/Library/Application\\ Support/Claude/'}];
+
+  const shared=[
+    {id:'tol-clone',title:'Clone a repo into Tolaria',
+     desc:`Every Tolaria vault is a Git repository — and you just set up SSH, so cloning needs no password.<br><br>Start with the <strong>Studocu design vault</strong>:<br><br>1. In Tolaria, click the <strong>vault switcher at the bottom-left</strong><br>2. Choose <strong>"Clone git repo"</strong><br>3. Paste the SSH URL below and pick where to save it locally`,
+     cmds:[{lbl:'SSH URL — paste into "Clone git repo"',text:'git@github.com:Studocu/designVault.git'}],
+     n:mkNote(`📦 <strong>Cloning a different repo?</strong> On <strong>${pn}</strong>, open it → <strong>Code / Clone ▾</strong> → <strong>SSH</strong> tab and copy that <code>git@${host}:…</code> URL instead. Or pick <strong>"Getting Started"</strong> in the switcher for a guided sample.<br><br>🔑 This is a <strong>github.com</strong> repo, so it clones with your <strong>GitHub</strong> SSH key from the earlier steps.`)},
+    {id:'tol-set',title:'Turn on multi-vault & auto-git',
+     desc:'Open Tolaria <strong>Settings</strong> and enable two things:<br><br>• <strong>Use multiple vaults at the same time</strong> — keeps several vaults open together<br>• <strong>Auto-git</strong> — automatically commits (and pushes) every change, so your notes stay versioned and backed up',
+     n:mkNote('🔁 With Auto-git on and SSH configured, every edit is committed and pushed to your remote — no manual <code>git</code> commands needed.')},
+    {id:'tol-find',title:'Find the Claude Desktop config',
+     desc:findDesc,
+     cmds:findCmd,
+     link:{url:'https://claude.ai/download',label:'Don\'t have Claude Desktop yet? Get it'},
+     n:mkNote('🆕 <strong>Empty or brand-new file?</strong> That\'s fine — the next step generates the entire contents for you to paste in.')},
+    {id:'tol-cfg',title:'Generate your config',tolariaConfig:true,
+     desc:'Enter your Tolaria <strong>vault path</strong> and I\'ll build the complete <code>claude_desktop_config.json</code>. Copy the whole thing into the file from the last step.',
+     n:mkNote('🧬 <strong>Already have other MCP servers?</strong> Don\'t paste over them — instead copy just the <code>"tolaria": { … }</code> entry into your existing <code>"mcpServers"</code> block (add a comma between entries).','warn')},
+    {id:'tol-test',title:'Test Tolaria in Claude',
+     desc:'Save the config, then <strong>fully quit and reopen Claude Desktop</strong> — MCP servers only load at launch. Start a new chat and try:',
+     cmds:[{lbl:'Ask Claude',text:'Which vault is Tolaria connected to?'},{lbl:'Ask Claude',text:'Search my Tolaria notes and tell me what you find.'}],
+     n:mkNote('🔧 Claude should call tools like <code>get_vault_context</code>, <code>search_notes</code> and <code>list_vaults</code>. Keep Tolaria running — <code>open_note</code> and <code>refresh_vault</code> talk to the live app.','ok')},
+    {id:'tol-agents',title:'Connect other AI agents (optional)',
+     desc:'Tolaria can also drive other assistants from its own <strong>Settings → AI</strong> panel: Claude Code, Codex, OpenCode, Pi and Antigravity, plus direct providers like Anthropic, OpenAI, Gemini and OpenRouter, or local models via Ollama / LM Studio.',
+     link:{url:'https://tolaria.md/concepts/ai',label:'Tolaria AI docs'},
+     n:mkNote('🧩 Its setup flow can write the MCP entry for those clients automatically, or copy a JSON snippet — nothing changes unless you confirm.')},
+  ];
+
+  return install.concat(shared);
+}
+
+function renderSidebar(ss){
+  const pct=Math.round(((S.step+1)/ss.length)*100);
+  const items=ss.map((s,i)=>`${s.grp?`<div class="sgrp">${s.grp}</div>`:''}
+    <div class="si ${i===S.step?'active':''} ${i<S.step?'done':''}" onclick="go(${i})">
+      <div class="snum">${i<S.step?'✓':i+1}</div>
+      <span class="slbl">${s.title}</span>
+    </div>`).join('');
+  return `<div class="wsb">
+    <div class="slist">${items}</div>
+    <div class="wbar">
+      <div class="wbar-top"><span>Progress</span><span>${pct}%</span></div>
+      <div class="wbg"><div class="wbf" style="width:${pct}%"></div></div>
+    </div>
+  </div>`;
+}
+
+function renderStepContent(s,i,total){
+  let h=`<div class="wc">
+    <div class="wtitle">${s.title}</div>`;
+  if(s.desc) h+=`<div class="wdesc">${s.desc}</div>`;
+  if(s.input) h+=`<div class="field"><label>Your email address</label><input type="email" id="eml" value="${S.email}" placeholder="you@example.com" oninput="S.email=this.value"></div>`;
+  if(s.tolariaConfig) h+=mkTolariaFormatter();
+  if(s.cmds) s.cmds.forEach(c=>{h+=mkCB(c);});
+  if(s.platlink) h+=`<a class="platlink" href="${pm().url}" target="_blank" rel="noopener">↗ Open ${pm().name} SSH Settings</a>`;
+  if(s.link) h+=`<a class="platlink" href="${s.link.url}" target="_blank" rel="noopener">↗ ${s.link.label}</a>`;
+  if(s.n) h+=s.n;
+  h+=`<div class="wnav">
+    <button class="btn btn-out ${i===0?'btn-dis':''}" onclick="go(${i-1})">← Back</button>
+    <span class="stepof">Step ${i+1} of ${total}</span>
+    ${i<total-1
+      ?`<button class="btn btn-pri" onclick="go(${i+1})">Continue →</button>`
+      :`<button class="btn btn-ok" onclick="showDone()">All done! 🎉</button>`}
+  </div></div>`;
+  return h;
+}
+
+function showDone(){S.screen='done';render();}
+function go(n){
+  const ss=getSteps();
+  if(n<0||n>=ss.length)return;
+  S.step=n;render();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function render(){
+  const app=document.getElementById('app');
+  if(S.screen==='os'){
+    app.innerHTML=`<div class="sel">
+      <h1>🔐 Studocu dev setup</h1>
+      <p>GitHub account, Studocu org access, passwordless Git, and a Tolaria vault wired into Claude.<br>Around 10 minutes end to end. What's your operating system?</p>
+      <div class="cards">${OS.map(o=>`<div class="card" onclick="pickOS('${o.id}')"><i>${o.ic}</i><b>${o.label}</b><s>${o.sub}</s></div>`).join('')}</div>
+    </div>`;
+  } else if(S.screen==='start'){
+    const ss=getSteps();
+    const phases=getPhases(ss);
+    const meta=[
+      {ic:'🌱',big:'I\'m brand new',sub:'Create a GitHub account & join Studocu'},
+      {ic:'🔑',big:'I\'m in the Studocu org',sub:'Set up my SSH key'},
+      {ic:'🧠',big:'SSH & Git already work',sub:'Jump straight to Tolaria + Claude'},
+    ];
+    app.innerHTML=`<div class="sel">
+      <button class="back" onclick="S.screen='os';render()">← Change OS</button>
+      <h1>Where are you starting?</h1>
+      <p>Pick the first thing you still need to do — you can jump between sections anytime.</p>
+      <div class="cards">${phases.map((p,i)=>`<div class="card" onclick="startAt(${p.index})"><i>${meta[i]?meta[i].ic:'▶'}</i><b>${meta[i]?meta[i].big:p.label}</b><s>${meta[i]?meta[i].sub:''}</s></div>`).join('')}</div>
+    </div>`;
+  } else if(S.screen==='wizard'){
+    const ss=getSteps();
+    const s=ss[S.step]||ss[0];
+    const phases=getPhases(ss);
+    let cur=0; phases.forEach((p,i)=>{ if(S.step>=p.index) cur=i; });
+    const jumps=phases.map((p,i)=>`<button class="jchip ${i===cur?'active':''}" onclick="go(${p.index})">${p.label}</button>`).join('<span class="jsep">›</span>');
+    app.innerHTML=`<div style="padding:0 0 14px 0">
+      <button class="back" onclick="S.screen='start';render()">← Change setup</button>
+    </div>
+    <div class="jumps">${jumps}</div>
+    <div class="wizard">${renderSidebar(ss)}${renderStepContent(s,S.step,ss.length)}</div>`;
+    if(s.tolariaConfig) updateTolariaPreview();
+  } else {
+    const m=pm();
+    app.innerHTML=`<div class="done">
+      <div class="done-e">🎉</div>
+      <div class="done-t">You're all set!</div>
+      <div class="done-s">Passwordless Git is live, your Tolaria vault is cloned and auto-syncing, and Claude Desktop can read and write your notes.</div>
+      <div class="done-box">
+        <div class="done-box-t">🔄 Have older repos cloned over HTTPS? Switch them to SSH</div>
+        <div class="wdesc" style="margin-bottom:2px">Update the remote URL so they stop asking for a password:</div>
+        ${mkCB({lbl:'Terminal',text:`git remote set-url origin git@${m.host}:USERNAME/REPO.git`})}
+        ${mkNote('Replace <strong>USERNAME</strong> with your '+m.name+' username and <strong>REPO</strong> with the repository name.')}
+      </div>
+      <div class="done-box">
+        <div class="done-box-t">🧠 Using Tolaria in Claude</div>
+        <div class="wdesc">Keep Tolaria open while you work — <code>open_note</code> and <code>refresh_vault</code> talk to the live app. To point Claude at a different vault later, re-run the config step and change <code>VAULT_PATH</code>, then restart Claude Desktop.</div>
+      </div>
+      <button class="btn btn-out" style="margin-top:8px" onclick="S={screen:'os',os:null,plat:'github',email:'',step:0,vaultPath:'',nodePath:'',indexPath:'',wsPort:'9711'};render()">↺ Start over</button>
+    </div>`;
+  }
+}
+
+function pickOS(os){S.os=os;S.screen='start';render();}
+function startAt(i){S.step=i;S.screen='wizard';render();window.scrollTo({top:0,behavior:'smooth'});}
+
+render();
+</script>
+</body>
+</html>
